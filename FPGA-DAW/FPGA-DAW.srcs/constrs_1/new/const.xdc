@@ -8,7 +8,7 @@
 
 ##Clock signal
 set_property -dict { PACKAGE_PIN K17   IOSTANDARD LVCMOS33 } [get_ports { sysclk }]; #IO_L12P_T1_MRCC_35 Sch=sysclk
-create_clock -add -name sys_clk_pin -period 7.52 -waveform {0 4} [get_ports { sysclk }];
+create_clock -add -name sys_clk_pin -period 7.52 -waveform {0 4} [get_ports { sysclk }]; # 7.52ns period (~133MHz clock)
 
 
 ##Switches
@@ -146,7 +146,8 @@ set_property -dict { PACKAGE_PIN D18   IOSTANDARD LVCMOS33 } [get_ports { led[3]
 #set_property -dict { PACKAGE_PIN V18   IOSTANDARD LVCMOS33     } [get_ports { jd[7] }]; #IO_L21N_T3_DQS_34 Sch=jd_n[4]             
                                                                                                                                  
                                                                                                                                  
-##Pmod Header JE                                                                                                                  
+##Pmod Header JE - NOTE: This is the only Pmod port on the board with 200 ohm resistor outputs - 
+# these prevents shorts when input signals are accidentally driven as outputs (according to the manual)                                                                                            
 #set_property -dict { PACKAGE_PIN V12   IOSTANDARD LVCMOS33 } [get_ports { je[0] }]; #IO_L4P_T0_34 Sch=je[1]						 
 #set_property -dict { PACKAGE_PIN W16   IOSTANDARD LVCMOS33 } [get_ports { je[1] }]; #IO_L18N_T2_34 Sch=je[2]                     
 #set_property -dict { PACKAGE_PIN J15   IOSTANDARD LVCMOS33 } [get_ports { je[2] }]; #IO_25_35 Sch=je[3]                          
