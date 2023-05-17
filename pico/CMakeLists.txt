@@ -27,6 +27,7 @@ pico_sdk_init()
 
 add_executable(daw 
   src/daw.cpp
+  src/spi_link.cpp
 )
 
 pico_set_program_name(daw "daw")
@@ -57,3 +58,8 @@ target_link_libraries(daw
 
 pico_add_extra_outputs(daw)
 
+add_custom_command(TARGET daw POST_BUILD
+    COMMAND powershell ${CMAKE_CURRENT_SOURCE_DIR}/picoFlashTool_WinPS.ps1
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    COMMENT "Flashing Pico..."
+)
