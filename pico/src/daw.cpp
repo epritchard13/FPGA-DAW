@@ -9,13 +9,6 @@
 
 #include "spi_link.h"
 
-// SPI Defines
-// We are going to use SPI 0, and allocate it to the following GPIO pins
-// Pins can be changed, see the GPIO function select table in the datasheet for information on GPIO assignments
-
-
-#define SYSCLK 133000000
-
 int main()
 {
     stdio_init_all();
