@@ -1,6 +1,9 @@
 #include "pico/stdlib.h"
 #include "hardware/spi.h"
 
+// SPI link opcodes
+const uint8_t QUERY_STATUS = 0x01;
+
 #define SYSCLK 133000000
 #define SPI_CLK (SYSCLK / 4)
 
@@ -10,4 +13,5 @@
 #define PIN_SCK 18
 #define PIN_MOSI 19
 
-bool init_spi();
+bool spi_link_init();
+bool spi_link_query_status();

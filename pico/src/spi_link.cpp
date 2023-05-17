@@ -1,6 +1,6 @@
 #include "spi_link.h"
 
-bool init_spi()
+bool spi_link_init()
 {
     spi_init(SPI_PORT, SYSCLK / 4);
     gpio_set_function(PIN_MISO, GPIO_FUNC_SPI);
@@ -9,4 +9,8 @@ bool init_spi()
     gpio_set_function(PIN_MOSI, GPIO_FUNC_SPI);
 
     return true;
+}
+
+bool spi_link_query_status() {
+    spi_write_blocking(SPI_PORT, &QUERY_STATUS, 0);
 }
