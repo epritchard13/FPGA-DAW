@@ -38,22 +38,22 @@ assign led = div[30:(30-4)];
 
 wire [7:0] spi_data;
 wire valid;
+reg reset = 1'b1;
 
 
-//SPI stuff
-spi spi0(
-	.rst(1'b0),
-	.clk(1'b0),
-	.spi_miso(je[0]),
-	.spi_cs(je[1]),
-	.spi_clk(je[2]),
-	.spi_mosi(je[3]),
+SPI_Slave spi0(
+	.i_Rst_L(reset),
+	.i_Clk(sysclk),
 
-	.data_out(spi_data),
-	.valid(valid),
-	
-	.data_in(8'b0),
-	.data_write(1'b0)
+	.o_RX_DV(valid),
+	.o_RX_Byte(spi_data),
+	.i_TX_DV(1'b0),
+	.i_TX_Byte(8'b0),
+
+	.o_SPI_MISO(je[0]),
+	.i_SPI_CS_n(je[1]),
+	.i_SPI_Clk(je[2]),
+	.i_SPI_MOSI(je[3])
 );
 
 reg [7:0] spi_byte = 8'b0;
