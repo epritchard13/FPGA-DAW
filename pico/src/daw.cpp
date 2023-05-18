@@ -5,16 +5,12 @@
 #include "hardware/spi.h"
 #include "hardware/timer.h"
 #include "pico/stdlib.h"
-#include <stdio.h>
-#include <cmath>
 #include "spi_link.h"
+#include <cmath>
+#include <cstring>
+#include <stdio.h>
 
-uint8_t data[1] = { 0x05 };
-
-void print_status()
-{
-    printf("nominal\n");
-}
+uint8_t num = 10;
 
 void read_stdin()
 {
@@ -23,10 +19,22 @@ void read_stdin()
         c = getchar_timeout_us(0);
         if (c == PICO_ERROR_TIMEOUT)
             break;
-        else if (c == '?')
-            print_status();
-        
-        data[0] = c;
+        else if (c == '/') { // we have a command
+            char cmd[10];
+            uint val;
+
+            scanf("%s", cmd);
+            if (strcmp(cmd, "set") == 0) {
+                scanf("%d", &val);
+                num = val;
+            } else if (strcmp(cmd, "get") == 0) {
+                printf("num: %d\n", num);
+            } else if (strcmp(cmd, "status") == 0) {
+                printf("nominal\n");
+            } else {
+                printf("unknown command: %s\n", cmd);
+            }
+        }
     }
 }
 
@@ -38,14 +46,14 @@ int main()
     puts("Hello, world!");
 
     while (true) {
-        
-        for (float i = 0; i < 1.0; i += .1) {
-            uint8_t val = (sin(2*3.14159*i) + 1) * 127.5;
+
+        for (float i = 0; i < 1.0; i += 1. / num) {
+            uint8_t val = (sin(2 * 3.14159 * i) + 1) * 127.5;
             spi_write_blocking(SPI_PORT, &val, 1);
         }
 
-        //puts("poop");
-        //read_stdin();
+        // puts("poop");
+        read_stdin();
     }
 
     return 0;
