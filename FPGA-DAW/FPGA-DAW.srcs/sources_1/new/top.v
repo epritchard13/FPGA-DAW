@@ -28,7 +28,6 @@ module top(
 	output [2:0] rgb
 );
 
-assign rgb[1:0] = 2'b0; // not used now
 /*
 reg [30:0] div = 31'b0;
 always @(posedge sysclk) begin
@@ -57,17 +56,23 @@ spi spi0(
 	.data_write(1'b0)
 );
 
-reg [7:0] spi_out = 8'b0;
+reg [7:0] spi_byte = 8'b0;
 always @(posedge sysclk) begin
+	// Yes, there are clock domain crossing issues.
+	// However, valid will fall a considerable amount of time before
+	// the data actually becoems invalid.
 	if (valid) begin
-		spi_out <= spi_data;
+		spi_byte <= spi_data;
 	end
 end
 
-assign led = spi_out[3:0];
+assign led = spi_byte[3:0];
 
 
 // PWM DAC
-pwm_dac dac(sysclk, spi_out, rgb[2]);
+wire analog_out;
+pwm_dac dac(sysclk, spi_byte, analog_out);
+assign rgb = 3'b0;//{3{analog_out}};
+assign je[4] = analog_out;
 
 endmodule
