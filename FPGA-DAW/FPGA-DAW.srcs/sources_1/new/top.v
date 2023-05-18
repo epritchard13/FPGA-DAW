@@ -4,7 +4,8 @@ module top(
 	output [3:0] led,
 	input sysclk,
 	
-	inout [7:0] je,
+	input MOSI, SCLK, SS,
+	output MISO, A_OUT,
 	output [2:0] rgb
 );
 
@@ -22,10 +23,10 @@ SPI_Slave spi0(
 	.i_TX_DV(1'b0),
 	.i_TX_Byte(8'b0),
 
-	.o_SPI_MISO(je[0]),
-	.i_SPI_CS_n(je[1]),
-	.i_SPI_Clk(je[2]),
-	.i_SPI_MOSI(je[3])
+	.o_SPI_MISO(MISO),
+	.i_SPI_CS_n(SS),
+	.i_SPI_Clk(SCLK),
+	.i_SPI_MOSI(MOSI)
 );
 
 reg [7:0] spi_byte = 8'b0;
@@ -42,6 +43,6 @@ assign led = spi_byte[3:0];
 wire analog_out;
 pwm_dac dac(sysclk, spi_byte, analog_out);
 assign rgb = 3'b0;//{3{analog_out}};
-assign je[4] = analog_out;
+assign A_OUT = analog_out;
 
 endmodule
