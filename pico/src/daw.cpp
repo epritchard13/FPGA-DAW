@@ -33,11 +33,12 @@ int main()
     spi_link_init();
     puts("Hello, world!");
 
-    uint8_t data[16] = {};
+    uint8_t data[1] = {0b01101010};
 
     while (true) {
-        spi_write_blocking(SPI_PORT, data, 16);
-        read_stdin();
+        spi_write_blocking(SPI_PORT, data, sizeof(data));
+        //puts("poop");
+        //read_stdin();
     }
 
     return 0;
