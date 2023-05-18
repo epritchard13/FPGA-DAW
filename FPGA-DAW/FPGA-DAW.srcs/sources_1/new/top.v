@@ -8,19 +8,11 @@ module top(
 	output [2:0] rgb
 );
 
-/*
-reg [30:0] div = 31'b0;
-always @(posedge sysclk) begin
-	div <= div + 31'b1;
-end
-assign led = div[30:(30-4)];
-//*/
-
 wire [7:0] spi_data;
 wire valid;
 reg reset = 1'b1;
 
-
+//spi stuff
 SPI_Slave spi0(
 	.i_Rst_L(reset),
 	.i_Clk(sysclk),
@@ -38,9 +30,6 @@ SPI_Slave spi0(
 
 reg [7:0] spi_byte = 8'b0;
 always @(posedge sysclk) begin
-	// Yes, there are clock domain crossing issues.
-	// However, valid will fall a considerable amount of time before
-	// the data actually becoems invalid.
 	if (valid) begin
 		spi_byte <= spi_data;
 	end
