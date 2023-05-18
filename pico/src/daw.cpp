@@ -6,8 +6,9 @@
 #include "hardware/timer.h"
 #include "pico/stdlib.h"
 #include <stdio.h>
-
 #include "spi_link.h"
+
+uint8_t data[1] = { 0x05 };
 
 void print_status()
 {
@@ -23,6 +24,8 @@ void read_stdin()
             break;
         else if (c == '?')
             print_status();
+        
+        data[0] = c;
     }
 }
 
@@ -33,12 +36,10 @@ int main()
     spi_link_init();
     puts("Hello, world!");
 
-    uint8_t data[1] = {0b01101010};
-
     while (true) {
         spi_write_blocking(SPI_PORT, data, sizeof(data));
         //puts("poop");
-        //read_stdin();
+        read_stdin();
     }
 
     return 0;

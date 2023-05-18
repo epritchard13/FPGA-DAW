@@ -10,7 +10,7 @@
 set_property -dict { PACKAGE_PIN K17   IOSTANDARD LVCMOS33 } [get_ports { sysclk }]; #IO_L12P_T1_MRCC_35 Sch=sysclk
 create_clock -add -name sys_clk_pin -period 7.52 -waveform {0 4} [get_ports { sysclk }]; # 7.52ns period (~133MHz clock)
 
-set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets je_IBUF[0]]
+set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets je_IBUF[2]]
 
 ##Switches
 #set_property -dict { PACKAGE_PIN G15   IOSTANDARD LVCMOS33 } [get_ports { sw[0] }]; #IO_L19N_T3_VREF_35 Sch=sw[0]
