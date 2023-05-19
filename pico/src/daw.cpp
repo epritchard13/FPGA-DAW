@@ -49,6 +49,8 @@ int main()
 
         for (float i = 0; i < 1.0; i += 1. / num) {
             uint8_t val = (sin(2 * 3.14159 * i) + 1) * 127.5;
+            const uint8_t code = 0x87;
+            spi_write_blocking(SPI_PORT, &code, 1);
             spi_write_blocking(SPI_PORT, &val, 1);
         }
 
