@@ -13,9 +13,9 @@
     "design_tree": {
       "HIGH": "",
       "LOW": "",
-      "SPI_Slave_0": "",
       "pwm_dac_0": "",
       "top_0": "",
+      "SPI_Slave_1": "",
       "spi_link_sm_0": ""
     },
     "ports": {
@@ -77,75 +77,6 @@
         "parameters": {
           "CONST_VAL": {
             "value": "0"
-          }
-        }
-      },
-      "SPI_Slave_0": {
-        "vlnv": "xilinx.com:module_ref:SPI_Slave:1.0",
-        "xci_name": "system_SPI_Slave_0_0",
-        "xci_path": "ip\\system_SPI_Slave_0_0\\system_SPI_Slave_0_0.xci",
-        "inst_hier_path": "SPI_Slave_0",
-        "reference_info": {
-          "ref_type": "hdl",
-          "ref_name": "SPI_Slave",
-          "boundary_crc": "0x0"
-        },
-        "ports": {
-          "i_Rst_L": {
-            "direction": "I",
-            "parameters": {
-              "POLARITY": {
-                "value": "ACTIVE_LOW",
-                "value_src": "const_prop"
-              }
-            }
-          },
-          "i_Clk": {
-            "type": "clk",
-            "direction": "I",
-            "parameters": {
-              "FREQ_HZ": {
-                "value": "100000000",
-                "value_src": "user_prop"
-              },
-              "PHASE": {
-                "value": "0.0",
-                "value_src": "default_prop"
-              },
-              "CLK_DOMAIN": {
-                "value": "system_processing_system7_0_0_FCLK_CLK0",
-                "value_src": "default_prop"
-              }
-            }
-          },
-          "o_RX_DV": {
-            "direction": "O"
-          },
-          "o_RX_Byte": {
-            "direction": "O",
-            "left": "7",
-            "right": "0"
-          },
-          "i_TX_DV": {
-            "direction": "I"
-          },
-          "i_TX_Byte": {
-            "direction": "I",
-            "left": "7",
-            "right": "0"
-          },
-          "i_SPI_Clk": {
-            "type": "clk",
-            "direction": "I"
-          },
-          "o_SPI_MISO": {
-            "direction": "O"
-          },
-          "i_SPI_MOSI": {
-            "direction": "I"
-          },
-          "i_SPI_CS_n": {
-            "direction": "I"
           }
         }
       },
@@ -236,6 +167,75 @@
           }
         }
       },
+      "SPI_Slave_1": {
+        "vlnv": "xilinx.com:module_ref:SPI_Slave:1.0",
+        "xci_name": "system_SPI_Slave_1_0",
+        "xci_path": "ip\\system_SPI_Slave_1_0\\system_SPI_Slave_1_0.xci",
+        "inst_hier_path": "SPI_Slave_1",
+        "reference_info": {
+          "ref_type": "hdl",
+          "ref_name": "SPI_Slave",
+          "boundary_crc": "0x0"
+        },
+        "ports": {
+          "i_Rst_L": {
+            "direction": "I",
+            "parameters": {
+              "POLARITY": {
+                "value": "ACTIVE_LOW",
+                "value_src": "const_prop"
+              }
+            }
+          },
+          "i_Clk": {
+            "type": "clk",
+            "direction": "I",
+            "parameters": {
+              "FREQ_HZ": {
+                "value": "100000000",
+                "value_src": "user_prop"
+              },
+              "PHASE": {
+                "value": "0.0",
+                "value_src": "default_prop"
+              },
+              "CLK_DOMAIN": {
+                "value": "system_processing_system7_0_0_FCLK_CLK0",
+                "value_src": "default_prop"
+              }
+            }
+          },
+          "o_RX_DV": {
+            "direction": "O"
+          },
+          "o_RX_Byte": {
+            "direction": "O",
+            "left": "7",
+            "right": "0"
+          },
+          "i_TX_DV": {
+            "direction": "I"
+          },
+          "i_TX_Byte": {
+            "direction": "I",
+            "left": "7",
+            "right": "0"
+          },
+          "i_SPI_Clk": {
+            "type": "clk",
+            "direction": "I"
+          },
+          "o_SPI_MISO": {
+            "direction": "O"
+          },
+          "i_SPI_MOSI": {
+            "direction": "I"
+          },
+          "i_SPI_CS_n": {
+            "direction": "I"
+          }
+        }
+      },
       "spi_link_sm_0": {
         "vlnv": "xilinx.com:module_ref:spi_link_sm:1.0",
         "xci_name": "system_spi_link_sm_0_0",
@@ -293,54 +293,60 @@
       "HIGH_dout": {
         "ports": [
           "HIGH/dout",
-          "SPI_Slave_0/i_Rst_L"
+          "SPI_Slave_1/i_Rst_L"
         ]
       },
       "LOW_dout": {
         "ports": [
           "LOW/dout",
-          "SPI_Slave_0/i_TX_DV",
+          "SPI_Slave_1/i_TX_DV",
           "spi_link_sm_0/rst"
         ]
       },
-      "MOSI_0_1": {
+      "MOSI_1": {
         "ports": [
           "MOSI",
-          "SPI_Slave_0/i_SPI_MOSI"
+          "SPI_Slave_1/i_SPI_MOSI"
         ]
       },
-      "SCLK_0_1": {
+      "SCLK_1": {
         "ports": [
           "SCLK",
-          "SPI_Slave_0/i_SPI_Clk"
+          "SPI_Slave_1/i_SPI_Clk"
         ]
       },
       "SPI_Slave_0_o_RX_Byte": {
         "ports": [
-          "SPI_Slave_0/o_RX_Byte",
+          "SPI_Slave_1/o_RX_Byte",
           "top_0/spi_data",
           "spi_link_sm_0/spi_data"
         ]
       },
       "SPI_Slave_0_o_RX_DV": {
         "ports": [
-          "SPI_Slave_0/o_RX_DV",
+          "SPI_Slave_1/o_RX_DV",
           "top_0/valid",
           "spi_link_sm_0/valid"
         ]
       },
-      "SS_0_1": {
+      "SPI_Slave_1_o_SPI_MISO": {
+        "ports": [
+          "SPI_Slave_1/o_SPI_MISO",
+          "MISO"
+        ]
+      },
+      "SS_1": {
         "ports": [
           "SS",
-          "SPI_Slave_0/i_SPI_CS_n"
+          "SPI_Slave_1/i_SPI_CS_n"
         ]
       },
       "processing_system7_0_FCLK_CLK0": {
         "ports": [
           "sysclk",
-          "SPI_Slave_0/i_Clk",
           "pwm_dac_0/clk",
           "top_0/sysclk",
+          "SPI_Slave_1/i_Clk",
           "spi_link_sm_0/clk"
         ]
       },
@@ -354,12 +360,6 @@
         "ports": [
           "spi_link_sm_0/dac_state",
           "pwm_dac_0/val"
-        ]
-      },
-      "top_0_MISO": {
-        "ports": [
-          "SPI_Slave_0/o_SPI_MISO",
-          "MISO"
         ]
       },
       "top_0_led": {
