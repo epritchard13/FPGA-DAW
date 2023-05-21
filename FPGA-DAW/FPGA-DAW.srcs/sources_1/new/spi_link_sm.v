@@ -83,9 +83,11 @@ always @(posedge clk) begin
 			end
 		end
 		
+		//receiving the data itself
 		else if (state == `RECEIVING_RX_BODY) begin
 			ctr0 <= ctr0 + 1;
-			if (ctr0 == {header[0], header[1]}) begin //the header should be one less than the actual data size
+			dac_state <= spi_data;
+			if (ctr0 == {header[1], header[0]}) begin //the header should be one less than the actual data size
 				state <= `WAITING;
 			end
 		end
