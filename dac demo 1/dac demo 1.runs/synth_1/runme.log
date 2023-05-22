@@ -1,0 +1,15 @@
+
+*** Running vivado
+    with args -log top.vds -m64 -product Vivado -mode batch -messageDb vivado.pb -notrace -source top.tcl
+
+
+
+****** Vivado v2022.2 (64-bit)
+  **** SW Build 3671981 on Fri Oct 14 05:00:03 MDT 2022
+  **** IP Build 3669848 on Fri Oct 14 08:30:02 MDT 2022
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+
+source top.tcl -notrace
+create_project: Time (s): cpu = 00:00:09 ; elapsed = 00:00:10 . Memory (MB): peak = 410.527 ; gain = 89.926
+ERROR: [Common 17-275] File does not exist [C:/Users/Eddie/source/repos/Certain-Synthesizer-FPGA-DAW/FPGA-DAW/FPGA-DAW.srcs/constrs_1/Zybo-Z7.xdc]
+INFO: [Common 17-206] Exiting Vivado at Sun May 21 21:32:57 2023...
