@@ -10,30 +10,42 @@
 #include <cstring>
 #include <stdio.h>
 
-uint8_t num = 10;
+uint8_t num = 20;
+uint8_t buf[1024];
+uint audio_size;
 
 void read_stdin()
 {
     int c;
-    while (true) {
-        c = getchar_timeout_us(0);
-        if (c == PICO_ERROR_TIMEOUT)
-            break;
-        else if (c == '/') { // we have a command
-            char cmd[10];
-            uint val;
+    c = getchar_timeout_us(0);
+    if (c == PICO_ERROR_TIMEOUT)
+        return;
+    else if (c == '/') { // we have a command
+        char cmd[10];
+        uint val;
 
-            scanf("%s", cmd);
-            if (strcmp(cmd, "set") == 0) {
-                scanf("%d", &val);
-                num = val;
-            } else if (strcmp(cmd, "get") == 0) {
-                printf("num: %d\n", num);
-            } else if (strcmp(cmd, "status") == 0) {
-                printf("nominal\n");
-            } else {
-                printf("unknown command: %s\n", cmd);
-            }
+        scanf("%s", cmd);
+        if (strcmp(cmd, "set") == 0) {
+            scanf("%d", &val);
+            num = val;
+        } else if (strcmp(cmd, "audio") == 0) {
+
+        } else if (strcmp(cmd, "get") == 0) {
+            printf("num: %d\n", num);
+        } else if (strcmp(cmd, "status") == 0) {
+            printf("nominal\n");
+        } else {
+            printf("unknown command: %s\n", cmd);
+        }
+    }
+    else if (c == 0x53) {
+        fread(&audio_size, 1, 4, stdin);
+        if (audio_size < sizeof(buf)) {
+            fread(buf, 1, audio_size, stdin);
+            uint16_t val = audio_size - 1;
+            uint8_t cmd[] = { 0x88, val & 0xff, (val >> 8) & 0xff};
+            spi_write_blocking(SPI_PORT, cmd, sizeof(cmd));
+            spi_write_blocking(SPI_PORT, buf, audio_size); //*/
         }
     }
 }
@@ -46,11 +58,13 @@ int main()
     puts("Hello, world!");
 
     while (true) {
-
-        for (float i = 0; i < 1.0; i += 1. / num) {
-            uint8_t val = (sin(2 * 3.14159 * i) + 1) * 127.5;
+        /*
+        uint8_t stuff[] = { 0x88, 249, 0 };
+        spi_write_blocking(SPI_PORT, stuff, sizeof(stuff));
+        for (int i = 0; i < 250; i++) {
+            uint8_t val = i;
             spi_write_blocking(SPI_PORT, &val, 1);
-        }
+        }//*/
 
         // puts("poop");
         read_stdin();

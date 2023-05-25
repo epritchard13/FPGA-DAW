@@ -1,0 +1,27 @@
+[*]
+[*] GTKWave Analyzer v3.3.100 (w)1999-2019 BSI
+[*] Sat May 20 14:52:37 2023
+[*]
+[dumpfile] "C:\Users\Ethan\Documents\Certain-Synthesizer-FPGA-DAW\FPGA-DAW\FPGA-DAW.srcs\sources_1\new\verilog_tb.vcd"
+[dumpfile_mtime] "Sat May 20 14:51:52 2023"
+[dumpfile_size] 8651
+[savefile] "C:\Users\Ethan\Documents\Certain-Synthesizer-FPGA-DAW\FPGA-DAW\FPGA-DAW.srcs\sources_1\new\wave.gtkw"
+[timestart] 0
+[size] 1920 1009
+[pos] -113 -113
+*-13.000000 22980 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] verilog_tb.
+[sst_width] 197
+[signals_width] 134
+[sst_expanded] 1
+[sst_vpaned_height] 297
+@28
+verilog_tb.uut.clk
+@22
+verilog_tb.uut.spi_data[7:0]
+@28
+verilog_tb.uut.valid
+@29
+verilog_tb.uut.state[2:0]
+[pattern_trace] 1
+[pattern_trace] 0
