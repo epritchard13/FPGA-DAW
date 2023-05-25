@@ -6,7 +6,7 @@ import math
 ser = serial.Serial('COM5')
 
 a = 0
-size = 500
+size = 1000
 
 def clamp(val, min_val, max_val):
     return min(max_val, max(min_val, val))

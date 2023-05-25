@@ -1,28 +1,48 @@
 `timescale 1ns / 1ps
 
 module top(
-	output [3:0] led,
-	input sysclk,
+	input SYSCLK,
 	
-	input [7:0] spi_data,
-	input valid,
-
-	output [2:0] rgb
+	input SS,
+	input SCLK,
+	input MOSI,
+	output MISO,
+	
+	output A_OUT,
+	output [3:0] LED
 );
 
-reg [7:0] spi_byte = 8'b0;
-always @(posedge sysclk) begin
-	if (valid) begin
-		spi_byte <= spi_data;
-	end
-end
+wire spi_valid;
+wire [7:0] spi_data;
+wire [7:0] signal_out;
 
-assign led = spi_byte[3:0];
+SPI_Slave spslv(
+	.i_Rst_L(1'b1),
+	.i_Clk(SYSCLK),
+	.i_TX_DV(1'b0),
+	.i_TX_Byte(8'h00),
+	.i_SPI_Clk(SCLK),
+	.i_SPI_CS_n(SS),
+	.i_SPI_MOSI(MOSI),
 
+	.o_RX_DV(spi_valid),
+	.o_RX_Byte(spi_data),
+	.o_SPI_MISO(MISO)
+);
 
-// PWM DAC
-wire analog_out;
-pwm_dac dac(sysclk, spi_byte, analog_out);
-assign rgb = 3'b0;//{3{analog_out}};
+spi_link_sm spi_sm(
+	.clk(SYSCLK),
+	.rst(1'b0),
+	.valid(spi_valid),
+	.spi_data(spi_data),
+
+	.dac_state(signal_out)
+);
+
+pwm_dac pwmdac(
+	.clk(SYSCLK),
+	.val(signal_out),
+	.analog(A_OUT)
+);
 
 endmodule
