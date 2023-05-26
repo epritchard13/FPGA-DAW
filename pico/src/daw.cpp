@@ -38,7 +38,7 @@ void read_stdin()
     }
     else if (c == 0x53) {
         fread(&audio_size, 1, 4, stdin);
-        if (audio_size < sizeof(buf)) {
+        if (audio_size <= sizeof(buf)) {
             fread(buf, 1, audio_size, stdin);
             uint16_t val = audio_size - 1;
             uint8_t cmd[] = { 0x88, (uint8_t) (val & 0xff), (uint8_t) ((val >> 8) & 0xff)};

@@ -8,7 +8,7 @@ import numpy as np
 
 with wave.open('audio.wav') as fd:
     params = fd.getparams()
-    frames = fd.readframes(1000000) # 1 million frames max
+    frames = fd.readframes(1000000000)
 
 audio = np.ndarray(len(frames) // 4, dtype=np.uint8)
 print(len(frames), audio.shape)
@@ -17,7 +17,7 @@ for i in range(audio.shape[0]):
 
 ser = serial.Serial('COM5')
 
-size = 1024*16 - 1
+size = 1024
 
 def clamp(val, min_val, max_val):
     return min(max_val, max(min_val, val))
