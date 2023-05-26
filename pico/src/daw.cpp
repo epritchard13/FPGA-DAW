@@ -43,7 +43,7 @@ void read_stdin()
         if (audio_size < sizeof(buf)) {
             fread(buf, 1, audio_size, stdin);
             uint16_t val = audio_size - 1;
-            uint8_t cmd[] = { 0x88, val & 0xff, (val >> 8) & 0xff};
+            uint8_t cmd[] = { 0x88, (uint8_t) (val & 0xff), (uint8_t) ((val >> 8) & 0xff)};
             spi_write_blocking(SPI_PORT, cmd, sizeof(cmd));
             spi_write_blocking(SPI_PORT, buf, audio_size); //*/
         }
