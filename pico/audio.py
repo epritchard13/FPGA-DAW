@@ -17,7 +17,7 @@ for i in range(audio.shape[0]):
 
 ser = serial.Serial('COM5')
 
-size = 1024*15
+size = 1024*16 - 1
 
 def clamp(val, min_val, max_val):
     return min(max_val, max(min_val, val))
@@ -50,13 +50,7 @@ while index < audio.shape[0]:
             exit()
 
         val = clamp(val, 0, 255)
-        if val != 0x88 and val != 0x87:
-            packet.append(val)
-        else:
-            packet.append(0x89)
-    #for i in range(100):
-    #   packet.append(0x30)
-    print(len(packet))
+        packet.append(val)
     ser.write(packet)
     
 

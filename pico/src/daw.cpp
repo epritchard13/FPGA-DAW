@@ -11,16 +11,14 @@
 #include <stdio.h>
 
 uint8_t num = 20;
-uint8_t buf[1024*16];
+uint8_t buf[1024 * 16];
 uint audio_size;
 
 void read_stdin()
 {
-    int c;
-    c = getchar_timeout_us(0);
-    if (c == PICO_ERROR_TIMEOUT)
-        return;
-    else if (c == '/') { // we have a command
+    uint8_t c;
+    fread(&c, 1, 1, stdin);
+    if (c == '/') { // we have a command
         char cmd[10];
         uint val;
 
