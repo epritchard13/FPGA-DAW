@@ -47,7 +47,7 @@ while index < audio.shape[0]:
         val = audio[index]
         index += 1
         if (index >= audio.shape[0]):
-            break
+            exit()
 
         val = clamp(val, 0, 255)
         if val != 0x88 and val != 0x87:
