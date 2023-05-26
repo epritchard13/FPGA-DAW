@@ -11,7 +11,7 @@
 #include <stdio.h>
 
 uint8_t num = 20;
-uint8_t buf[1024];
+uint8_t buf[1024*16];
 uint audio_size;
 
 void read_stdin()
