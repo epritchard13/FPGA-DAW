@@ -7,6 +7,7 @@
 #include "pico/stdlib.h"
 #include "spi_link.h"
 #include <cmath>
+#include "player.h"
 #include <cstring>
 #include <stdio.h>
 
