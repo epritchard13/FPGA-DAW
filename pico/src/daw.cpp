@@ -8,10 +8,11 @@
 #include "spi_link.h"
 #include <cmath>
 #include "player.h"
+#include <iostream>
 #include <cstring>
 #include <stdio.h>
 
-uint8_t num = 20;
+Player test_player;
 uint8_t buf[1024 * 16];
 uint audio_size;
 
@@ -25,12 +26,14 @@ void read_stdin()
 
         scanf("%s", cmd);
         if (strcmp(cmd, "set") == 0) {
-            scanf("%d", &val);
-            num = val;
+            uint track, data, size, timestamp;
+            scanf("%d %d %d %d", &track, &data, &size, &timestamp);
+            printf("track: %d, data: %d, size: %d, timestamp: %d\n", track, data, size, timestamp);
+            test_player.add_clip(track, data, size, timestamp);
         } else if (strcmp(cmd, "audio") == 0) {
 
         } else if (strcmp(cmd, "get") == 0) {
-            printf("num: %d\n", num);
+            std::cout << test_player << std::endl;
         } else if (strcmp(cmd, "status") == 0) {
             printf("nominal\n");
         } else {
@@ -55,6 +58,11 @@ int main()
 
     spi_link_init();
     puts("Hello, world!");
+
+    //add 8 tracks to the player
+    for (int i = 0; i < 8; i++) {
+        test_player.tracks.push_back(Track());
+    }
 
     while (true) {
         /*

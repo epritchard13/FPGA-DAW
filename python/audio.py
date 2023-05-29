@@ -52,5 +52,3 @@ while index < audio.shape[0]:
         val = clamp(val, 0, 255)
         packet.append(val)
     ser.write(packet)
-    
-
