@@ -8,6 +8,7 @@
 #include "spi_link.h"
 #include <cmath>
 #include "player.h"
+#include "stdio_mem.h"
 #include <iostream>
 #include <cstring>
 #include <stdio.h>
@@ -64,17 +65,17 @@ int main()
         test_player.tracks.push_back(Track());
     }
 
-    while (true) {
-        /*
-        uint8_t stuff[] = { 0x88, 249, 0 };
-        spi_write_blocking(SPI_PORT, stuff, sizeof(stuff));
-        for (int i = 0; i < 250; i++) {
-            uint8_t val = i;
-            spi_write_blocking(SPI_PORT, &val, 1);
-        }//*/
+    fread(NULL, 1, 1, stdin); // don't start any of the code until we get a single byte
 
-        // puts("poop");
-        read_stdin();
+    audio_size = 1024*2;
+    while (true) {
+        //read_stdin();
+        read_blocking(buf, 0, audio_size);
+        write_blocking(buf, 0, audio_size);
+        uint16_t val = audio_size - 1;
+        uint8_t cmd[] = { 0x88, (uint8_t) (val & 0xff), (uint8_t) ((val >> 8) & 0xff)};
+        spi_write_blocking(SPI_PORT, cmd, sizeof(cmd));
+        spi_write_blocking(SPI_PORT, buf, audio_size); //*/
     }
 
     return 0;
