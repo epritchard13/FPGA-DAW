@@ -28,6 +28,8 @@ pico_sdk_init()
 add_executable(daw 
   src/daw.cpp
   src/spi_link.cpp
+  src/player.cpp
+  src/stdio_mem.cpp
 )
 
 pico_set_program_name(daw "daw")

@@ -5,7 +5,7 @@ import serial
 # 4 bytes - address
 # 4 bytes - data size
 # 1 byte - read or write (1 - write, 0 - read)
-header_size = 17
+header_size = 9
 
 ram_size = 1 * 1024 * 1024  # 1MB
 ram = np.empty(ram_size, dtype=np.uint8)
@@ -15,6 +15,12 @@ ser = serial.Serial('COM5')
 
 def bytes_to_int(bytes):
     return int.from_bytes(bytes, byteorder='little')
+
+ser.write(0x1)
+
+# write ramp function to 0-1024
+for i in range(1024*10):
+    ram[i] = i % 256
 
 
 i = 0
@@ -36,9 +42,9 @@ while 1:
             ram[addr:addr+data_size] = np.frombuffer(data, dtype=np.uint8)
             # if i % 10 == 0:
             #   print(i)
-            print('write: ', data)
+            print('write: ', len(data))
         else:
             # read
             data = ram[addr:addr+data_size]
             ser.write(data)
-            print('read: ', data)
+            print('read: ', len(data))

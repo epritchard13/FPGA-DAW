@@ -7,10 +7,13 @@
 #include "pico/stdlib.h"
 #include "spi_link.h"
 #include <cmath>
+#include "player.h"
+#include "stdio_mem.h"
+#include <iostream>
 #include <cstring>
 #include <stdio.h>
 
-uint8_t num = 20;
+Player test_player;
 uint8_t buf[1024 * 16];
 uint audio_size;
 
@@ -24,12 +27,14 @@ void read_stdin()
 
         scanf("%s", cmd);
         if (strcmp(cmd, "set") == 0) {
-            scanf("%d", &val);
-            num = val;
+            uint track, data, size, timestamp;
+            scanf("%d %d %d %d", &track, &data, &size, &timestamp);
+            printf("track: %d, data: %d, size: %d, timestamp: %d\n", track, data, size, timestamp);
+            test_player.add_clip(track, data, size, timestamp);
         } else if (strcmp(cmd, "audio") == 0) {
 
         } else if (strcmp(cmd, "get") == 0) {
-            printf("num: %d\n", num);
+            std::cout << test_player << std::endl;
         } else if (strcmp(cmd, "status") == 0) {
             printf("nominal\n");
         } else {
@@ -55,17 +60,22 @@ int main()
     spi_link_init();
     puts("Hello, world!");
 
-    while (true) {
-        /*
-        uint8_t stuff[] = { 0x88, 249, 0 };
-        spi_write_blocking(SPI_PORT, stuff, sizeof(stuff));
-        for (int i = 0; i < 250; i++) {
-            uint8_t val = i;
-            spi_write_blocking(SPI_PORT, &val, 1);
-        }//*/
+    //add 8 tracks to the player
+    for (int i = 0; i < 8; i++) {
+        test_player.tracks.push_back(Track());
+    }
 
-        // puts("poop");
-        read_stdin();
+    fread(NULL, 1, 1, stdin); // don't start any of the code until we get a single byte
+
+    audio_size = 1024*2;
+    while (true) {
+        //read_stdin();
+        read_blocking(buf, 0, audio_size);
+        write_blocking(buf, 0, audio_size);
+        uint16_t val = audio_size - 1;
+        uint8_t cmd[] = { 0x88, (uint8_t) (val & 0xff), (uint8_t) ((val >> 8) & 0xff)};
+        spi_write_blocking(SPI_PORT, cmd, sizeof(cmd));
+        spi_write_blocking(SPI_PORT, buf, audio_size); //*/
     }
 
     return 0;
