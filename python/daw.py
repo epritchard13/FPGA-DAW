@@ -22,10 +22,22 @@ def get_tracks():
                 tracks.append('')
         elif s[i] == ')':
             depth -= 1
-            if depth == 2:
+            if depth == 2: # next track
                 tracks[num_tracks-1] += ','
         elif depth == 3:
             tracks[num_tracks-1] += s[i]
 
-    print(tracks)
-    print('Number of tracks: ' + str(num_tracks))
+    # parse tracks
+    for i in range(num_tracks):
+        tracks[i] = tracks[i].split(',')[:-1]
+
+        list = []
+        for j in range(len(tracks[i])):
+            if j % 3 == 0:
+                track = []
+                list.append(track)
+            track.append(int(tracks[i][j]))
+        tracks[i] = list
+
+    #print(tracks)
+    return tracks

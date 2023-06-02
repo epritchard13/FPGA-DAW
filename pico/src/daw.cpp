@@ -29,7 +29,7 @@ void read_stdin()
         if (strcmp(cmd, "set") == 0) {
             uint track, data, size, timestamp;
             scanf("%d %d %d %d", &track, &data, &size, &timestamp);
-            printf("track: %d, data: %d, size: %d, timestamp: %d\n", track, data, size, timestamp);
+            //printf("track: %d, data: %d, size: %d, timestamp: %d\n", track, data, size, timestamp);
             test_player.add_clip(track, data, size, timestamp);
         } else if (strcmp(cmd, "audio") == 0) {
 
@@ -69,8 +69,8 @@ int main()
 
     audio_size = 1024*2;
     while (true) {
-        //read_stdin();
-        read_blocking(buf, 0, audio_size);
+        read_stdin();
+        /*read_blocking(buf, 0, audio_size);
         write_blocking(buf, 0, audio_size);
         uint16_t val = audio_size - 1;
         uint8_t cmd[] = { 0x88, (uint8_t) (val & 0xff), (uint8_t) ((val >> 8) & 0xff)};
