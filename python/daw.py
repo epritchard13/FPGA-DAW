@@ -6,6 +6,15 @@ def open():
     dev.write(0x20)
     #dev.write(b'/set 5 0 1 1\n')
 
+def init_tracks():
+    dev.write(b'/clear\n')
+    for i in range(8):
+        dev.write(b'/add\n')
+        cmd = '/set '
+        cmd += str(i)
+        cmd += ' 0 200 ' + str(i * 10) + '\n'
+        dev.write(cmd.encode('utf-8'))
+
 def get_tracks():
     cmd = b'/get\n'
     dev.write(cmd)

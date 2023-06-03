@@ -11,11 +11,11 @@
  * NOTE: Timestamps are measured in samples.
  */
 struct Clip {
-	uint data;			// address of audio data in storage. This is NOT a c++ pointer.
+	storage_ptr_t data;			// address of audio data in storage. This is NOT a c++ pointer.
 	uint size;
 	uint timestamp;
 
-	std::vector<segment> segments;
+	std::vector<segment_t> segments;
 
 	// More information will be added here...
 
@@ -40,6 +40,7 @@ class Player {
 
 public:
 	std::vector<Track> tracks;
+
 	friend std::ostream& operator<< (std::ostream &os, const Player &s);
 
 	/**
@@ -47,3 +48,7 @@ public:
 	 */
 	bool add_clip(uint track, uint data, uint size, uint timestamp);
 };
+
+void player_sm(Player* player) {
+	static MemQueue queue;
+}

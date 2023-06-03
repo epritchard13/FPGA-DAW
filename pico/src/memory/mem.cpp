@@ -7,15 +7,15 @@ Memory::Memory() {
     }
 }
 
-block Memory::alloc() {
+block_t Memory::alloc() {
     if (freeBlocks.size() == 0) {
         return MEM_ERROR;
     }
-    block b = *freeBlocks.begin();
+    block_t b = *freeBlocks.begin();
     freeBlocks.erase(b);
     return b;
 }
 
-void Memory::free(block b) {
+void Memory::free(block_t b) {
     freeBlocks.insert(b);
 }

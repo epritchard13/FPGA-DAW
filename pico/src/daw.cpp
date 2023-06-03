@@ -37,6 +37,10 @@ void read_stdin()
             std::cout << test_player << std::endl;
         } else if (strcmp(cmd, "status") == 0) {
             printf("nominal\n");
+        } else if (strcmp(cmd, "clear") == 0) {
+            test_player.tracks.clear();
+        } else if (strcmp(cmd, "add") == 0) {
+            test_player.tracks.push_back(Track());
         } else {
             printf("unknown command: %s\n", cmd);
         }
@@ -59,11 +63,6 @@ int main()
 
     spi_link_init();
     puts("Hello, world!");
-
-    //add 8 tracks to the player
-    for (int i = 0; i < 8; i++) {
-        test_player.tracks.push_back(Track());
-    }
 
     fread(NULL, 1, 1, stdin); // don't start any of the code until we get a single byte
 

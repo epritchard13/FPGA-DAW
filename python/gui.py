@@ -23,7 +23,6 @@ def draw():
 
 root = tk.Tk()
 root.title('DAW Control Panel')
-#tk.Label(root, text="Hello World").grid(row=0, column=0)
 tk.Button(root, text='Refresh', command=draw).grid(row=1, column=0)
 
 # create canvas and draw background
@@ -32,5 +31,6 @@ c.grid(row=2, column=0)
 background = c.create_rectangle(0, 0, canvas_width, canvas_height, fill="gray", outline="gray")
 
 daw.open()
+daw.init_tracks()
 
 root.mainloop()

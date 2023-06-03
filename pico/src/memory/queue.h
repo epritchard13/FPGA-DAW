@@ -4,24 +4,29 @@
 
 #include "mem.h"
 
-struct segment {
+#define MAX_QUEUE_SIZE 16
+
+struct segment_t {
     uint start; // TODO: can these be smaller?
     uint size;
     uint complete_size;
-    std::vector<block> blocks;
+    std::vector<block_t> blocks;
 };
 
-struct mem_op {
-    int placeholder;
+struct mem_op_t {
+    storage_ptr_t data;
+    segment_t* seg;
 };
 
 class MemQueue {
-    std::queue<mem_op> operations;
+    std::queue<mem_op_t> operations;
     Memory mem;
 
 public:
     //MemQueue();
-    void push(mem_op op);
+    void push(mem_op_t op);
     void pop();
-    void empty();
+    bool full();
+    bool empty();
+    void clear();
 };
