@@ -30,6 +30,8 @@ add_executable(daw
   src/spi_link.cpp
   src/player.cpp
   src/stdio_mem.cpp
+  src/memory/mem.cpp
+  src/memory/queue.cpp
 )
 
 pico_set_program_name(daw "daw")

@@ -3,17 +3,19 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include "memory/queue.h"
 
 /**
  * @brief Stores information about an audio clip.
  * 
  * NOTE: Timestamps are measured in samples.
  */
-class Clip {
-public:
+struct Clip {
 	uint data;			// address of audio data in storage. This is NOT a c++ pointer.
 	uint size;
-	uint timestamp;		
+	uint timestamp;
+
+	std::vector<segment> segments;
 
 	// More information will be added here...
 
@@ -24,8 +26,7 @@ public:
  * @brief Stores a list of audio clips.
  * 
  */
-class Track {
-public:
+struct Track {
 	std::vector<Clip> clips;
 	friend std::ostream& operator<< (std::ostream &os, const Track &s);
 };
@@ -35,8 +36,9 @@ public:
  * 
  */
 class Player {
-public:
 	uint head_pos;
+
+public:
 	std::vector<Track> tracks;
 	friend std::ostream& operator<< (std::ostream &os, const Player &s);
 
