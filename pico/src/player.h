@@ -14,10 +14,12 @@ struct Clip {
 	storage_ptr_t data;			// address of audio data in storage. This is NOT a c++ pointer.
 	uint size;
 	uint timestamp;
+	inline constexpr uint end() const { return timestamp + size; }
 
-	std::vector<segment_t> segments;
+	uint current_segment;
+	std::vector<segment_t> segments;	// The segments of contiguous blocks stored in memory
 
-	// More information will be added here...
+	void add_segment(segment_t seg);
 
 	friend std::ostream& operator<< (std::ostream &os, const Clip &s);
 };
@@ -27,7 +29,9 @@ struct Clip {
  * 
  */
 struct Track {
+	int current_clip;
 	std::vector<Clip> clips;
+
 	friend std::ostream& operator<< (std::ostream &os, const Track &s);
 };
 
@@ -36,19 +40,23 @@ struct Track {
  * 
  */
 class Player {
-	uint head_pos;
+	uint head_pos = 200;
+	MemQueue queue;
+
+	enum {
+		DONE,		// Loading is complete.
+		MOVED,		// The playhead has moved. Rerun the state machine.
+		LOADING		// Loading is in progress.
+	} state = MOVED;
 
 public:
 	std::vector<Track> tracks;
-
-	friend std::ostream& operator<< (std::ostream &os, const Player &s);
+	void player_sm();
 
 	/**
 	 * Shortcut function used for debugging
 	 */
 	bool add_clip(uint track, uint data, uint size, uint timestamp);
-};
 
-void player_sm(Player* player) {
-	static MemQueue queue;
-}
+	friend std::ostream& operator<< (std::ostream &os, const Player &s);
+};

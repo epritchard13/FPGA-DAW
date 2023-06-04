@@ -7,8 +7,8 @@
 #define MAX_QUEUE_SIZE 16
 
 struct segment_t {
-    uint start; // TODO: can these be smaller?
-    uint size;
+    uint start; //offset from start of audio clip // TODO: can these be smaller?
+    uint size; //segment size
     uint complete_size;
     std::vector<block_t> blocks;
 };

@@ -7,6 +7,7 @@ def open():
     #dev.write(b'/set 5 0 1 1\n')
 
 def init_tracks():
+    return
     dev.write(b'/clear\n')
     for i in range(8):
         dev.write(b'/add\n')
@@ -33,19 +34,21 @@ def get_tracks():
             depth -= 1
             if depth == 2: # next track
                 tracks[num_tracks-1] += ','
-        elif depth == 3:
+        elif depth >= 3:
             tracks[num_tracks-1] += s[i]
 
+    print(tracks)
     # parse tracks
     for i in range(num_tracks):
         tracks[i] = tracks[i].split(',')[:-1]
 
         list = []
         for j in range(len(tracks[i])):
-            if j % 3 == 0:
+            if j % 5 == 0:
                 track = []
                 list.append(track)
-            track.append(int(tracks[i][j]))
+            if (j % 5 < 4):
+                track.append(int(tracks[i][j]))
         tracks[i] = list
 
     #print(tracks)

@@ -37,6 +37,7 @@ void read_stdin()
             std::cout << test_player << std::endl;
         } else if (strcmp(cmd, "status") == 0) {
             printf("nominal\n");
+            test_player.player_sm(); //TODO:
         } else if (strcmp(cmd, "clear") == 0) {
             test_player.tracks.clear();
         } else if (strcmp(cmd, "add") == 0) {

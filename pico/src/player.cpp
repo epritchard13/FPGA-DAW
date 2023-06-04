@@ -1,4 +1,61 @@
 #include "player.h"
+#include <sstream>
+
+void Player::player_sm() {
+    static int current_track;
+
+    switch (state) {
+    case DONE:
+        // Do nothing.
+        break;
+    case MOVED:
+        state = LOADING;
+        current_track = 0;
+        queue.clear();
+
+        //find current clips
+        for (int i = 0; i < tracks.size(); i++) {
+            tracks[i].current_clip = -1;
+            for (int j = 0; j < tracks[i].clips.size(); j++) {
+                if (tracks[i].clips[j].end() > head_pos) { //if clips ends in the future
+                    tracks[i].current_clip = j; // this is the clip we'll focus on first
+                    break;
+                }
+            }
+        }
+
+        //look through clip segments
+        for (int i = 0; i < tracks.size(); i++) {
+            if (tracks[i].current_clip == -1)
+                continue;
+            
+            Clip& clip = tracks[i].clips[tracks[i].current_clip];
+
+            // some temp code
+            clip.segments = std::vector<segment_t>();
+
+            // add a segment that runs from the head to the end of the clip
+            uint offset = head_pos - clip.timestamp;
+            clip.segments.push_back({offset, 0, clip.size - offset});
+
+            //for (int j = 0; j < clip.segments.size(); j++) {
+            //}
+
+        }
+
+
+        break;
+    case LOADING:
+        if (queue.full())
+            break;
+        if (current_track >= tracks.size()) {
+            current_track = 0;
+        }
+
+        current_track++;
+        break;
+    }
+}
 
 bool Player::add_clip(uint track, uint data, uint size, uint timestamp) {
     if (track >= tracks.size()) {
@@ -11,7 +68,15 @@ bool Player::add_clip(uint track, uint data, uint size, uint timestamp) {
 
 // String functions used for testing
 std::ostream& operator<< (std::ostream &os, const Clip &s) {
-    os << "Clip(" << s.data << ", " << s.size << ", " << s.timestamp << ")";
+    std::stringstream ss;
+    ss << '[';
+    std::vector<segment_t> vec = s.segments;
+    for (segment_t seg : vec) {
+        ss << "(" << seg.start << " " << seg.size << " " << seg.complete_size << ")";
+    }
+    ss << ']';
+
+    os << "Clip(" << s.data << ", " << s.size << ", " << s.timestamp << ", " << s.current_segment << ", " << ss.str() << ")";
     return os;
 }
 
