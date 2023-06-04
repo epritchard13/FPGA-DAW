@@ -7,7 +7,6 @@ def open():
     #dev.write(b'/set 5 0 1 1\n')
 
 def init_tracks():
-    return
     dev.write(b'/clear\n')
     for i in range(8):
         dev.write(b'/add\n')

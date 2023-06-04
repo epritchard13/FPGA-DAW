@@ -12,8 +12,8 @@
  */
 struct Clip {
 	storage_ptr_t data;			// address of audio data in storage. This is NOT a c++ pointer.
-	uint size;
 	uint timestamp;				// start time of the clip
+	uint size;
 	inline constexpr uint end() const { return timestamp + size; }
 
 	uint current_segment;
@@ -57,7 +57,7 @@ public:
 	/**
 	 * Shortcut function used for debugging
 	 */
-	bool add_clip(uint track, uint data, uint size, uint timestamp);
+	bool addClip(uint track, uint data, uint size, uint timestamp);
 
 	friend std::ostream& operator<< (std::ostream &os, const Player &s);
 };

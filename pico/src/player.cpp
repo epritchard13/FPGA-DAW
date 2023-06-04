@@ -1,5 +1,6 @@
 #include "player.h"
 #include <sstream>
+#include <algorithm>
 
 void Player::player_sm() {
     static int current_track;
@@ -56,6 +57,8 @@ void Player::player_sm() {
             virtualHeadPos += BLOCK_SIZE;
         }
 
+        printf("Loading, virtual headpos: %d, current track: %d\n", virtualHeadPos, current_track);
+
         // find out if the current segment is over
         Clip& curr = tracks[current_track].clips[tracks[current_track].current_clip];
         segment_t& seg = curr.segments[curr.current_segment];
@@ -63,6 +66,8 @@ void Player::player_sm() {
         if (virtualHeadPos >= curr.timestamp + seg.start + seg.complete_size) {
             // The head position is past the end of the current segment
 
+        } else if (virtualHeadPos < curr.timestamp + seg.start) {
+            // The head position is before the start of the current segment
         } else {
             // we can add another block
             uint block_size = std::min((uint) BLOCK_SIZE, curr.timestamp + seg.start + seg.complete_size - virtualHeadPos);
@@ -81,13 +86,18 @@ bool Player::movePlayhead(uint newPos) {
     return true;
 }
 
-
-bool Player::add_clip(uint track, uint data, uint size, uint timestamp) {
+bool Player::addClip(uint track, uint data, uint timestamp, uint size) {
     if (track >= tracks.size()) {
         //std::cout << "track " << track << " does not exist" << std::endl;
         return false;
     }
     this->tracks[track].clips.push_back({data, size, timestamp});
+
+    // sort clips by timestamp
+    std::sort(this->tracks[track].clips.begin(), this->tracks[track].clips.end(), [](const Clip& a, const Clip& b) {
+        return a.timestamp < b.timestamp;
+    });
+
     return true;
 }
 
@@ -101,7 +111,7 @@ std::ostream& operator<< (std::ostream &os, const Clip &s) {
     }
     ss << ']';
 
-    os << "Clip(" << s.data << ", " << s.size << ", " << s.timestamp << ", " << s.current_segment << ", " << ss.str() << ")";
+    os << "Clip(" << s.data << ", " << s.timestamp << ", " << s.size << ", " << s.current_segment << ", " << ss.str() << ")";
     return os;
 }
 

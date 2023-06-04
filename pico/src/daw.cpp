@@ -30,7 +30,7 @@ void read_stdin()
             uint track, data, size, timestamp;
             scanf("%d %d %d %d", &track, &data, &size, &timestamp);
             //printf("track: %d, data: %d, size: %d, timestamp: %d\n", track, data, size, timestamp);
-            test_player.add_clip(track, data, size, timestamp);
+            test_player.addClip(track, data, size, timestamp);
         } else if (strcmp(cmd, "audio") == 0) {
 
         } else if (strcmp(cmd, "get") == 0) {

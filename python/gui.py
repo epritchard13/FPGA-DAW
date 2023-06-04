@@ -18,7 +18,7 @@ def draw():
         # draw line dividers
         c.create_line(0, (i+1)*track_height, canvas_width, (i+1)*track_height, fill="black")
         for clip in tracks[i]:
-            c.create_rectangle(clip[2], i*track_height, clip[2] + clip[1], (i+1)*track_height, fill="green", outline="blue")
+            c.create_rectangle(clip[1], i*track_height, clip[1] + clip[2], (i+1)*track_height, fill="green", outline="blue")
 
 
 root = tk.Tk()
