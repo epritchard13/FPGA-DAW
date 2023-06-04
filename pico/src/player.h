@@ -39,8 +39,8 @@ struct Track {
  * @brief Stores a list of tracks, which in turn each store a list of clips.
  * 
  */
-class Player {
-	uint headPos = 200;
+struct Player { //TODO: make class
+	uint headPos = 0;
 	MemQueue queue;
 
 	enum {

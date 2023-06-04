@@ -37,8 +37,23 @@ void read_stdin()
             std::cout << test_player << std::endl;
         } else if (strcmp(cmd, "status") == 0) {
             printf("nominal\n");
-            test_player.player_sm(); //TODO:
-        } else if (strcmp(cmd, "clear") == 0) {
+        }
+        else if (strcmp(cmd, "runsm") == 0) {
+            test_player.player_sm();
+        } 
+        else if (strcmp(cmd, "pop") == 0) {
+            test_player.queue.pop();
+        } 
+        else if (strcmp(cmd, "move") == 0) {
+            uint new_pos;
+            scanf("%d", &new_pos);
+            test_player.movePlayhead(new_pos);
+        } 
+        //else if (strcmp(cmd, "status") == 0) {
+        //    printf("nominal\n");
+        //} 
+        
+        else if (strcmp(cmd, "clear") == 0) {
             test_player.tracks.clear();
         } else if (strcmp(cmd, "add") == 0) {
             test_player.tracks.push_back(Track());

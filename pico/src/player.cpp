@@ -65,7 +65,8 @@ void Player::player_sm() {
 
         } else {
             // we can add another block
-            uint block_size = std::min((uint) BLOCK_SIZE, curr.timestamp + seg.start + seg.size - virtualHeadPos);
+            uint block_size = std::min((uint) BLOCK_SIZE, curr.timestamp + seg.start + seg.complete_size - virtualHeadPos);
+            //printf("%d %d %d %d\n", curr.timestamp, seg.start, seg.complete_size, virtualHeadPos);
             queue.push({curr.data + (virtualHeadPos - curr.timestamp), &seg, block_size});
         }
 
