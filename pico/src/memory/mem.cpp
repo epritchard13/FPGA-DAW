@@ -19,3 +19,12 @@ block_t Memory::alloc() {
 void Memory::free(block_t b) {
     freeBlocks.insert(b);
 }
+
+std::ostream& operator<< (std::ostream &os, const Memory &m) {
+    //print every free block
+    os << NUM_BLOCKS << " ";
+    for (auto it = m.freeBlocks.begin(); it != m.freeBlocks.end(); it++) {
+        os << *it << " ";
+    }
+    return os;
+}

@@ -2,6 +2,10 @@
 #include "stdio.h"
 
 void MemQueue::push(mem_op_t op) {
+    if (full()) {
+        printf("Error: tried to push to full queue\n");
+        return;
+    }
     operations.push(op);
 }
 

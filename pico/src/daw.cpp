@@ -1,9 +1,4 @@
-#include "hardware/clocks.h"
-#include "hardware/dma.h"
-#include "hardware/i2c.h"
-#include "hardware/pio.h"
 #include "hardware/spi.h"
-#include "hardware/timer.h"
 #include "pico/stdlib.h"
 #include "spi_link.h"
 #include <cmath>
@@ -49,6 +44,9 @@ void read_stdin()
             scanf("%d", &new_pos);
             test_player.movePlayhead(new_pos);
         } 
+        else if (strcmp(cmd, "memory") == 0) {
+            std::cout << test_player.queue.mem << std::endl;
+        }
         //else if (strcmp(cmd, "status") == 0) {
         //    printf("nominal\n");
         //} 

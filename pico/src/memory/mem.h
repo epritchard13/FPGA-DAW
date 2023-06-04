@@ -1,10 +1,11 @@
 #pragma once
 
 #include <unordered_set>
+#include <iostream>
 #include "pico/stdlib.h"
 
-#define MEMORY_SIZE (8*1024*1024) // 8MB PSRAM
-#define BLOCK_SIZE (16*1024) // 16KB blocks
+#define MEMORY_SIZE 8192 //(8*1024*1024) // 8MB PSRAM
+#define BLOCK_SIZE 64 //(16*1024) // 16KB blocks
 #define NUM_BLOCKS (MEMORY_SIZE / BLOCK_SIZE) // 512 blocks
 
 typedef uint16_t block_t; // The ID number of a block of memory.
@@ -19,5 +20,9 @@ public:
     Memory();
     block_t alloc();
     void free(block_t b);
+
+
+
+    friend std::ostream& operator<< (std::ostream &os, const Memory &m);
 };
 

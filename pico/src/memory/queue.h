@@ -4,7 +4,7 @@
 
 #include "mem.h"
 
-#define MAX_QUEUE_SIZE 16
+#define MAX_QUEUE_SIZE 32
 
 struct segment_t {
     uint start; //offset from start of audio clip // TODO: can these be smaller?
@@ -19,7 +19,7 @@ struct mem_op_t {
     uint size;
 };
 
-class MemQueue {
+struct MemQueue { // TODO: make class
     std::queue<mem_op_t> operations;
     Memory mem;
 

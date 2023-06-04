@@ -57,7 +57,7 @@ void Player::player_sm() {
             virtualHeadPos += BLOCK_SIZE;
         }
 
-        printf("Loading, virtual headpos: %d, current track: %d\n", virtualHeadPos, current_track);
+        //printf("Loading, virtual headpos: %d, current track: %d\n", virtualHeadPos, current_track);
 
         // find out if the current segment is over
         Clip& curr = tracks[current_track].clips[tracks[current_track].current_clip];
