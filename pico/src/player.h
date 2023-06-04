@@ -13,7 +13,7 @@
 struct Clip {
 	storage_ptr_t data;			// address of audio data in storage. This is NOT a c++ pointer.
 	uint size;
-	uint timestamp;
+	uint timestamp;				// start time of the clip
 	inline constexpr uint end() const { return timestamp + size; }
 
 	uint current_segment;
@@ -40,7 +40,7 @@ struct Track {
  * 
  */
 class Player {
-	uint head_pos = 200;
+	uint headPos = 200;
 	MemQueue queue;
 
 	enum {
@@ -52,6 +52,7 @@ class Player {
 public:
 	std::vector<Track> tracks;
 	void player_sm();
+	bool movePlayhead(uint new_pos);
 
 	/**
 	 * Shortcut function used for debugging
