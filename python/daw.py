@@ -1,4 +1,5 @@
 import serial
+import json
 
 dev = serial.Serial('COM5')
 
@@ -23,6 +24,12 @@ def pop():
     dev.read_all()
     dev.write(b'/pop\n')
     print(dev.readline().decode('utf-8'))
+
+def get_json():
+    dev.write(b'/json\n')
+    s = dev.readline().decode('utf-8')
+    return json.loads(s)
+
 
 def get_memory():
     dev.write(b'/memory\n')

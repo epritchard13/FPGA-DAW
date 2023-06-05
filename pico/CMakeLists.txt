@@ -20,6 +20,8 @@ endif()
 
 project(daw C CXX ASM)
 
+set(PICO_CXX_ENABLE_EXCEPTIONS 1)
+
 # Initialise the Raspberry Pi Pico SDK
 pico_sdk_init()
 
@@ -32,6 +34,7 @@ add_executable(daw
   src/stdio_mem.cpp
   src/memory/mem.cpp
   src/memory/queue.cpp
+  src/json.cpp
 )
 
 pico_set_program_name(daw "daw")
@@ -53,7 +56,6 @@ target_include_directories(daw PRIVATE
 # Add any user requested libraries
 target_link_libraries(daw
         hardware_spi
-        hardware_i2c
         hardware_dma
         hardware_pio
         hardware_timer

@@ -1,27 +1,31 @@
 import tkinter as tk
 import daw
+import json
 
 canvas_width = 800
 canvas_height = 400
 mem_window_height = 100
 
 def draw():
-    tracks = daw.get_tracks()
-    playhead = tracks[0]
-    tracks = tracks[1]
+    top = daw.get_json()
+    playhead = top['head_pos']
+    tracks = top['tracks']
     num_tracks = len(tracks)
     track_height = canvas_height / num_tracks
 
     # clear canvas
     window.delete("all")
     window.create_rectangle(0, 0, canvas_width, canvas_height, fill="gray", outline="gray")
-
+    
     # draw tracks
     for i in range(num_tracks):
         # draw line dividers
         window.create_line(0, (i+1)*track_height, canvas_width, (i+1)*track_height, fill="black")
-        for clip in tracks[i]:
-            window.create_rectangle(clip[1], i*track_height, clip[1] + clip[2], (i+1)*track_height, fill="green", outline="blue")
+        clips = tracks[i]['clips']
+        for clip in clips:
+            start = clip['timestamp']
+            end = start + clip['size']
+            window.create_rectangle(start, i*track_height, end, (i+1)*track_height, fill="green", outline="blue")
 
     # draw playhead
     window.create_line(playhead, 0, playhead, canvas_height, fill="red", width=5)
@@ -29,12 +33,12 @@ def draw():
     # draw memory
     mem_window.delete("all")
     mem_window.create_rectangle(0, 0, canvas_width, mem_window_height, fill="gray", outline="gray")
-    mem = daw.get_memory()
-    max_blocks = mem[0]
-    blocks = mem[1]
+
+    max_blocks = top['num_mem_blocks']
+    blocks = top['mem_blocks']
     num_blocks = len(blocks)
-    #sort blocks
     blocks.sort()
+
     #draw black box if block is not in blocks, else draw green box
     i2 = 0
     for i in range(max_blocks):
@@ -43,6 +47,7 @@ def draw():
             i2 += 1
         else:
             mem_window.create_rectangle(i * canvas_width / max_blocks, 0, (i+1) * canvas_width / max_blocks, mem_window_height, fill="black", outline="black")
+
 
 def runsm():
     daw.runsm()

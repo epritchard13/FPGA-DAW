@@ -53,6 +53,7 @@ public:
 	std::vector<Track> tracks;
 	void player_sm();
 	bool movePlayhead(uint new_pos);
+	std::string toJson();
 
 	/**
 	 * Shortcut function used for debugging

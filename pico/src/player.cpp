@@ -1,6 +1,9 @@
 #include "player.h"
 #include <sstream>
 #include <algorithm>
+#include "memory/mem.h"
+
+#include "json.h"
 
 void Player::player_sm() {
     static int current_track;
@@ -135,4 +138,53 @@ std::ostream& operator<< (std::ostream &os, const Player &s) {
     }
     os << ")";
     return os;
+}
+
+std::string Player::toJson() {
+    json::jobject top;
+    top["head_pos"] = headPos;
+
+    std::vector<json::jobject> track_arr;
+    
+    for (int i = 0; i < tracks.size(); i++) {
+        json::jobject track;
+        std::vector<json::jobject> clip_arr;
+
+        for (int j = 0; j < tracks[i].clips.size(); j++) {
+            json::jobject clip;
+            std::vector<json::jobject> segment_arr;
+
+            for (int k = 0; k < tracks[i].clips[j].segments.size(); k++) {
+                json::jobject segment;
+                segment["start"] = tracks[i].clips[j].segments[k].start;
+                segment["size"] = tracks[i].clips[j].segments[k].size;
+                segment["complete_size"] = tracks[i].clips[j].segments[k].complete_size;
+
+                std::vector<int> block_arr;
+                for (int l = 0; l < tracks[i].clips[j].segments[k].blocks.size(); l++) {
+                    block_arr.push_back(tracks[i].clips[j].segments[k].blocks[l]);
+                }
+
+                segment["blocks"] = block_arr;
+                segment_arr.push_back(segment);
+            }
+
+            clip["data"] = tracks[i].clips[j].data;
+            clip["timestamp"] = tracks[i].clips[j].timestamp;
+            clip["size"] = tracks[i].clips[j].size;
+            clip["current_segment"] = tracks[i].clips[j].current_segment;
+            clip["segments"] = segment_arr;
+            clip_arr.push_back(clip);
+        }
+
+        track["clips"] = clip_arr;
+        track_arr.push_back(track);
+    }
+    
+    top["tracks"] = track_arr;
+
+    top["num_mem_blocks"] = NUM_BLOCKS;
+    top["mem_blocks"] = queue.mem.getBlocks();
+
+    return (std::string) top;
 }

@@ -28,9 +28,10 @@ void read_stdin()
             test_player.addClip(track, data, size, timestamp);
         } else if (strcmp(cmd, "audio") == 0) {
 
-        } else if (strcmp(cmd, "get") == 0) {
-            std::cout << test_player << std::endl;
-        } else if (strcmp(cmd, "status") == 0) {
+        }// else if (strcmp(cmd, "get") == 0) {
+        //    std::cout << test_player << std::endl;
+        //} 
+        else if (strcmp(cmd, "status") == 0) {
             printf("nominal\n");
         }
         else if (strcmp(cmd, "runsm") == 0) {
@@ -44,8 +45,11 @@ void read_stdin()
             scanf("%d", &new_pos);
             test_player.movePlayhead(new_pos);
         } 
-        else if (strcmp(cmd, "memory") == 0) {
-            std::cout << test_player.queue.mem << std::endl;
+        //else if (strcmp(cmd, "memory") == 0) {
+        //    std::cout << test_player.queue.mem << std::endl;
+        //}
+        else if (strcmp(cmd, "json") == 0) {
+            std::cout << test_player.toJson() << std::endl;
         }
         //else if (strcmp(cmd, "status") == 0) {
         //    printf("nominal\n");

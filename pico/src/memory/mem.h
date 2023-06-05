@@ -2,6 +2,7 @@
 
 #include <unordered_set>
 #include <iostream>
+#include <vector>
 #include "pico/stdlib.h"
 
 #define MEMORY_SIZE 8192 //(8*1024*1024) // 8MB PSRAM
@@ -22,7 +23,6 @@ public:
     void free(block_t b);
 
 
-
-    friend std::ostream& operator<< (std::ostream &os, const Memory &m);
+    // used for debugging
+    std::vector<int> getBlocks();
 };
-

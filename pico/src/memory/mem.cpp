@@ -20,11 +20,10 @@ void Memory::free(block_t b) {
     freeBlocks.insert(b);
 }
 
-std::ostream& operator<< (std::ostream &os, const Memory &m) {
-    //print every free block
-    os << NUM_BLOCKS << " ";
-    for (auto it = m.freeBlocks.begin(); it != m.freeBlocks.end(); it++) {
-        os << *it << " ";
+std::vector<int> Memory::getBlocks() { 
+    std::vector<int> blocks;
+    for (auto it = freeBlocks.begin(); it != freeBlocks.end(); it++) {
+        blocks.push_back(*it);
     }
-    return os;
+    return blocks;
 }
