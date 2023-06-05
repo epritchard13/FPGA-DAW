@@ -6,6 +6,11 @@ canvas_width = 800
 canvas_height = 400
 mem_window_height = 100
 
+block_size = 64
+
+# https://www.color-hex.com/color-palette/1026328
+cols = ['#5d2fb2', '#8d95b9', '#83779b', '#53697a', '#ffffff']
+
 def draw():
     top = daw.get_json()
     playhead = top['head_pos']
@@ -25,7 +30,22 @@ def draw():
         for clip in clips:
             start = clip['timestamp']
             end = start + clip['size']
-            window.create_rectangle(start, i*track_height, end, (i+1)*track_height, fill="green", outline="blue")
+            window.create_rectangle(start, i*track_height, end, (i+1)*track_height, fill=cols[0], outline="black")
+            
+            # overlay clips with clip segments
+            segments = clip['segments']
+            for segment in segments:
+                start = segment['start'] + clip['timestamp']
+                end = start + segment['complete_size']
+                window.create_rectangle(start, i*track_height, end, (i+1)*track_height, fill=cols[1], outline="black")
+
+                # add blocks to clip segments
+                blocks = len(segment['blocks'])
+                for j in range(blocks):
+                    start = segment['start'] + clip['timestamp'] + j * block_size
+                    end = min(start + block_size, segment['start'] + clip['timestamp'] + segment['complete_size'])
+                    window.create_rectangle(start, i*track_height, end, (i+1)*track_height, fill=cols[2], outline="black")
+
 
     # draw playhead
     window.create_line(playhead, 0, playhead, canvas_height, fill="red", width=5)
@@ -43,10 +63,11 @@ def draw():
     i2 = 0
     for i in range(max_blocks):
         if i2 < num_blocks and blocks[i2] == i:
-            mem_window.create_rectangle(i * canvas_width / max_blocks, 0, (i+1) * canvas_width / max_blocks, mem_window_height, fill="green", outline="black")
+            mem_window.create_rectangle(i * canvas_width / max_blocks, 0, (i+1) * canvas_width / max_blocks, mem_window_height, fill=cols[2], outline="black")
             i2 += 1
         else:
             mem_window.create_rectangle(i * canvas_width / max_blocks, 0, (i+1) * canvas_width / max_blocks, mem_window_height, fill="black", outline="black")
+    
 
 
 def runsm():
