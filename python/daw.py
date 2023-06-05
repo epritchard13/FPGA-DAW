@@ -14,7 +14,7 @@ def init_tracks():
         dev.write(b'/add\n')
         cmd = '/set '
         cmd += str(i)
-        cmd += ' 0 200 ' + str(i * 10) + '\n'
+        cmd += ' 0 200 ' + str(i * 50) + '\n'
         dev.write(cmd.encode('utf-8'))
 
 def runsm():

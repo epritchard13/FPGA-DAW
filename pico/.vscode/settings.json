@@ -62,6 +62,7 @@
       "typeinfo": "cpp",
       "set": "cpp",
       "unordered_set": "cpp",
-      "queue": "cpp"
+      "queue": "cpp",
+      "sstream": "cpp"
     },
 }

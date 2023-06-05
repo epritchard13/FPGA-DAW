@@ -73,9 +73,9 @@ void Player::player_sm() {
             // The head position is before the start of the current segment
         } else {
             // we can add another block
-            uint block_size = std::min((uint) BLOCK_SIZE, curr.timestamp + seg.start + seg.complete_size - virtualHeadPos);
-            //printf("%d %d %d %d\n", curr.timestamp, seg.start, seg.complete_size, virtualHeadPos);
-            queue.push({curr.data + (virtualHeadPos - curr.timestamp), &seg, block_size});
+            //uint block_size = std::min((uint) BLOCK_SIZE, );
+            //printf("%d\n", seg.complete_size - BLOCK_SIZE * seg.blocks.size());
+            queue.push({curr.data + (virtualHeadPos - curr.timestamp), &seg});
         }
 
         current_track++;

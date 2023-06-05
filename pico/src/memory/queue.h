@@ -16,7 +16,6 @@ struct segment_t {
 struct mem_op_t {
     storage_ptr_t data;
     segment_t* seg;
-    uint size;
 };
 
 struct MemQueue { // TODO: make class

@@ -18,11 +18,12 @@ void MemQueue::pop() {
     operations.pop();
 
     // allocate memory
+    uint size = std::min((uint) BLOCK_SIZE, op.seg->complete_size - BLOCK_SIZE * op.seg->blocks.size());
     block_t b = mem.alloc();
     op.seg->blocks.push_back(b);
-    op.seg->size += op.size;
+    op.seg->size += size;
 
-    printf("Memory operation - address: %d, size: %d, block: %d\n", op.data, op.size, b);
+    printf("Memory operation - address: %d, size: %d, block: %d\n", op.data, size, b);
 }
 
 bool MemQueue::full() {
