@@ -11,11 +11,21 @@ struct segment_t {
     uint size; //segment size
     uint complete_size;
     std::vector<block_t> blocks;
+
+    inline constexpr uint start_absolute(uint timestamp) {
+        return timestamp + start;
+    }
+    inline constexpr uint end_absolute(uint timestamp) {
+        return timestamp + start + size;
+    }
+    inline constexpr uint max_end_absolute(uint timestamp) {
+        return timestamp + start + complete_size;
+    }
 };
 
 struct mem_op_t {
-    storage_ptr_t data;
-    segment_t* seg;
+    storage_ptr_t data;     // The storage address of the segment start.
+    segment_t* seg;         // The segment to add the allocated block to
 };
 
 struct MemQueue { // TODO: make class

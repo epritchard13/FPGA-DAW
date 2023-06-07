@@ -23,9 +23,9 @@ void read_stdin()
         scanf("%s", cmd);
         if (strcmp(cmd, "set") == 0) {
             uint track, data, size, timestamp;
-            scanf("%d %d %d %d", &track, &data, &size, &timestamp);
+            scanf("%d %d %d %d", &track, &data, &timestamp, &size);
             //printf("track: %d, data: %d, size: %d, timestamp: %d\n", track, data, size, timestamp);
-            test_player.addClip(track, data, size, timestamp);
+            test_player.addClip(track, data, timestamp, size);
         } else if (strcmp(cmd, "audio") == 0) {
 
         }// else if (strcmp(cmd, "get") == 0) {

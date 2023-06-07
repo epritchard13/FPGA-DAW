@@ -5,6 +5,11 @@
 
 #include "json.h"
 
+bool should_be_loaded(uint head_pos, Clip& clip, segment_t& seg) {
+    uint t = seg.end_absolute(clip.timestamp);
+    return head_pos + BLOCK_SIZE >= t; // TODO: greater than or equal to? Shouldn't matter that much
+}
+
 void Player::player_sm() {
     static int current_track;
     static uint virtualHeadPos;
@@ -13,6 +18,9 @@ void Player::player_sm() {
     case DONE:
         // Do nothing.
         break;
+    
+    // This case is entered when the playhead is moved. It ensures that each track is 
+    // ready to play when the state machine enters the LOADING state.
     case MOVED:
         state = LOADING;
         virtualHeadPos = headPos;
@@ -29,7 +37,7 @@ void Player::player_sm() {
                 }
             }
         }
-
+        
         //look through clip segments
         for (int i = 0; i < tracks.size(); i++) {
             if (tracks[i].current_clip == -1)
@@ -41,17 +49,15 @@ void Player::player_sm() {
             clip.segments = std::vector<segment_t>();
 
             // add a segment that runs from the head to the end of the clip
-            uint offset = headPos - clip.timestamp;
-            clip.segments.push_back({offset, 0, clip.size - offset});
-            clip.current_segment = 0;
-
-            //for (int j = 0; j < clip.segments.size(); j++) {
-            //}
-
+            if (headPos > clip.timestamp) {
+                uint offset = headPos - clip.timestamp;
+                clip.segments.push_back({offset, 0, clip.size - offset});
+                clip.current_segment = 0;
+            }
         }
-
-
         break;
+
+    // This case looks at a single track and sees if a block should be added to the queue.
     case LOADING:
         if (queue.full())
             break;
@@ -60,24 +66,48 @@ void Player::player_sm() {
             virtualHeadPos += BLOCK_SIZE;
         }
 
-        //printf("Loading, virtual headpos: %d, current track: %d\n", virtualHeadPos, current_track);
+        // 
+        Track& track = tracks[current_track];
+        if (track.current_clip == -1) {
+            current_track++;
+            break;
+        }
+        Clip& clip = track.clips[track.current_clip];
+        segment_t& seg = clip.segments[clip.current_segment];
 
-        // find out if the current segment is over
-        Clip& curr = tracks[current_track].clips[tracks[current_track].current_clip];
-        segment_t& seg = curr.segments[curr.current_segment];
 
-        if (virtualHeadPos >= curr.timestamp + seg.start + seg.complete_size) {
+        if (virtualHeadPos >= seg.max_end_absolute(clip.timestamp)) {
             // The head position is past the end of the current segment
+            // This means that either:
+            // 1. The current segment is the last segment in the clip.
+            // Hopefully we can deduce this by seeing if there are any more segments in the clip.
+            // 2. The current segment is not the last segment in the clip
 
-        } else if (virtualHeadPos < curr.timestamp + seg.start) {
+            if (clip.current_segment + 1 == clip.segments.size()) {
+                // This is the last segment in the clip
+                track.current_clip++;
+                if (track.current_clip == track.clips.size()) {
+                    // This is the last clip in the track
+                    track.current_clip = -1;
+                    goto end;
+                }
+            } else {
+                // This is not the last segment in the clip
+                clip.current_segment++;
+            }
+        }
+        else if (virtualHeadPos < seg.start_absolute(clip.timestamp)) {
             // The head position is before the start of the current segment
         } else {
             // we can add another block
             //uint block_size = std::min((uint) BLOCK_SIZE, );
             //printf("%d\n", seg.complete_size - BLOCK_SIZE * seg.blocks.size());
-            queue.push({curr.data + (virtualHeadPos - curr.timestamp), &seg});
+            if (should_be_loaded(virtualHeadPos, clip, seg)) {
+                queue.push({clip.data + seg.start, &seg});
+            }
         }
 
+    end:
         current_track++;
         break;
     }
@@ -94,7 +124,7 @@ bool Player::addClip(uint track, uint data, uint timestamp, uint size) {
         //std::cout << "track " << track << " does not exist" << std::endl;
         return false;
     }
-    this->tracks[track].clips.push_back({data, size, timestamp});
+    this->tracks[track].clips.push_back({data, timestamp, size});
 
     // sort clips by timestamp
     std::sort(this->tracks[track].clips.begin(), this->tracks[track].clips.end(), [](const Clip& a, const Clip& b) {

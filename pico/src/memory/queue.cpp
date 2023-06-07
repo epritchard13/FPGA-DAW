@@ -17,11 +17,16 @@ void MemQueue::pop() {
     mem_op_t op = operations.front();
     operations.pop();
 
+    // op.data current is the address of the segment start. Move it over for each block
+    op.data += BLOCK_SIZE * op.seg->blocks.size();
+
     // allocate memory
     uint size = std::min((uint) BLOCK_SIZE, op.seg->complete_size - BLOCK_SIZE * op.seg->blocks.size());
     block_t b = mem.alloc();
     op.seg->blocks.push_back(b);
     op.seg->size += size;
+
+    //TODO: send this data to fpga
 
     printf("Memory operation - address: %d, size: %d, block: %d\n", op.data, size, b);
 }

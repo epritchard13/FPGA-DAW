@@ -37,6 +37,7 @@ def draw():
             for segment in segments:
                 start = segment['start'] + clip['timestamp']
                 end = start + segment['complete_size']
+
                 window.create_rectangle(start, i*track_height, end, (i+1)*track_height, fill=cols[1], outline="black")
 
                 # add blocks to clip segments
