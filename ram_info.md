@@ -31,3 +31,4 @@ SD card reads and writes will be done in large blocks. For now, these reads and 
 
 ## Block Diagram
 ![FPGA](https://github.com/epritchard13/Certain-Synthesizer-FPGA-DAW/assets/22825641/55225abe-9e22-4145-a0c9-442ac570196a)
+I like this.
