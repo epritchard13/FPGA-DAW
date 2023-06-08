@@ -67,43 +67,56 @@ void Player::player_sm() {
         }
 
         // 
-        Track& track = tracks[current_track];
-        if (track.current_clip == -1) {
+        Track* track = &tracks[current_track];
+        if (track->current_clip == -1) {
             current_track++;
             break;
         }
-        Clip& clip = track.clips[track.current_clip];
-        segment_t& seg = clip.segments[clip.current_segment];
+        Clip* clip = &track->clips[track->current_clip];
+        segment_t* seg = &clip->segments[clip->current_segment];
 
 
-        if (virtualHeadPos >= seg.max_end_absolute(clip.timestamp)) {
+        if (virtualHeadPos >= seg->max_end_absolute(clip->timestamp)) {
             // The head position is past the end of the current segment
             // This means that either:
             // 1. The current segment is the last segment in the clip.
             // Hopefully we can deduce this by seeing if there are any more segments in the clip.
             // 2. The current segment is not the last segment in the clip
 
-            if (clip.current_segment + 1 == clip.segments.size()) {
+            if (clip->current_segment + 1 == clip->segments.size()) {
                 // This is the last segment in the clip
-                track.current_clip++;
-                if (track.current_clip == track.clips.size()) {
+                track->current_clip++;
+                if (track->current_clip == track->clips.size()) {
                     // This is the last clip in the track
-                    track.current_clip = -1;
+                    track->current_clip = -1;
                     goto end;
+                } else {
+                    // This is not the last clip in the track
+                    clip = &track->clips[track->current_clip];
+                    // see if the clip has any segments
+                    if (clip->segments.size() == 0) {
+                        // This clip has no segments.
+                        // create one segment that runs from the start of the clip to the end of the clip
+                        clip->segments.push_back({0, 0, clip->size});
+                    } else {
+                        // TODO
+                        throw "not implemented";
+                    }
                 }
             } else {
                 // This is not the last segment in the clip
-                clip.current_segment++;
+                //clip->current_segment++;
+                throw "not implemented";
             }
         }
-        else if (virtualHeadPos < seg.start_absolute(clip.timestamp)) {
+        else if (virtualHeadPos < seg->start_absolute(clip->timestamp)) {
             // The head position is before the start of the current segment
         } else {
             // we can add another block
             //uint block_size = std::min((uint) BLOCK_SIZE, );
             //printf("%d\n", seg.complete_size - BLOCK_SIZE * seg.blocks.size());
-            if (should_be_loaded(virtualHeadPos, clip, seg)) {
-                queue.push({clip.data + seg.start, &seg});
+            if (should_be_loaded(virtualHeadPos, *clip, *seg)) {
+                queue.push({clip->data + seg->start, seg});
             }
         }
 
