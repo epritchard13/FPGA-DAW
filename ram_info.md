@@ -30,4 +30,4 @@ I mentioned that the read and write commands will need to be FIFOd. How will the
 SD card reads and writes will be done in large blocks. For now, these reads and writes will probably be equal to the block size for simplicity. However, reads and writes to the PSRAM from the DSP will be very small (maybe 32 or 64 bytes at a time) because the DSP needs to obtain the data from many tracks. Why 32 or 64 bytes? Reads that are too big will result in large FIFOs being needed for the DSP, and reads that are too small will have poor performance due to the overhead of addressing and sending commands to the PSRAM.
 
 ## Block Diagram
-![FPGA](https://github.com/epritchard13/Certain-Synthesizer-FPGA-DAW/assets/22825641/3606e0a8-83ca-43a8-b06a-f8eb1071b075)
+![FPGA](https://github.com/epritchard13/Certain-Synthesizer-FPGA-DAW/assets/22825641/55225abe-9e22-4145-a0c9-442ac570196a)
