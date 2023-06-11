@@ -1,14 +1,14 @@
-GENERAL REMARKS:
+## General Remarks
 
 **The DSP Processor may or may not have access to DSP48 blocks on FPGA resources. DSP48 blocks are good at multiply/accumulate, but are limited to a set width and are pipelined, so take several CC to warm up.
 
 **In the absence of DSP blocks (Which is likely, because Xilinx chips are expensive) we will use a proprietary "DSP CORE."
 
 ---------------------------------------------------------------
--     The following assumes no DSP blocks.                    -
+     The following assumes no DSP blocks.                    
 ---------------------------------------------------------------
 
-DSP CORE ELEMENTS IMPLEMENTED:
+## DSP Core Elements Implemented
 
 Abilities:
     Volume Attenuation - Scalar Multiplication used to diminish sample volume with minimal loss of sample resolution
