@@ -25,7 +25,10 @@ module Pipelined_Mixer#(
 reg [2*(SAM_WID-1)-1:0] atten_sam;      //The attenuated sample does not lose precision.
 logic select;
 assign select = control[3:0];       //subject to change    
-always @(posedge clk)begin          //The following case is an approximate decimator. 
+always @(posedge clk)begin          //The following case is an approximate decimator.
+    if(resetn)begin
+        atten_sam <= 0;
+    end else begin 
     case(select)
         4'h0    : atten_sam <= dsp_axi_data;
         4'h1    : atten_sam <= dsp_axi_data >> 1;
@@ -45,10 +48,11 @@ always @(posedge clk)begin          //The following case is an approximate decim
         4'hf    : atten_sam <= 0;
         default : atten_sam <= 0;
     endcase
+    end
 end
 
 
-reg [NUM_TRA-1:0] acc_buff [2*(SAM_WID-1)-1:0];
+reg [2*(SAM_WID-1)-1:0] acc_buff [NUM_TRA-1:0];
 logic read_ptr;
 logic write_ptr;
 reg [2*(SAM_WID-1)-1:0] delay;

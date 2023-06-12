@@ -1,13 +1,17 @@
 `timescale 1ns / 1ps
 
-module Pipelined_Mixer_Tb();
+module Pipelined_Mixer_Tb#(
+    parameter SAM_WID = 4,
+    parameter NUM_TRA = 4,
+    parameter CTL_WID = 4);
+
     logic clk;
     logic resetn;
-    logic control;
-    logic dsp_axi_data;
+    logic [CTL_WID-1:0] control;
+    logic [SAM_WID-1:0] dsp_axi_data;
     logic dsp_axi_valid;
     logic dsp_axi_ready;
-    logic mix_axi_data;
+    logic [SAM_WID-1:0] mix_axi_data;
     logic mix_axi_valid;
     logic mix_axi_ready;
     
@@ -25,12 +29,12 @@ module Pipelined_Mixer_Tb();
         clk = 0;
         forever begin
             clk = ~clk;
-            #20;
+            #2;
         end
     end
     initial begin
         resetn = 0;
-        control = 8;
+        control = 5;
         dsp_axi_data = 5555;
         dsp_axi_valid = 0;
         mix_axi_ready = 0;
@@ -39,7 +43,7 @@ module Pipelined_Mixer_Tb();
         #10;
         dsp_axi_valid = 1;
         mix_axi_ready = 1;
-        #200;
+        #2000;
         $stop;
     end
 
