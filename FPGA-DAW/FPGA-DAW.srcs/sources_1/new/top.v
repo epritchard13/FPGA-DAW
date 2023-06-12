@@ -14,13 +14,15 @@ module top(
 
 wire spi_valid;
 wire [7:0] spi_data;
+wire [7:0] spi_data_tx;
+wire spi_tx_valid;
 wire [7:0] signal_out;
 
 SPI_Slave spslv(
 	.i_Rst_L(1'b1),
 	.i_Clk(SYSCLK),
-	.i_TX_DV(1'b0),
-	.i_TX_Byte(8'h00),
+	.i_TX_DV(spi_tx_valid),
+	.i_TX_Byte(spi_data_tx),
 	.i_SPI_Clk(SCLK),
 	.i_SPI_CS_n(SS),
 	.i_SPI_MOSI(MOSI),
@@ -35,6 +37,8 @@ spi_link_sm spi_sm(
 	.rst(1'b0),
 	.valid(spi_valid),
 	.spi_data(spi_data),
+	.spi_data_out(spi_data_tx),
+	.spi_tx_valid(spi_tx_valid),
 
 	.dac_state(signal_out)
 );
@@ -44,5 +48,10 @@ pwm_dac pwmdac(
 	.val(signal_out),
 	.analog(A_OUT)
 );
+/*
+psram_controller psram0(
+	.clk(SYSCLK),
+	.rst(1'b0)
+);*/
 
 endmodule

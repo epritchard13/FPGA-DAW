@@ -3,6 +3,7 @@
 //SPI command opcodes
 `define WRITE_8BIT_REG 8'h87 		//write a value to the test dac
 `define RX_DATA 8'h88 				//receive a packet
+`define RX_SD_DATA 8'h89 			//SD card operation
 
 module spi_link_sm(
 	input clk,
@@ -11,6 +12,9 @@ module spi_link_sm(
 	input [7:0] spi_data,
 	input valid,
 	
+	output [7:0] spi_data_out,
+	output reg spi_tx_valid,
+
 	output reg [7:0] dac_state
 );
 
@@ -18,30 +22,44 @@ enum logic [2:0] {
 	WAITING,
 	WRITING_8BIT_REG,
 	RECEIVING_RX_HEADER,
-	RECEIVING_RX_BODY
+	RECEIVING_RX_BODY,
+	RX_SD_DATA,
+	READ_SD_REG,
+	WRITE_SD_REG
 } state = WAITING;
 
 `define HEADER_SIZE 2 //size of header in bytes
 reg [7:0] header [(`HEADER_SIZE - 1):0]; //rx header
 reg [15:0] ctr0; //right now just used for rx headers, but could be used for other stuff
 
+reg [7:0] test_data; // test register
+reg [6:0] test_addr; // test register address
+
+assign spi_data_out = test_data;
 
 always @(posedge clk) begin
 	if (rst) begin
 		state <= WAITING;
+		spi_tx_valid <= 1'b0;
 	end
-	
+
+	if (spi_tx_valid == 1'b1) spi_tx_valid <= 1'b0;
+
 	if (valid) begin
 		//run the state machine
 		case (state)
 		//waiting state
 		WAITING:
+			//spi_tx_valid <= 1'b0; //make sure the TX byte isn't being updated
+
 			//see if the opcode is a command
 			if (spi_data == `WRITE_8BIT_REG)
 				state <= WRITING_8BIT_REG;
 			else if (spi_data == `RX_DATA) begin
 				state <= RECEIVING_RX_HEADER;
 				ctr0 <= 0;
+			end else if (spi_data == `RX_SD_DATA) begin
+				state <= RX_SD_DATA;
 			end
 		
 		//writing to dac state
@@ -68,6 +86,27 @@ always @(posedge clk) begin
 				state <= WAITING;
 			end
 		end
+
+		RX_SD_DATA: begin
+			if (spi_data[7] == 1'b1) begin // write
+				state <= WRITE_SD_REG;
+			end else begin // read
+				state <= READ_SD_REG;
+				spi_tx_valid <= 1'b1; // This will write until the next spi valid is received. TODO: is this ok?
+			end
+			test_addr <= spi_data[6:0];
+		end
+
+		WRITE_SD_REG: begin
+			state <= WAITING;
+			test_data <= spi_data[7:0];
+		end
+
+		READ_SD_REG: begin
+			state <= WAITING;
+			//spi_tx_valid <= 1'b0;
+		end
+
 		//end of state machine
 		endcase
 	end

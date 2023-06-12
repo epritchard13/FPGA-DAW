@@ -12,7 +12,8 @@ module verilog_tb;
 	initial begin
 		#10 reset = 1;
 		#6 reset = 0;
-		
+		#10;
+		/*
 		#10 spi_data = 8'h88;
 		#2 valid = 1;
 		#2 valid = 0;
@@ -25,14 +26,45 @@ module verilog_tb;
 		#2 valid = 1;
 		#2 valid = 0;
 		
-		spi_data = 8'h30;
+		spi_data = 8'h5;
+		#2 valid = 1;
+		#2 valid = 0;
+
+		spi_data = 8'h0;
 		#2 valid = 1;
 		#2 valid = 0;
 		
-		repeat(10) begin
+		repeat(30) begin
 		#2 valid = 1;
 		#2 valid = 0;
-		end
+		end*/
+		spi_data = 8'h89;
+		#2 valid = 1;
+		#2 valid = 0;
+
+		spi_data = 8'b1010_1100;
+		#2 valid = 1;
+		#2 valid = 0;
+
+		spi_data = 8'h36;
+		#2 valid = 1;
+		#2 valid = 0;
+
+		spi_data = 8'h89;
+		#2 valid = 1;
+		#2 valid = 0;
+
+		spi_data = 8'b0010_1100;
+		#2 valid = 1;
+		#2 valid = 0;
+
+		spi_data = 8'h0;
+		#2 valid = 1;
+		#2 valid = 0;
+
+		#2 valid = 1;
+		#2 valid = 0;
+
 	end
 	
 	initial begin
