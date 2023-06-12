@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
 
 module Pipelined_Mixer_Tb#(
-    parameter SAM_WID = 4,
+    parameter SAM_WID = 16,
     parameter NUM_TRA = 4,
     parameter CTL_WID = 4);
 
@@ -14,6 +14,9 @@ module Pipelined_Mixer_Tb#(
     logic [SAM_WID-1:0] mix_axi_data;
     logic mix_axi_valid;
     logic mix_axi_ready;
+    integer file;
+    integer scan_file;
+    logic [SAM_WID-1:0] data;
     
     Pipelined_Mixer plm(.clk(clk),
                         .resetn(resetn),
@@ -24,18 +27,23 @@ module Pipelined_Mixer_Tb#(
                         .mix_axi_data(mix_axi_data),
                         .mix_axi_valid(mix_axi_valid),
                         .mix_axi_ready(mix_axi_ready));
+    
+    initial begin
+        file = $fopen("sin.txt","r");
+    end
                         
     initial begin
         clk = 0;
         forever begin
             clk = ~clk;
+            scan_file = $fscanf(data_file, "%d\n", data);
             #2;
         end
     end
     initial begin
         resetn = 0;
         control = 5;
-        dsp_axi_data = 5555;
+        dsp_axi_data = data;
         dsp_axi_valid = 0;
         mix_axi_ready = 0;
         #10;

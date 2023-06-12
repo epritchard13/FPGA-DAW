@@ -11,13 +11,13 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="0.000 ns"></ZoomStartTime>
-      <ZoomEndTime time="220.001 ns"></ZoomEndTime>
-      <Cursor1Time time="220.000 ns"></Cursor1Time>
+      <ZoomStartTime time="12.000 ns"></ZoomStartTime>
+      <ZoomEndTime time="48.861 ns"></ZoomEndTime>
+      <Cursor1Time time="16.380 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="404"></NameColumnWidth>
-      <ValueColumnWidth column_width="184"></ValueColumnWidth>
+      <ValueColumnWidth column_width="178"></ValueColumnWidth>
    </column_width_setting>
    <WVObjectSize size="16" />
    <wvobject fp_name="/Pipelined_Mixer_Tb/clk" type="logic">
@@ -28,13 +28,13 @@
       <obj_property name="ElementShortName">resetn</obj_property>
       <obj_property name="ObjectShortName">resetn</obj_property>
    </wvobject>
-   <wvobject fp_name="/Pipelined_Mixer_Tb/control" type="logic">
-      <obj_property name="ElementShortName">control</obj_property>
-      <obj_property name="ObjectShortName">control</obj_property>
+   <wvobject fp_name="/Pipelined_Mixer_Tb/control" type="array">
+      <obj_property name="ElementShortName">control[3:0]</obj_property>
+      <obj_property name="ObjectShortName">control[3:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/Pipelined_Mixer_Tb/dsp_axi_data" type="logic">
-      <obj_property name="ElementShortName">dsp_axi_data</obj_property>
-      <obj_property name="ObjectShortName">dsp_axi_data</obj_property>
+   <wvobject fp_name="/Pipelined_Mixer_Tb/dsp_axi_data" type="array">
+      <obj_property name="ElementShortName">dsp_axi_data[3:0]</obj_property>
+      <obj_property name="ObjectShortName">dsp_axi_data[3:0]</obj_property>
    </wvobject>
    <wvobject fp_name="/Pipelined_Mixer_Tb/dsp_axi_valid" type="logic">
       <obj_property name="ElementShortName">dsp_axi_valid</obj_property>
@@ -44,9 +44,9 @@
       <obj_property name="ElementShortName">dsp_axi_ready</obj_property>
       <obj_property name="ObjectShortName">dsp_axi_ready</obj_property>
    </wvobject>
-   <wvobject fp_name="/Pipelined_Mixer_Tb/mix_axi_data" type="logic">
-      <obj_property name="ElementShortName">mix_axi_data</obj_property>
-      <obj_property name="ObjectShortName">mix_axi_data</obj_property>
+   <wvobject fp_name="/Pipelined_Mixer_Tb/mix_axi_data" type="array">
+      <obj_property name="ElementShortName">mix_axi_data[3:0]</obj_property>
+      <obj_property name="ObjectShortName">mix_axi_data[3:0]</obj_property>
    </wvobject>
    <wvobject fp_name="/Pipelined_Mixer_Tb/mix_axi_valid" type="logic">
       <obj_property name="ElementShortName">mix_axi_valid</obj_property>
@@ -57,9 +57,41 @@
       <obj_property name="ObjectShortName">mix_axi_ready</obj_property>
    </wvobject>
    <wvobject fp_name="/Pipelined_Mixer_Tb/plm/acc_buff" type="array">
-      <obj_property name="ElementShortName">acc_buff[5:0][3:0]</obj_property>
-      <obj_property name="ObjectShortName">acc_buff[5:0][3:0]</obj_property>
+      <obj_property name="ElementShortName">acc_buff[3:0][5:0]</obj_property>
+      <obj_property name="ObjectShortName">acc_buff[3:0][5:0]</obj_property>
       <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/Pipelined_Mixer_Tb/plm/acc_buff[3]" type="array">
+         <obj_property name="ElementShortName">[3][5:0]</obj_property>
+         <obj_property name="ObjectShortName">[3][5:0]</obj_property>
+         <obj_property name="WaveformStyle">STYLE_ANALOG</obj_property>
+         <obj_property name="CellHeight">100</obj_property>
+         <obj_property name="CustomSignalColor">#FFFF00</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Pipelined_Mixer_Tb/plm/acc_buff[2]" type="array">
+         <obj_property name="ElementShortName">[2][5:0]</obj_property>
+         <obj_property name="ObjectShortName">[2][5:0]</obj_property>
+         <obj_property name="WaveformStyle">STYLE_ANALOG</obj_property>
+         <obj_property name="CellHeight">100</obj_property>
+         <obj_property name="CustomSignalColor">#FFFF00</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Pipelined_Mixer_Tb/plm/acc_buff[1]" type="array">
+         <obj_property name="ElementShortName">[1][5:0]</obj_property>
+         <obj_property name="ObjectShortName">[1][5:0]</obj_property>
+         <obj_property name="WaveformStyle">STYLE_ANALOG</obj_property>
+         <obj_property name="CellHeight">100</obj_property>
+         <obj_property name="CustomSignalColor">#FFFF00</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/Pipelined_Mixer_Tb/plm/acc_buff[0]" type="array">
+         <obj_property name="ElementShortName">[0][5:0]</obj_property>
+         <obj_property name="ObjectShortName">[0][5:0]</obj_property>
+         <obj_property name="WaveformStyle">STYLE_ANALOG</obj_property>
+         <obj_property name="CellHeight">100</obj_property>
+         <obj_property name="CustomSignalColor">#FFFF00</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
    </wvobject>
    <wvobject fp_name="/Pipelined_Mixer_Tb/plm/atten_sam" type="array">
       <obj_property name="ElementShortName">atten_sam[5:0]</obj_property>

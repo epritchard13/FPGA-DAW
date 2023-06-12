@@ -2,9 +2,10 @@
 
 
 module Pipelined_Mixer#(
-    parameter SAM_WID = 4,
+    parameter SAM_WID = 16,
     parameter NUM_TRA = 4,
-    parameter CTL_WID = 4
+    parameter CTL_WID = 4,
+    parameter PTR_WID = 2
     )(
     //controls
     input clk,
@@ -53,8 +54,8 @@ end
 
 
 reg [2*(SAM_WID-1)-1:0] acc_buff [NUM_TRA-1:0];
-logic read_ptr;
-logic write_ptr;
+logic [PTR_WID-1:0] read_ptr;
+logic [PTR_WID-1:0] write_ptr;
 reg [2*(SAM_WID-1)-1:0] delay;
 
 logic buffer_can_read;
