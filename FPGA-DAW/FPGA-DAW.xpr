@@ -3,7 +3,7 @@
 <!--                                                         -->
 <!-- Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.   -->
 
-<Project Version="7" Minor="61" Path="C:/Users/Eddie/source/repos/Certain-Synthesizer-FPGA-DAW/FPGA-DAW/FPGA-DAW.xpr">
+<Project Version="7" Minor="61" Path="C:/Users/Ethan/Documents/Certain-Synthesizer-FPGA-DAW/FPGA-DAW/FPGA-DAW.xpr">
   <DefaultLaunch Dir="$PRUNDIR"/>
   <Configuration>
     <Option Name="Id" Val="9bf6e576a9964376a66c0d565c21637b"/>
@@ -44,7 +44,7 @@
     <Option Name="SimulatorGccVersionActiveHdl" Val="9.3.0"/>
     <Option Name="BoardPart" Val="digilentinc.com:zybo-z7-20:part0:1.1"/>
     <Option Name="SourceMgmtMode" Val="DisplayOnly"/>
-    <Option Name="ActiveSimSet" Val="sim_1"/>
+    <Option Name="ActiveSimSet" Val="sim_2"/>
     <Option Name="DefaultLib" Val="xil_defaultlib"/>
     <Option Name="ProjectType" Val="Default"/>
     <Option Name="IPOutputRepo" Val="$PCACHEDIR/ip"/>
@@ -59,20 +59,20 @@
     <Option Name="IPStaticSourceDir" Val="$PIPUSERFILESDIR/ipstatic"/>
     <Option Name="EnableBDX" Val="FALSE"/>
     <Option Name="DSABoardId" Val="zybo-z7-20"/>
-    <Option Name="WTXSimLaunchSim" Val="0"/>
+    <Option Name="WTXSimLaunchSim" Val="21"/>
     <Option Name="WTModelSimLaunchSim" Val="0"/>
     <Option Name="WTQuestaLaunchSim" Val="0"/>
     <Option Name="WTIesLaunchSim" Val="0"/>
     <Option Name="WTVcsLaunchSim" Val="0"/>
     <Option Name="WTRivieraLaunchSim" Val="0"/>
     <Option Name="WTActivehdlLaunchSim" Val="0"/>
-    <Option Name="WTXSimExportSim" Val="0"/>
-    <Option Name="WTModelSimExportSim" Val="0"/>
-    <Option Name="WTQuestaExportSim" Val="0"/>
+    <Option Name="WTXSimExportSim" Val="2"/>
+    <Option Name="WTModelSimExportSim" Val="2"/>
+    <Option Name="WTQuestaExportSim" Val="2"/>
     <Option Name="WTIesExportSim" Val="0"/>
-    <Option Name="WTVcsExportSim" Val="0"/>
-    <Option Name="WTRivieraExportSim" Val="0"/>
-    <Option Name="WTActivehdlExportSim" Val="0"/>
+    <Option Name="WTVcsExportSim" Val="2"/>
+    <Option Name="WTRivieraExportSim" Val="2"/>
+    <Option Name="WTActivehdlExportSim" Val="2"/>
     <Option Name="GenerateIPUpgradeLog" Val="TRUE"/>
     <Option Name="XSimRadix" Val="hex"/>
     <Option Name="XSimTimeUnit" Val="ns"/>
@@ -118,9 +118,24 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
+      <File Path="$PSRCDIR/sources_1/new/psram_controller.sv">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/new/tb.v">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
       <Config>
         <Option Name="DesignMode" Val="RTL"/>
-        <Option Name="TopModule" Val="top"/>
+        <Option Name="TopModule" Val="tb"/>
+        <Option Name="dataflowViewerSettings" Val="min_width=16"/>
       </Config>
     </FileSet>
     <FileSet Name="constrs_1" Type="Constrs" RelSrcDir="$PSRCDIR/constrs_1" RelGenDir="$PGENDIR/constrs_1">
@@ -139,13 +154,12 @@
       <Filter Type="Srcs"/>
       <Config>
         <Option Name="DesignMode" Val="RTL"/>
-        <Option Name="TopModule" Val="top"/>
+        <Option Name="TopModule" Val="tb"/>
         <Option Name="TopLib" Val="xil_defaultlib"/>
-        <Option Name="TopRTLFile" Val="$PSRCDIR/sources_1/new/top.v"/>
-        <Option Name="TopAutoSet" Val="TRUE"/>
         <Option Name="TransportPathDelay" Val="0"/>
         <Option Name="TransportIntDelay" Val="0"/>
         <Option Name="SelectedSimModel" Val="rtl"/>
+        <Option Name="SimMode" Val="post-implementation"/>
         <Option Name="PamDesignTestbench" Val=""/>
         <Option Name="PamDutBypassFile" Val="xil_dut_bypass"/>
         <Option Name="PamSignalDriverFile" Val="xil_bypass_driver"/>
@@ -181,6 +195,42 @@
       </File>
       <Config>
         <Option Name="TopAutoSet" Val="TRUE"/>
+      </Config>
+    </FileSet>
+    <FileSet Name="psram_sim" Type="BlockSrcs" RelSrcDir="$PSRCDIR/psram_sim" RelGenDir="$PGENDIR/psram_sim">
+      <File Path="$PSRCDIR/sources_1/ip/psram_sim/psram_sim.xci">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <Config>
+        <Option Name="TopModule" Val="psram_sim"/>
+        <Option Name="dataflowViewerSettings" Val="min_width=16"/>
+        <Option Name="UseBlackboxStub" Val="1"/>
+      </Config>
+    </FileSet>
+    <FileSet Name="sim_2" Type="SimulationSrcs" RelSrcDir="$PSRCDIR/sim_2" RelGenDir="$PGENDIR/sim_2">
+      <Filter Type="Srcs"/>
+      <File Path="$PPRDIR/tb_behav.wcfg">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <Config>
+        <Option Name="DesignMode" Val="RTL"/>
+        <Option Name="TopModule" Val="tb"/>
+        <Option Name="TopLib" Val="xil_defaultlib"/>
+        <Option Name="TransportPathDelay" Val="0"/>
+        <Option Name="TransportIntDelay" Val="0"/>
+        <Option Name="SelectedSimModel" Val="rtl"/>
+        <Option Name="PamDesignTestbench" Val=""/>
+        <Option Name="PamDutBypassFile" Val="xil_dut_bypass"/>
+        <Option Name="PamSignalDriverFile" Val="xil_bypass_driver"/>
+        <Option Name="PamPseudoTop" Val="pseudo_tb"/>
+        <Option Name="SrcSet" Val="sources_1"/>
+        <Option Name="XSimWcfgFile" Val="$PPRDIR/tb_behav.wcfg"/>
       </Config>
     </FileSet>
   </FileSets>
@@ -222,6 +272,18 @@
       <RQSFiles/>
     </Run>
     <Run Id="synth_3" Type="Ft3:Synth" SrcSet="sources_1" Part="xc7z020clg400-1" ConstrsSet="constrs_1" Description="Vivado Synthesis Defaults" AutoIncrementalCheckpoint="true" IncrementalCheckpoint="$PSRCDIR/utils_1/imports/synth_3/top.dcp" WriteIncrSynthDcp="false" State="current" Dir="$PRUNDIR/synth_3" IncludeInArchive="true" IsChild="false" AutoIncrementalDir="$PSRCDIR/utils_1/imports/synth_3" AutoRQSDir="$PSRCDIR/utils_1/imports/synth_3">
+      <Strategy Version="1" Minor="2">
+        <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2022"/>
+        <Step Id="synth_design">
+          <Option Id="FlattenHierarchy">1</Option>
+        </Step>
+      </Strategy>
+      <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
+      <ReportStrategy Name="Vivado Synthesis Default Reports" Flow="Vivado Synthesis 2022"/>
+      <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
+      <RQSFiles/>
+    </Run>
+    <Run Id="psram_sim_synth_1" Type="Ft3:Synth" SrcSet="psram_sim" Part="xc7z020clg400-1" ConstrsSet="psram_sim" Description="Vivado Synthesis Defaults" AutoIncrementalCheckpoint="false" WriteIncrSynthDcp="false" Dir="$PRUNDIR/psram_sim_synth_1" IncludeInArchive="true" IsChild="false" AutoIncrementalDir="$PSRCDIR/utils_1/imports/psram_sim_synth_1" AutoRQSDir="$PSRCDIR/utils_1/imports/psram_sim_synth_1">
       <Strategy Version="1" Minor="2">
         <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2022"/>
         <Step Id="synth_design"/>
@@ -279,6 +341,23 @@
         <Step Id="write_bitstream"/>
       </Strategy>
       <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
+      <ReportStrategy Name="Vivado Implementation Default Reports" Flow="Vivado Implementation 2022"/>
+      <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
+      <RQSFiles/>
+    </Run>
+    <Run Id="psram_sim_impl_1" Type="Ft2:EntireDesign" Part="xc7z020clg400-1" ConstrsSet="psram_sim" Description="Default settings for Implementation." AutoIncrementalCheckpoint="false" WriteIncrSynthDcp="false" SynthRun="psram_sim_synth_1" IncludeInArchive="false" IsChild="false" GenFullBitstream="true" AutoIncrementalDir="$PSRCDIR/utils_1/imports/psram_sim_impl_1" AutoRQSDir="$PSRCDIR/utils_1/imports/psram_sim_impl_1">
+      <Strategy Version="1" Minor="2">
+        <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2022"/>
+        <Step Id="init_design"/>
+        <Step Id="opt_design"/>
+        <Step Id="power_opt_design"/>
+        <Step Id="place_design"/>
+        <Step Id="post_place_power_opt_design"/>
+        <Step Id="phys_opt_design"/>
+        <Step Id="route_design"/>
+        <Step Id="post_route_phys_opt_design"/>
+        <Step Id="write_bitstream"/>
+      </Strategy>
       <ReportStrategy Name="Vivado Implementation Default Reports" Flow="Vivado Implementation 2022"/>
       <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
       <RQSFiles/>
