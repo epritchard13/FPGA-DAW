@@ -2,8 +2,8 @@
 
 
 module Pipelined_Mixer#(
-    parameter SAM_WID = 16,
-    parameter NUM_TRA = 32,
+    parameter SAM_WID = 4,
+    parameter NUM_TRA = 4,
     parameter CTL_WID = 4
     )(
     //controls
