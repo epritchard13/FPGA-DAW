@@ -1,1 +1,0 @@
-VCD info: dumpfile verilog_tb.vcd opened for output.
