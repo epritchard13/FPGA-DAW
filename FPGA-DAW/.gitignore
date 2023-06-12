@@ -1,6 +1,9 @@
 # gitignore template for Xilinx Vivado Design Suite
 # website: https://www.xilinx.com/support/download.html
 
+*.gen
+*.sim
+
 # [home]
 *.runs
 *.xsa
