@@ -45,6 +45,25 @@ void read_stdin()
             scanf("%d", &new_pos);
             test_player.movePlayhead(new_pos);
         } 
+        else if (strcmp(cmd, "sdwrite") == 0) {
+            uint8_t cmd[] = { 0x89, 0b10000000, 0};
+            int val;
+            scanf("%d", &val);
+            cmd[2] = val;
+            spi_write_blocking(SPI_PORT, cmd, sizeof(cmd));
+
+            cmd[1] = 0;
+            cmd[2] = 0;
+            uint8_t response[3];
+            spi_write_read_blocking(SPI_PORT, cmd, response, sizeof(cmd));
+            printf("%d %d %d", response[0], response[1], response[2]);
+        }
+        else if (strcmp(cmd, "sd") == 0) {
+            uint8_t cmd[] = { 0x89, 0, 0};
+            uint8_t response[4];
+            spi_write_read_blocking(SPI_PORT, cmd, response, sizeof(cmd));
+            printf("%d %d %d", response[0], response[1], response[2]);
+        } 
         //else if (strcmp(cmd, "memory") == 0) {
         //    std::cout << test_player.queue.mem << std::endl;
         //}
