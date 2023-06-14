@@ -80,10 +80,10 @@ module dsp48_macro_wrapper#(
     //      when an exhale is requested, no other core may proceed to next instruction. every core but the exhaler freezes (inst_ready = !inhale_trig)
     //      this is accomplished using an external OR gate driving the inhale trigger input.
     //      exhaling is used to drive a common output FIFO and ensures no other core is driving the fifo at the same time.
-    //      it probably reduces capacity of the system, but assuming we only have 8 dsp cores who cares.
+    //      it probably reduces capacity of the system, but assuming we only have 8 dsp cores who cares...
     //      
     //      exhaling MUST require precise compilation of instructions.
-    //      the followin instruction MUST be a no-op to allow other cores to resync.
+    //      the following instruction MUST be a no-op to allow other cores to resync.
     //
     //  H.P.6.13.23
     
