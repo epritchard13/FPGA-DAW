@@ -19,17 +19,15 @@ double coeffs[ FILTER_LEN ] =
 void firFloat( double *coeffs, double *input, double *output,
        int length, int filterLength )
 {
-    double acc;     // accumulator for MACs
-    double *coeffp; // pointer to coefficients
-    double *inputp; // pointer to input samples
+    double acc;     
+    double *coeffp; 
+    double *inputp; 
     int n;
     int k;
  
-    // put the new samples at the high end of the buffer
     memcpy( &insamp[filterLength - 1], input,
             length * sizeof(double) );
  
-    // apply the filter to each input sample
     for ( n = 0; n < length; n++ ) {
         // calculate output n
         coeffp = coeffs;
@@ -40,7 +38,7 @@ void firFloat( double *coeffs, double *input, double *output,
         }
         output[n] = acc;
     }
-    // shift input samples back in time for next time
+
     memmove( &insamp[0], &insamp[length],
             (filterLength - 1) * sizeof(double) );
  

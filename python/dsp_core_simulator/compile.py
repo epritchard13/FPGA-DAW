@@ -1,9 +1,13 @@
 EMPTIES = ['',"",' '," "]
+COMMENT = ['//',"//"]
 types = ["double","int"]
 lines,line_number = {},0
 constants = {}
 variables = {}
 functions = {}
+
+#NEED TO ADD ABILITY TO PARSE COMMENTS
+
 
 #tokenize
 with open("filter.strom" , "r") as rf:
@@ -31,26 +35,40 @@ def parseLine(line,comeback):
     if(line[0] == "double"):        #instantiate a double
         var_type = line[0]
         line.pop(0)
+        array = False
         if(len(line[0].split("[")) > 1):        #when [ is attached to name token
             name = line[0].split("[")[0]
+            array = True
+        elif(";" in line[0]):
+            name = line[0].split(";")[0]
+        line.pop(0)
+        if(line[0].isdigit()):
+            size = line[0]
+        else:
+            try:
+                size = constants[line[0]]
+            except:
+                print("unknown size")
+        line.pop(0)
+        if(line[0] == "]"):
             line.pop(0)
-            if(line[0].isdigit()):
-                size = line[0]
-            else:
-                try:
-                    size = constants[line[0]]
-                except:
-                    print("unknown size")
-            line.pop(0)
-            if(line[0] == "]"):
-                line.pop(0)
-                if(line[0] == "="):
-                    variables[name] = {}
-                    variables[name]["type"] = var_type
-                    variables[name]["size"] = size
-                    variables[name]["data"] = []
+            if(line[0] == "="):
+                variables[name] = {}
+                variables[name]["type"] = var_type
+                variables[name]["size"] = size
+                variables[name]["data"] = []
+                if(array):
                     if(len(line) == 1):
                         return "pending definition of:"+name+":"+size
+        else:   #not array
+            variables[name] = {}
+            variables[name]["type"] = var_type
+            variables[name]["size"] = 1
+            variables[name]["data"] = []
+            line.pop(0)
+            if(len(line)==0):
+                return "complete"
+
     if(line[0]=="void"):                #a new function
         line.pop(0)
         if(len(line[0].split("("))>1):      #when ( is attached to name token)
@@ -79,6 +97,8 @@ def parseLine(line,comeback):
         if(comeback=="pending definition of"):
             if(len(line)==1):
                 return comeback+":"+name+":"+size
+        elif(comeback=="pending implementation of"):
+            return "pending implementation of:"+name+":?"
     if(line[0] == "};"):
         comeback,name,size = comeback.split(":")
         if(comeback=="pending definition of"):
