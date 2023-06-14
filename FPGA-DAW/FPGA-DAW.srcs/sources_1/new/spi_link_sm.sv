@@ -15,7 +15,11 @@ module spi_link_sm(
 	output [7:0] spi_data_out,
 	output reg spi_tx_valid,
 
-	output reg [7:0] dac_state
+	output reg [7:0] dac_state,
+	output reg [6:0] sd_addr,
+	output reg sd_we,
+	output reg [7:0] sd_data_o,
+	input [7:0] sd_data_i
 );
 
 enum logic [2:0] {
@@ -32,15 +36,13 @@ enum logic [2:0] {
 reg [7:0] header [(`HEADER_SIZE - 1):0]; //rx header
 reg [15:0] ctr0; //right now just used for rx headers, but could be used for other stuff
 
-reg [7:0] test_data; // test register
-reg [6:0] test_addr; // test register address
-
-assign spi_data_out = test_data;
+assign spi_data_out = sd_data_i;
 
 always @(posedge clk) begin
 	if (rst) begin
 		state <= WAITING;
 		spi_tx_valid <= 1'b0;
+		sd_we <= 1'b0;
 	end
 
 	if (spi_tx_valid == 1'b1) spi_tx_valid <= 1'b0;
@@ -49,9 +51,8 @@ always @(posedge clk) begin
 		//run the state machine
 		case (state)
 		//waiting state
-		WAITING:
-			//spi_tx_valid <= 1'b0; //make sure the TX byte isn't being updated
-
+		WAITING: begin
+			sd_we <= 1'b0;
 			//see if the opcode is a command
 			if (spi_data == `WRITE_8BIT_REG)
 				state <= WRITING_8BIT_REG;
@@ -61,6 +62,7 @@ always @(posedge clk) begin
 			end else if (spi_data == `RX_SD_DATA) begin
 				state <= RX_SD_DATA;
 			end
+		end
 		
 		//writing to dac state
 		WRITING_8BIT_REG: begin
@@ -94,17 +96,17 @@ always @(posedge clk) begin
 				state <= READ_SD_REG;
 				spi_tx_valid <= 1'b1; // This will write until the next spi valid is received. TODO: is this ok?
 			end
-			test_addr <= spi_data[6:0];
+			sd_addr <= spi_data[6:0];
 		end
 
 		WRITE_SD_REG: begin
 			state <= WAITING;
-			test_data <= spi_data[7:0];
+			sd_data_o <= spi_data[7:0];
+			sd_we <= 1'b1;
 		end
 
 		READ_SD_REG: begin
 			state <= WAITING;
-			//spi_tx_valid <= 1'b0;
 		end
 
 		//end of state machine

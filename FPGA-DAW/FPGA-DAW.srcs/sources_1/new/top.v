@@ -12,6 +12,20 @@ module top(
 	output [3:0] LED
 );
 
+reg rst = 0;
+reg [3:0] ctr = 3'b111;
+always @(posedge SYSCLK) begin
+	if (ctr == 3'b111) begin
+		rst <= 1;
+		ctr <= ctr - 1;
+	end else if (ctr != 3'b000) begin
+		ctr <= ctr - 1;
+	end else begin
+		rst <= 0;
+	end
+end
+
+
 wire spi_valid;
 wire [7:0] spi_data;
 wire [7:0] spi_data_tx;
@@ -32,15 +46,35 @@ SPI_Slave spslv(
 	.o_SPI_MISO(MISO)
 );
 
+wire [6:0] sd_addr;
+wire sd_we;
+wire [7:0] sd_data_o;
+wire [7:0] sd_data_i;
+
 spi_link_sm spi_sm(
 	.clk(SYSCLK),
-	.rst(1'b0),
+	.rst(rst),
 	.valid(spi_valid),
 	.spi_data(spi_data),
 	.spi_data_out(spi_data_tx),
 	.spi_tx_valid(spi_tx_valid),
 
-	.dac_state(signal_out)
+	.dac_state(signal_out),
+
+	.sd_addr(sd_addr),
+	.sd_we(sd_we),
+	.sd_data_o(sd_data_o),
+	.sd_data_i(sd_data_i)	
+);
+
+sdc_controller sdc_controller0(
+	.clk(SYSCLK),
+	.rst(rst),
+
+	.addr(sd_addr),
+	.we(sd_we),
+	.data_in(sd_data_o),
+	.data_out(sd_data_i)	
 );
 
 pwm_dac pwmdac(

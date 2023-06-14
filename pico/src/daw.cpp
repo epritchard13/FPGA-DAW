@@ -47,12 +47,14 @@ void read_stdin()
         } 
         else if (strcmp(cmd, "sdwrite") == 0) {
             uint8_t cmd[] = { 0x89, 0b10000000, 0};
-            int val;
-            scanf("%d", &val);
-            cmd[2] = val;
+            int val[2];
+            scanf("%d %d", &val[0], &val[1]);
+            cmd[1] |= val[0];
+            cmd[2] = val[1];
+            printf ("%d %d\n", cmd[1], cmd[2]);
             spi_write_blocking(SPI_PORT, cmd, sizeof(cmd));
 
-            cmd[1] = 0;
+            cmd[1] &= 0b01111111;
             cmd[2] = 0;
             uint8_t response[3];
             spi_write_read_blocking(SPI_PORT, cmd, response, sizeof(cmd));
@@ -60,7 +62,11 @@ void read_stdin()
         }
         else if (strcmp(cmd, "sd") == 0) {
             uint8_t cmd[] = { 0x89, 0, 0};
-            uint8_t response[4];
+            int val;
+            scanf("%d", &val);
+            cmd[1] = val;
+
+            uint8_t response[3];
             spi_write_read_blocking(SPI_PORT, cmd, response, sizeof(cmd));
             printf("%d %d %d", response[0], response[1], response[2]);
         } 
