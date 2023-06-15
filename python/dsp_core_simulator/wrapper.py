@@ -2,11 +2,11 @@
 ##                                                                              ##
 ##                          dsp wrapper simulator                               ##
 ##                                                                              ##
-##     -execute commands for the dsp wrapper to computer filtered sinc data     ##
+##     -execute commands for the dsp wrapper to compute filtered sinc data      ##
 ##                                                                              ##
 ##################################################################################
 
-BUF_LEN = 2
+BUF_LEN = 32
 HEX_WID = 4
 ACC_NUM = 8
 
@@ -106,7 +106,9 @@ with open("instructions.txt", "r") as fp:
             line = line.split("\n")[0].split(" ")
             instruction = line[0]+" "+line[1]+" "+line[2]+" "+line[3]+" "+line[4]+" "+line[5]+" "+line[6]+" "+line[7]+" "+line[8]
             memory = parse(line[9],line[10],memory,instruction)
-            print(memory)
+            #print(memory)
+
+print(memory)
 
 
 

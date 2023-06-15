@@ -6,7 +6,11 @@ constants = {}
 variables = {}
 functions = {}
 
-#NEED TO ADD ABILITY TO PARSE COMMENTS
+######################################################
+####################  DEPRICATED  ####################
+###########  SEE GENERATE_INSTRUCTIONS.PY  ###########
+######################################################
+
 
 
 #tokenize

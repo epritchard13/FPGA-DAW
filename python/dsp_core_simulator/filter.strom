@@ -1,45 +1,18 @@
-#define FILTER_LEN  63
-double coeffs[ FILTER_LEN ] =
-{
+coef:c1
   -0.0448093,  0.0322875,   0.0181163,   0.0087615,   0.0056797,
    0.0086685,  0.0148049,   0.0187190,   0.0151019,   0.0027594,
   -0.0132676, -0.0232561,  -0.0187804,   0.0006382,   0.0250536,
-   0.0387214,  0.0299817,   0.0002609,  -0.0345546,  -0.0525282,
-  -0.0395620,  0.0000246,   0.0440998,   0.0651867,   0.0479110,
-   0.0000135, -0.0508558,  -0.0736313,  -0.0529380,  -0.0000709,
-   0.0540186,  0.0766746,   0.0540186,  -0.0000709,  -0.0529380,
-  -0.0736313, -0.0508558,   0.0000135,   0.0479110,   0.0651867,
-   0.0440998,  0.0000246,  -0.0395620,  -0.0525282,  -0.0345546,
-   0.0002609,  0.0299817,   0.0387214,   0.0250536,   0.0006382,
-  -0.0187804, -0.0232561,  -0.0132676,   0.0027594,   0.0151019,
-   0.0187190,  0.0148049,   0.0086685,   0.0056797,   0.0087615,
-   0.0181163,  0.0322875,  -0.0448093
-};
+   0.0387214,
+end
 
-void firFloat( double *coeffs, double *input, double *output,
-       int length, int filterLength )
-{
-    double acc;     
-    double *coeffp; 
-    double *inputp; 
-    int n;
-    int k;
- 
-    memcpy( &insamp[filterLength - 1], input,
-            length * sizeof(double) );
- 
-    for ( n = 0; n < length; n++ ) {
-        // calculate output n
-        coeffp = coeffs;
-        inputp = &insamp[filterLength - 1 + n];
-        acc = 0;
-        for ( k = 0; k < filterLength; k++ ) {
-            acc += (*coeffp++) * (*inputp--);
-        }
-        output[n] = acc;
-    }
+coef:s1
+  -0.05,  0.04,   0.03,   0.02,   0.01,
+end
 
-    memmove( &insamp[0], &insamp[length],
-            (filterLength - 1) * sizeof(double) );
- 
-}
+samp:a1
+    45, 34, 543, 543, 435, 5435, 345, 345, 5345, 543
+end
+
+task:f1
+    fir_filt OFIFO c1 a1
+end
