@@ -68,8 +68,8 @@ spi_link_sm spi_sm(
 );
 
 wire sd_clk;
-wire sdcmd;
-pullup(sdcmd);
+wire sd_cmd_out;
+wire sd_cmd_in;
 
 sdc_controller sdc_controller0(
 	.clk(SYSCLK),
@@ -79,7 +79,9 @@ sdc_controller sdc_controller0(
 	.we(sd_we),
 	.data_in(sd_data_o),
 	.data_out(sd_data_i),
-	.sd_cmd(sdcmd),
+
+	.sd_cmd_out_o(sd_cmd_out),
+    .sd_cmd_dat_i(sd_cmd_in),
 
     .sd_clk_o_pad(sd_clk)
 );
@@ -87,7 +89,8 @@ sdc_controller sdc_controller0(
 sd_fake sd_fake(
     .rstn_async(~rst),
     .sdclk(sd_clk),
-	.sdcmd(sdcmd)
+	.sdcmdout(sd_cmd_in),
+    .sdcmdin(sd_cmd_out)
 );
 
 pwm_dac pwmdac(

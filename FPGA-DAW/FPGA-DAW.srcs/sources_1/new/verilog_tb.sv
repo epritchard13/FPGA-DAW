@@ -57,12 +57,9 @@ initial begin
 
 end
 
-wire [3:0] sd_dat_dat_i;
-wire [3:0] sd_dat_out_o;
-wire sd_clk_o_pad;
-
-wire sdcmd;
-pullup(sdcmd);
+wire sd_clk;
+wire sd_cmd_out;
+wire sd_cmd_in;
 
 sdc_controller sdc_controller (
     .clk(clk),
@@ -71,16 +68,18 @@ sdc_controller sdc_controller (
     .data_in(data_in),
     .data_out(data_out),
     .we(we),
-    .sd_cmd(sdcmd),
 
-    .sd_clk_o_pad(sd_clk_o_pad)
+    .sd_cmd_out_o(sd_cmd_out),
+    .sd_cmd_dat_i(sd_cmd_in),
+
+    .sd_clk_o_pad(sd_clk)
 );
 
 sd_fake sd_fake(
     .rstn_async(~rst),
-    .sdclk(sd_clk_o_pad),
-    .sdcmd(sdcmd),
-    .sddat(sd_dat_out_o)
+    .sdclk(sd_clk),
+    .sdcmdout(sd_cmd_in),
+    .sdcmdin(sd_cmd_out)
 );
 
 endmodule
