@@ -1,0 +1,6 @@
+NEW TRACK track_one
+NEW AUDIO from_looperman_1.wav INST_ID create_uuid TRACK_ID track_one BEGIN_TIMESTAMP 345 BYTE_SIZE 43656 
+NEW TRACK track_two
+NEW AUDIO cool_bass.wav INST_ID create_uuid TRACK_ID track_two BEGIN_TIMESTAMP 543 BYTE_SIZE 54
+NEW AUDIO cool_bass.wav INST_ID create_uuid TRACK_ID track_two BEGIN_TIMESTAMP 654 BYTE_SIZE 54
+ADJUST VOLUME cool_bass.wav INST_ID 5435345
