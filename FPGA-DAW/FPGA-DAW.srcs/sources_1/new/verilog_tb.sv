@@ -10,50 +10,28 @@ reg we = 0;
 reg [7:0] data_in;
 wire [7:0] data_out;
 
-function void write(input [6:0] addr_in, input [7:0] data);
+task write(input [6:0] addr_in, input [7:0] data);
     addr = addr_in;
     data_in = data;
-endfunction
+    #2 we = 1;
+    #2 we = 0;
+endtask
 
 initial begin
     $dumpfile("verilog_tb.vcd");
     $dumpvars;
     #3 rst = 1;
     #2 rst = 0;
-
     #50;
-    write(0, 0);
-    #2 we = 1;
-    #2 we = 0;
-
+    
     write(5, 0);
-    #2 we = 1;
-    #2 we = 0;
-
-    data_in = 8'b0;
-    #2 addr = 7'b0000000;
-    #2 we = 1;
-    #2 we = 0;
-
+    write(0, 0);
     #500;
 
-    write('h5, 2);
-    #2 we = 1;
-    #2 we = 0;
-
-    data_in = 8'b10;
-    #2 addr = 7'h4;
-    #2 we = 1;
-    #2 we = 0;
-
-    data_in = 8'b0;
-    #2 addr = 7'h1;
-    #2 we = 1;
-    #2 we = 0;
-
+    write(5, 2);
+    write(4, 'b10);
+    write(1, 0);
     write(0, 0);
-    we = 1;
-    #2 we = 0;
 
 end
 
