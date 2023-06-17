@@ -53,6 +53,12 @@ wire sd_cmd_out;
 wire sd_cmd_in;
 
 wire [3:0] sd_data_in;
+pullup(sd_data_in[0]);
+pullup(sd_data_in[1]);
+pullup(sd_data_in[2]);
+pullup(sd_data_in[3]);
+
+
 wire [3:0] sd_data_out;
 
 wire [15:0] rddata;
@@ -88,7 +94,9 @@ sd_fake sd_fake(
     .rddata(rddata)
 );
 
-rom rom(
+brom brom(
+    .clk(clk),
+    .en(1'b1),
     .addr(rdaddr),
     .dout(rddata)
 );
