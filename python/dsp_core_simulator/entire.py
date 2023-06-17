@@ -32,7 +32,7 @@ signal = [i / frame_rate for i in range(num_frames)]
 
 
 for i in range(len(signal)):
-    audio_graph = graphic.array_to_plot(signal)
+    audio_graph = graphic.array_to_plot(signal,20,20)
     graphic.render(clock,audio_graph,screen_state, 24, 24)
     print(graphic.strings(screen_state))
     graphic.wait()

@@ -56,20 +56,24 @@ def array_average(array):
     return int(sum / len(array))
 
 def array_to_plot(array,height,length):
-    builder,counter,samp_count = {},0,0
+    builder,counter,samp_count = {},1,1
     placement_array = []
     for i in range(height):
         builder[i] = []
         placement_array.append([])
         for j in range(length):
-            placement_array[i][j].append("")
+            placement_array[i].append("")
+
+
+    print(builder)
+
     for item in array:
         adjusted_height = int(float(item) / height)     #bin the input data (y axis)
         builder[counter].append(adjusted_height)
         if(samp_count / counter == length):             #x axis binner
             counter = counter + 1
         samp_count = samp_count + 1
-    counter = 0
+    counter = 1
     for bin in builder:
         placement_array[counter][array_average(builder[bin])] = "."
         counter = counter + 1
