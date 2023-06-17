@@ -35,8 +35,9 @@ add_executable(daw
   src/memory/mem.cpp
   src/memory/queue.cpp
   src/json.cpp
-  #src/mmc/mmc.cpp
-  #src/mmc/sdc_example.cpp
+  src/mmc/mmc.cpp
+  src/mmc/sdc_example.cpp
+  src/mmc/spisdc.cpp
 )
 
 pico_set_program_name(daw "daw")
