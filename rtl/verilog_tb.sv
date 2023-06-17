@@ -80,7 +80,6 @@ sdc_controller sdc_controller (
 
     .sd_cmd_out_o(sd_cmd_out),
     .sd_cmd_dat_i(sd_cmd_in),
-
     .sd_dat_dat_i(sd_data_in),
     .sd_dat_out_o(sd_data_out),
 
@@ -92,16 +91,14 @@ sd_fake sd_fake(
     .sdclk(sd_clk),
     .sdcmdout(sd_cmd_in),
     .sdcmdin(sd_cmd_out),
-
     .sddat(sd_data_in),
-    
 
     .rdaddr(rdaddr),
     .rddata(rddata)
 );
 
 brom brom(
-    .clk(clk),
+    .clk(sd_clk),
     .en(1'b1),
     .addr(rdaddr),
     .dout(rddata)

@@ -71,6 +71,16 @@ wire sd_clk;
 wire sd_cmd_out;
 wire sd_cmd_in;
 
+wire [3:0] sd_data_in;
+pullup(sd_data_in[0]);
+pullup(sd_data_in[1]);
+pullup(sd_data_in[2]);
+pullup(sd_data_in[3]);
+
+wire [3:0] sd_data_out;
+wire [15:0] rddata;
+wire [39:0] rdaddr;
+
 sdc_controller sdc_controller0(
 	.clk(SYSCLK),
 	.rst(rst),
@@ -81,16 +91,29 @@ sdc_controller sdc_controller0(
 	.data_out(sd_data_i),
 
 	.sd_cmd_out_o(sd_cmd_out),
-    .sd_cmd_dat_i(sd_cmd_in),
+	.sd_cmd_dat_i(sd_cmd_in),
+	.sd_dat_dat_i(sd_data_in),
+	.sd_dat_out_o(sd_data_out),
 
-    .sd_clk_o_pad(sd_clk)
+	.sd_clk_o_pad(sd_clk)
 );
 
 sd_fake sd_fake(
-    .rstn_async(~rst),
-    .sdclk(sd_clk),
+	.rstn_async(~rst),
+	.sdclk(sd_clk),
 	.sdcmdout(sd_cmd_in),
-    .sdcmdin(sd_cmd_out)
+	.sdcmdin(sd_cmd_out),
+	.sddat(sd_data_in),
+
+	.rdaddr(rdaddr),
+	.rddata(rddata)
+);
+
+brom brom(
+	.clk(sd_clk),
+	.en(1'b1),
+	.addr(rdaddr),
+	.dout(rddata)
 );
 
 pwm_dac pwmdac(
