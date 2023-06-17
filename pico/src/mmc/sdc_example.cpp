@@ -88,7 +88,7 @@ int example_main() {
 	printf("Hello World !!!\n\r");
 
 	//init ocsdc driver
-	struct mmc * drv = ocsdc_mmc_init(50000000);
+	struct mmc * drv = ocsdc_mmc_init(100000000);
 	if (!drv) {
 		printf("ocsdc_mmc_init failed\n\r");
 		return -1;

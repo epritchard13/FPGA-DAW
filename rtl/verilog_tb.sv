@@ -41,8 +41,14 @@ initial begin
     write(0, 0);
     #1000;
 
+    write(5, 55);
+    write(4, 0);
+    write(2, 'h13);
+    write(0, 0);
+    #1000;
+
     //CMD17 (read single block)
-    write(5, 17);
+    write(5, 51);
     write(4, 'b0111101);
     write(0, 0);
 

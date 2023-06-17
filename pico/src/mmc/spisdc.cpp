@@ -124,9 +124,8 @@ static inline uint32_t ocsdc_read(struct spisdc *dev, int offset)
 static inline void ocsdc_write(struct spisdc *dev, int offset, uint32_t data)
 {
 	//writel(data, dev->iobase + offset);
-	for (int i = 0; i < 4; i++) {
-		spisdc_writeb(offset + i, data & 0xFF);
-		data >>= 8;
+	for (int i = 3; i >= 0; i--) {
+		spisdc_writeb(offset + i, (data >> (i * 8)) & 0xFF);
 	}
 }
 

@@ -26,14 +26,10 @@
 #include "mmc.h"
 #include <stdio.h>
 #include <string.h>
+#include "pico/stdlib.h"
 
 void udelay(int t) {
-#define US_DELAY 100
-	volatile int us = US_DELAY;
-	while(t--) {
-		us = US_DELAY;
-		while(us--);
-	}
+	sleep_us(t);
 }
 
 /* frequency bases */
