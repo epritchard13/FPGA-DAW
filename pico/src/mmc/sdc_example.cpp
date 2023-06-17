@@ -48,7 +48,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-struct mmc * ocsdc_mmc_init(int base_addr, int clk_freq);
+struct mmc * ocsdc_mmc_init(int clk_freq);
 
 #define BLKSIZE 512
 #define BLKCNT 10
@@ -88,7 +88,7 @@ int example_main() {
 	printf("Hello World !!!\n\r");
 
 	//init ocsdc driver
-	struct mmc * drv = ocsdc_mmc_init(0x9e000000, 50000000);
+	struct mmc * drv = ocsdc_mmc_init(50000000);
 	if (!drv) {
 		printf("ocsdc_mmc_init failed\n\r");
 		return -1;

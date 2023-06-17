@@ -40,11 +40,15 @@
  */
 
 #include "mmc.h"
+#include "sdc_example.h"
 #include <malloc.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+
+#include <hardware/spi.h>
+#include "../spi_link.h"
 
 // Register space
 #define OCSDC_ARGUMENT           0x00
@@ -95,15 +99,35 @@ void flush_dcache_range(void * start, void * end) {
 	}
 }*/
 
+void spisdc_writeb(uint8_t offset, uint8_t data) {
+	uint8_t cmd[] = { SPI_CMD_SD, (uint8_t) (0b10000000 | offset), data};
+	spi_write_blocking(SPI_PORT, cmd, sizeof(cmd));
+}
+
+uint8_t spisdc_readb(uint8_t offset) {
+	uint8_t cmd[] = { SPI_CMD_SD, offset, 0};
+	spi_write_read_blocking(SPI_PORT, cmd, cmd, sizeof(cmd));
+	return cmd[2];
+}
+
 static inline uint32_t ocsdc_read(struct spisdc *dev, int offset)
 {
 	//return readl(dev->iobase + offset);
-	return 0;
+	uint32_t data = 0;
+	for (int i = 3; i >= 0; i--) {
+		data <<= 8;
+		data |= spisdc_readb(offset + i);
+	}
+	return data;
 }
 
 static inline void ocsdc_write(struct spisdc *dev, int offset, uint32_t data)
 {
 	//writel(data, dev->iobase + offset);
+	for (int i = 0; i < 4; i++) {
+		spisdc_writeb(offset + i, data & 0xFF);
+		data >>= 8;
+	}
 }
 
 static void ocsdc_set_buswidth(struct spisdc * dev, uint width) {
@@ -180,6 +204,7 @@ static int ocsdc_data_finish(struct spisdc * dev) {
     	return -1;
     }
 	*/
+	return -1;
 }
 
 static void ocsdc_setup_data_xfer(struct spisdc * dev, struct mmc_cmd *cmd, struct mmc_data *data) {
