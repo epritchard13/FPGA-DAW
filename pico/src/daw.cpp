@@ -4,6 +4,7 @@
 #include <cmath>
 #include "player.h"
 #include "stdio_mem.h"
+#include "mmc/sdc_example.h"
 #include <iostream>
 #include <cstring>
 #include <stdio.h>
@@ -46,29 +47,14 @@ void read_stdin()
             test_player.movePlayhead(new_pos);
         } 
         else if (strcmp(cmd, "sdwrite") == 0) {
-            uint8_t cmd[] = { 0x89, 0b10000000, 0};
             int val[2];
             scanf("%x %x", &val[0], &val[1]);
-            cmd[1] |= val[0];
-            cmd[2] = val[1];
-            printf ("%d %d\n", cmd[1], cmd[2]);
-            spi_write_blocking(SPI_PORT, cmd, sizeof(cmd));
-
-            cmd[1] &= 0b01111111;
-            cmd[2] = 0;
-            uint8_t response[3];
-            spi_write_read_blocking(SPI_PORT, cmd, response, sizeof(cmd));
-            printf("%02x %02x %02x", response[0], response[1], response[2]);
+            spisdc_writeb(val[0], val[1]);
         }
         else if (strcmp(cmd, "sd") == 0) {
-            uint8_t cmd[] = { 0x89, 0, 0};
             int val;
             scanf("%x", &val);
-            cmd[1] = val;
-
-            uint8_t response[3];
-            spi_write_read_blocking(SPI_PORT, cmd, response, sizeof(cmd));
-            printf("%02x %02x %02x", response[0], response[1], response[2]);
+            printf("%x\n", spisdc_readb(val));
         } 
         //else if (strcmp(cmd, "memory") == 0) {
         //    std::cout << test_player.queue.mem << std::endl;
@@ -76,9 +62,9 @@ void read_stdin()
         else if (strcmp(cmd, "json") == 0) {
             std::cout << test_player.toJson() << std::endl;
         }
-        //else if (strcmp(cmd, "status") == 0) {
-        //    printf("nominal\n");
-        //} 
+        else if (strcmp(cmd, "init") == 0) {
+            example_main();
+        } 
         
         else if (strcmp(cmd, "clear") == 0) {
             test_player.tracks.clear();
