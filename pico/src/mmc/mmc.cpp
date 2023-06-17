@@ -781,7 +781,7 @@ static int mmc_read_blocks(struct mmc *mmc, void *dst, size_t start, size_t blkc
 
 	cmd.resp_type = MMC_RSP_R1;
 
-	data.dest = dst;
+	data.dest = (char*) dst;
 	data.blocks = blkcnt;
 	data.blocksize = mmc->read_bl_len;
 	data.flags = MMC_DATA_READ;
