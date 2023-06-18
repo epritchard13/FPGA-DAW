@@ -24,9 +24,9 @@ module spi_link_sm(
 
 enum logic [2:0] {
 	WAITING,
-	WRITING_8BIT_REG,
-	RECEIVING_RX_HEADER,
-	RECEIVING_RX_BODY,
+	WRITE_8BIT_REG,
+	RECEIVE_RX_HEADER,
+	RECEIVE_RX_BODY,
 	RX_SD_DATA,
 	READ_SD_REG,
 	WRITE_SD_REG
@@ -54,34 +54,34 @@ always @(posedge clk) begin
 		WAITING: begin
 			sd_we <= 1'b0;
 			//see if the opcode is a command
-			if (spi_data == `WRITE_8BIT_REG)
-				state <= WRITING_8BIT_REG;
-			else if (spi_data == `RX_DATA) begin
-				state <= RECEIVING_RX_HEADER;
-				ctr0 <= 0;
-			end else if (spi_data == `RX_SD_DATA) begin
-				state <= RX_SD_DATA;
-			end
+			case (spi_data)
+				`WRITE_8BIT_REG: state <= WRITE_8BIT_REG;
+				`RX_DATA: begin
+					state <= RECEIVE_RX_HEADER;
+					ctr0 <= 0;
+				end
+				`RX_SD_DATA: state <= RX_SD_DATA;
+			endcase
 		end
 		
 		//writing to dac state
-		WRITING_8BIT_REG: begin
+		WRITE_8BIT_REG: begin
 			state <= WAITING; //go back to waiting
 			dac_state <= spi_data;
 		end
 		
 		//receiving data rx header
-		RECEIVING_RX_HEADER: begin
+		RECEIVE_RX_HEADER: begin
 			ctr0 <= ctr0 + 1;
 			header[ctr0] <= spi_data;
 			if (ctr0 == `HEADER_SIZE - 1) begin
-				state <= RECEIVING_RX_BODY;
+				state <= RECEIVE_RX_BODY;
 				ctr0 <= 0;
 			end
 		end
 		
 		//receiving the data itself
-		RECEIVING_RX_BODY: begin
+		RECEIVE_RX_BODY: begin
 			ctr0 <= ctr0 + 1;
 			dac_state <= spi_data;
 			if (ctr0 == {header[1], header[0]}) begin //the header should be one less than the actual data size
