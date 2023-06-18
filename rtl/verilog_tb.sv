@@ -50,14 +50,22 @@ initial begin
 
     //CMD17 (read single block)
     write('h48, 0);
-    write('h1c, 1);
-    write(3, 0);
+    //write('h1c, 1);
     write(5, 17);
-    write(4, 'b0111101);
+    write(4, 'b01_1_1101);
+    write(3, 0);
     write(2, 0);
     write(0, 0);
     //#2004 sd_data_out[0] = 1'b0;
     //#4 sd_data_out[0] = 1'b1;
+    #15000;
+    write('h48, 0);
+   // write('h1c, 1);
+    write(5, 17);
+    write(4, 'b01_1_1101);
+    write(3, 0);
+    write(2, 0);
+    write(0, 0);
 
 end
 
