@@ -3,7 +3,7 @@ module verilog_tb();
 reg clk = 0;
 reg rst = 0;
 
-initial repeat (4096*12) #1 clk = ~clk;
+initial repeat (4096*24) #1 clk = ~clk;
 
 reg [6:0] addr;
 reg we = 0;
@@ -49,8 +49,10 @@ initial begin
     #1000;*/
 
     //CMD17 (read single block)
-    write(5, 17);
+    write('h48, 1);
+    write(5, 18);
     write(4, 'b0111101);
+    write(2, 0);
     write(0, 0);
 
 end
@@ -101,7 +103,7 @@ sd_fake sd_fake(
 brom brom(
     .clk(sd_clk),
     .en(1'b1),
-    .addr(rdaddr),
+    .addr(rdaddr[7:0]),
     .dout(rddata)
 );
 
