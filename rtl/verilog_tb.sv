@@ -49,8 +49,9 @@ initial begin
     #1000;*/
 
     //CMD17 (read single block)
-    write('h48, 1);
-    write(5, 18);
+    write('h48, 0);
+    write(3, 0);
+    write(5, 17);
     write(4, 'b0111101);
     write(2, 0);
     write(0, 0);
