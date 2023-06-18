@@ -37,7 +37,7 @@ initial begin
     //CMD7 (select card)
     write(5, 7);
     write(4, 0);
-    write(2, 'h13);
+    write(3, 'h20);
     write(0, 0);
     #1000;
 
@@ -50,11 +50,14 @@ initial begin
 
     //CMD17 (read single block)
     write('h48, 0);
+    write('h1c, 1);
     write(3, 0);
     write(5, 17);
     write(4, 'b0111101);
     write(2, 0);
     write(0, 0);
+    //#2004 sd_data_out[0] = 1'b0;
+    //#4 sd_data_out[0] = 1'b1;
 
 end
 
@@ -63,13 +66,17 @@ wire sd_cmd_out;
 wire sd_cmd_in;
 
 wire [3:0] sd_data_in;
+logic [3:0] sd_data_out = 4'b1111;
 pullup(sd_data_in[0]);
 pullup(sd_data_in[1]);
 pullup(sd_data_in[2]);
 pullup(sd_data_in[3]);
+//pullup(sd_data_out[0]);
+//pullup(sd_data_out[1]);
+//pullup(sd_data_out[2]);
+//pullup(sd_data_out[3]);
 
 
-wire [3:0] sd_data_out;
 
 wire [15:0] rddata;
 wire [39:0] rdaddr;
@@ -85,27 +92,28 @@ sdc_controller sdc_controller (
     .sd_cmd_out_o(sd_cmd_out),
     .sd_cmd_dat_i(sd_cmd_in),
     .sd_dat_dat_i(sd_data_in),
-    .sd_dat_out_o(sd_data_out),
+    //.sd_dat_out_o(sd_data_out),
 
     .sd_clk_o_pad(sd_clk)
 );
+//*
+sdModel #("ramdisk2.hex", "sd.log") sdModel (
+    //.rstn_async(~rst),
+    .sdClk(sd_clk),
+    .cmdOut(sd_cmd_in),
+    .cmd(sd_cmd_out),
+    .datOut(sd_data_in),
+    .dat(sd_data_out)
 
-sd_fake sd_fake(
-    .rstn_async(~rst),
-    .sdclk(sd_clk),
-    .sdcmdout(sd_cmd_in),
-    .sdcmdin(sd_cmd_out),
-    .sddat(sd_data_in),
-
-    .rdaddr(rdaddr),
-    .rddata(rddata)
+    //.rdaddr(rdaddr),
+    //.rddata(rddata)
 );
-
+/*
 brom brom(
     .clk(sd_clk),
     .en(1'b1),
     .addr(rdaddr[7:0]),
     .dout(rddata)
 );
-
+*/
 endmodule
