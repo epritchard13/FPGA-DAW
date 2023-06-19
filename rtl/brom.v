@@ -12,7 +12,7 @@ if (en)
 case(addr)
 
 0: data <= 16'h807F;
-1: data <= 16'h83C2;
+1: data <= 16'h8382;
 2: data <= 16'h8685;
 3: data <= 16'h8988;
 4: data <= 16'h8C8B;

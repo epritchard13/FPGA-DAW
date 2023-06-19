@@ -433,7 +433,7 @@ begin
             end
         end else begin
             if         (read_idx<DATASTARTLEN+(BLOCK_SIZE*8)) begin
-                if( readbyteidx==4'hf ) begin
+                if( readbyteidx==4'h0 ) begin
                     rdreq<=1'b0;  rdaddr <= rdaddr+40'h1;
                 end else if( readbyteidx==4'h0 ) begin
                     if(read_idx<DATASTARTLEN+(BLOCK_SIZE*8)-1) rdreq<=1'b1;
