@@ -63,7 +63,7 @@ reg        sddatoe  = 1'b0;
 reg  [3:0] sddatout = 4'hF;
 
 //assign sdcmd = sdcmdoe ? sdcmdout : 1'bz;
-assign sddat = sddatoe ? sddatout : 4'bz;
+assign sddat = sddatout;
 
 
 function  [6:0] CalcCrcCMD;
@@ -625,7 +625,7 @@ always @ (negedge sdclk or negedge rstn_sdclk_n)
                           response_init( 1, 0 , request_cmd ,  32 ,  cardstatus                    );
                           cardstatus_illegal_command = 1'b0;
                       end
-            51      : if(last_is_acmd &&  cardstatus_current_state==TRAN) begin                       // SEND_SCR
+            51      : if(cardstatus_current_state==TRAN) begin                       // SEND_SCR
                           cardstatus_app_cmd = 1'b1;
                           response_init( 1, 0 , request_cmd ,  32 ,  cardstatus                    );
                           data_response_scr_init;
