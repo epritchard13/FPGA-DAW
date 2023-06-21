@@ -1,3 +1,5 @@
+`include "sd_defines.h"
+
 module verilog_tb();
 
 reg clk = 0;
@@ -24,10 +26,13 @@ initial begin
     #2 rst = 0;
     #50;
 
+    write('h24, 2); //set clock divider
+    write('h19, 10);
+
     //CMD0 (reset)
     write(5, 0);
     write(0, 0);
-    #500;
+    #1000;
 
     //CMD2 (get CID)
     /*write(5, 2);
@@ -39,27 +44,35 @@ initial begin
     write(4, 0);
     write(2, 'h13);
     write(0, 0);
-    #1000;
+    #2000;
 
-    /*
+    
     write(5, 55);
     write(4, 0);
     write(2, 'h13);
     write(0, 0);
-    #1000;*/
+    #10000;
 
     //CMD17 (read single block)
+    //*
     write('h48, 0);
-    //write('h1c, 1);
+    write('h44, 7);
+    write('h45, 0);
     write(3, 0);
-    write(5, 17);
+    write(5, 51);
     write(4, 'b01_1_1101);
     write(3, 0);
     write(2, 0);
     write(0, 0);
     //#2004 sd_data_out[0] = 1'b0;
     //#4 sd_data_out[0] = 1'b1;
-    #40000;
+    
+    /*while (sdc_controller.data_int_status_reg == 0) begin
+        #4;
+    end*/
+    #60000;
+    write(`data_isr, 0);
+
     write('h48, 0);
    // write('h1c, 1);
     write(5, 17);
@@ -75,10 +88,6 @@ wire sd_cmd_out;
 wire sd_cmd_in;
 
 wire [3:0] sd_data_in;
-pullup(sd_data_in[0]);
-pullup(sd_data_in[1]);
-pullup(sd_data_in[2]);
-pullup(sd_data_in[3]);
 
 
 wire [3:0] sd_data_out;
