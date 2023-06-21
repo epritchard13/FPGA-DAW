@@ -101,6 +101,8 @@ void flush_dcache_range(void * start, void * end) {
 
 void spisdc_writeb(uint8_t offset, uint8_t data) {
 	uint8_t cmd[] = { SPI_CMD_SD, (uint8_t) (0b10000000 | offset), data};
+	//printf("spisdc_writeb: %02x %02x\n", cmd[1] & 0b1111111, cmd[2]);
+	//sleep_us(8);
 	spi_write_blocking(SPI_PORT, cmd, sizeof(cmd));
 }
 
@@ -188,7 +190,6 @@ static int ocsdc_finish(struct spisdc * dev, struct mmc_cmd *cmd) {
 
 
 static int ocsdc_data_finish(struct spisdc * dev) {
-	/*
 	int status;
 
     while ((status = ocsdc_read(dev, OCSDC_DAT_INT_STATUS)) == 0);
@@ -202,7 +203,6 @@ static int ocsdc_data_finish(struct spisdc * dev) {
     	printf("ocsdc_data_finish: status %x\n\r", status);
     	return -1;
     }
-	*/
 	return -1;
 }
 
@@ -210,18 +210,17 @@ static void ocsdc_setup_data_xfer(struct spisdc * dev, struct mmc_cmd *cmd, stru
 	/*
 	//invalidate cache
 	if (data->flags & MMC_DATA_READ) {
-		flush_dcache_range(data->dest, data->dest+data->blocksize*data->blocks);
+		//flush_dcache_range(data->dest, data->dest+data->blocksize*data->blocks);
 		ocsdc_write(dev, OCSDC_DST_SRC_ADDR, (uint32_t)data->dest);
 	}
 	else {
-		flush_dcache_range((void *)data->src, (void *)data->src+data->blocksize*data->blocks);
+		//flush_dcache_range((void *)data->src, (void *)data->src+data->blocksize*data->blocks);
 		ocsdc_write(dev, OCSDC_DST_SRC_ADDR, (uint32_t)data->src);
-	}
+	}*/
 	ocsdc_write(dev, OCSDC_BLOCK_SIZE, data->blocksize-1);
 	ocsdc_write(dev, OCSDC_BLOCK_COUNT, data->blocks-1);
 
-	//printf("ocsdc_setup_read: addr: %x\n", (uint32_t)data->dest);
-	*/
+	printf("ocsdc_setup_read: addr: %x\n", (uint32_t)data->dest);
 }
 
 static int ocsdc_send_cmd(struct mmc *mmc, struct mmc_cmd *cmd, struct mmc_data *data)
