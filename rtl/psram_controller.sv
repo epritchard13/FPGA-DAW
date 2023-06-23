@@ -20,9 +20,9 @@ module psram_controller(
 	input clk,			// probably 100MHz
 	input rst,			// active high reset
 
-	input start_read, 	// start a read
-	input start_write, 	// start a write
-	input stop,			// stop a read/write
+	input start_read, 		// start a read
+	input start_write, 		// start a write
+	input [8:0] count, // number of bytes to read/write (max 512)
 
 	input [`DEPTH - 1:0] address_in,	// The address to start a read/write from
 	output reg [`DEPTH - 1:0] address,	// The address being written to or read from
@@ -31,7 +31,7 @@ module psram_controller(
 	output r_valid,		// no ready signal - the PSRAM just signals when data is valid
 
 	input [7:0] din,	// input (write)
-	output w_ready,		// no valid signal - the PSRAM decides when data is read
+	output w_ready		// no valid signal - the PSRAM decides when data is read
 );
 
 /*
