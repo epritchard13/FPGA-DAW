@@ -97,7 +97,7 @@ sdc_controller sdc_controller0(
 sd_fake sd_fake(
 	.rstn_async(~rst),
 	.sdclk(sd_clk),
-	.sdcmdout(sd_cmd_in),
+	.sdcmd(sd_cmd_in),
 	.sdcmdin(sd_cmd_out),
 	.sddat(sd_data_in),
 
@@ -114,7 +114,7 @@ brom brom(
 
 pwm_dac pwmdac(
 	.clk(SYSCLK),
-	.val(signal_out),
+	.val(sdc_controller0.sd_data_serial_host0.debug_out),
 	.analog(A_OUT)
 );
 

@@ -39,6 +39,7 @@ Everything below this is just some idea I had a while back.
 Feel free to delete it. The final implementation
 will almost certainly have some sort of state machine, though.
 */
+/*
 enum reg [2:0] { IDLE, READ_CMD, READING, WRITE_CMD, WRITING } state;
 
 always @(posedge clk) begin
@@ -72,6 +73,6 @@ always @(posedge clk) begin
 	end
 	
 	endcase
-end
+end*/
 
 endmodule

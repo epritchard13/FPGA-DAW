@@ -27,7 +27,7 @@ initial begin
     #50;
 
     write('h24, 2); //set clock divider
-    write('h19, 10);
+    //write('h19, 10);
 
     //CMD0 (reset)
     write(5, 0);
@@ -47,19 +47,19 @@ initial begin
     #2000;
 
     
-    write(5, 55);
+    /*write(5, 55);
     write(4, 0);
     write(2, 'h13);
     write(0, 0);
-    #10000;
+    #10000;*/
 
     //CMD17 (read single block)
     //*
     write('h48, 0);
-    write('h44, 7);
-    write('h45, 0);
+    //write('h44, 7);
+    //write('h45, 0);
     write(3, 0);
-    write(5, 51);
+    write(5, 17);
     write(4, 'b01_1_1101);
     write(3, 0);
     write(2, 0);
@@ -114,7 +114,7 @@ sdc_controller sdc_controller (
 sd_fake sd_fake(
     .rstn_async(~rst),
     .sdclk(sd_clk),
-    .sdcmdout(sd_cmd_in),
+    .sdcmd(sd_cmd_in),
     .sdcmdin(sd_cmd_out),
     .sddat(sd_data_in),
 

@@ -4,6 +4,7 @@
 `define WRITE_8BIT_REG 8'h87 		//write a value to the test dac
 `define RX_DATA 8'h88 				//receive a packet
 `define RX_SD_DATA 8'h89 			//SD card operation
+`define READ_SD_FIFO 8'h8A 			//read from the SD card FIFO
 
 module spi_link_sm(
 	input clk,
@@ -29,7 +30,8 @@ enum logic [2:0] {
 	RECEIVE_RX_BODY,
 	RX_SD_DATA,
 	READ_SD_REG,
-	WRITE_SD_REG
+	WRITE_SD_REG,
+	READ_SD_FIFO
 } state = WAITING;
 
 `define HEADER_SIZE 2 //size of header in bytes
@@ -61,6 +63,7 @@ always @(posedge clk) begin
 					ctr0 <= 0;
 				end
 				`RX_SD_DATA: state <= RX_SD_DATA;
+				`READ_SD_FIFO: state <= READ_SD_FIFO;
 			endcase
 		end
 		

@@ -11,7 +11,7 @@ module sd_fake (
     // SD-card signals, connect to a SD-host, such as a SDcard Reader
     input  wire         sdclk,
     input wire          sdcmdin,
-    output reg          sdcmdout = 1'b1,
+    output              sdcmd,
 
     output wire [ 3:0]  sddat,
     // data read interface, connect to a RAM which contains SD-card's data.
@@ -59,10 +59,11 @@ always @ (negedge sdclk or negedge rstn_async)
 
 
 reg        sdcmdoe  = 1'b0;
+reg        sdcmdout = 1'b1;
 reg        sddatoe  = 1'b0;
 reg  [3:0] sddatout = 4'hF;
 
-//assign sdcmd = sdcmdoe ? sdcmdout : 1'bz;
+assign sdcmd = sdcmdoe ? sdcmdout : 1'b1;
 assign sddat = sddatout;
 
 
