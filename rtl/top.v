@@ -25,7 +25,6 @@ always @(posedge SYSCLK) begin
 	end
 end
 
-
 wire spi_valid;
 wire [7:0] spi_data;
 wire [7:0] spi_data_tx;
@@ -33,7 +32,7 @@ wire spi_tx_valid;
 wire [7:0] signal_out;
 
 SPI_Slave spslv(
-	.i_Rst_L(1'b1),
+	.i_Rst_L(~rst),
 	.i_Clk(SYSCLK),
 	.i_TX_DV(spi_tx_valid),
 	.i_TX_Byte(spi_data_tx),
@@ -51,6 +50,9 @@ wire sd_we;
 wire [7:0] sd_data_o;
 wire [7:0] sd_data_i;
 
+wire sd_fifo_rd;
+wire [7:0] sd_fifo_data;
+
 spi_link_sm spi_sm(
 	.clk(SYSCLK),
 	.rst(rst),
@@ -64,7 +66,10 @@ spi_link_sm spi_sm(
 	.sd_addr(sd_addr),
 	.sd_we(sd_we),
 	.sd_data_o(sd_data_o),
-	.sd_data_i(sd_data_i)	
+	.sd_data_i(sd_data_i),
+
+	.sd_fifo_rd(sd_fifo_rd),
+    .sd_fifo_data(sd_fifo_data)
 );
 
 wire sd_clk;
@@ -91,7 +96,10 @@ sdc_controller sdc_controller0(
 	.sd_dat_dat_i(sd_data_in),
 	.sd_dat_out_o(sd_data_out),
 
-	.sd_clk_o_pad(sd_clk)
+	.sd_clk_o_pad(sd_clk),
+
+	.rd_en_i(sd_fifo_rd),
+    .rd_dat_o(sd_fifo_data)
 );
 
 sd_fake sd_fake(

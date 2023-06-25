@@ -20,7 +20,10 @@ module spi_link_sm(
 	output reg [6:0] sd_addr,
 	output reg sd_we,
 	output reg [7:0] sd_data_o,
-	input [7:0] sd_data_i
+	input [7:0] sd_data_i,
+
+	output reg sd_fifo_rd,
+	input [7:0] sd_fifo_data
 );
 
 enum logic [2:0] {
@@ -30,24 +33,25 @@ enum logic [2:0] {
 	RECEIVE_RX_BODY,
 	RX_SD_DATA,
 	READ_SD_REG,
-	WRITE_SD_REG,
-	READ_SD_FIFO
+	WRITE_SD_REG
 } state = WAITING;
 
 `define HEADER_SIZE 2 //size of header in bytes
 reg [7:0] header [(`HEADER_SIZE - 1):0]; //rx header
 reg [15:0] ctr0; //right now just used for rx headers, but could be used for other stuff
 
-assign spi_data_out = sd_data_i;
+assign spi_data_out = state == READ_SD_REG ? sd_data_i : sd_fifo_data;
 
 always @(posedge clk) begin
 	if (rst) begin
 		state <= WAITING;
 		spi_tx_valid <= 1'b0;
 		sd_we <= 1'b0;
+		sd_fifo_rd <= 1'b0;
 	end
 
 	if (spi_tx_valid == 1'b1) spi_tx_valid <= 1'b0;
+	if (sd_fifo_rd == 1'b1) sd_fifo_rd <= 1'b0;
 
 	if (valid) begin
 		//run the state machine
@@ -63,7 +67,10 @@ always @(posedge clk) begin
 					ctr0 <= 0;
 				end
 				`RX_SD_DATA: state <= RX_SD_DATA;
-				`READ_SD_FIFO: state <= READ_SD_FIFO;
+				`READ_SD_FIFO: begin
+					sd_fifo_rd <= 1'b1;
+					spi_tx_valid <= 1'b1;
+				end
 			endcase
 		end
 		
