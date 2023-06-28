@@ -65,7 +65,16 @@ void read_stdin()
         else if (strcmp(cmd, "init") == 0) {
             example_main();
         } 
-        
+        else if (strcmp(cmd, "fifo") == 0) {
+            int val;
+            scanf("%d", &val);
+            for (int i = 0; i < val; i++) {
+                uint8_t cmd[] = { 0x8A, 0x00, 0x00 };
+                spi_write_read_blocking(SPI_PORT, cmd, cmd, sizeof(cmd));
+                printf("%x ", cmd[2]);
+            }
+            printf("\n");
+        }
         else if (strcmp(cmd, "clear") == 0) {
             test_player.tracks.clear();
         } else if (strcmp(cmd, "add") == 0) {

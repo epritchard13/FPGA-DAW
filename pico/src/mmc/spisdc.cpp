@@ -112,6 +112,17 @@ uint8_t spisdc_readb(uint8_t offset) {
 	return cmd[2];
 }
 
+void spisdc_read_fifo(struct mmc_data *data) {
+	int bytes = data->blocksize * data->blocks;
+	printf("spisdc_read_fifo: %d\n", bytes);
+	char *buf = data->dest;
+	for (int i = 0; i < bytes; i++) {
+		uint8_t cmd[] = { 0x8A, 0, 0};
+		spi_write_read_blocking(SPI_PORT, cmd, cmd, sizeof(cmd));
+		buf[i] = cmd[2];
+	}
+}
+
 static inline uint32_t ocsdc_read(struct spisdc *dev, int offset)
 {
 	//return readl(dev->iobase + offset);
@@ -258,7 +269,13 @@ static int ocsdc_send_cmd(struct mmc *mmc, struct mmc_cmd *cmd, struct mmc_data 
 	ocsdc_write(dev, OCSDC_ARGUMENT, cmd->cmdarg);
 
 	if (ocsdc_finish(dev, cmd) < 0) return -1;
-	if (data && data->blocks) return ocsdc_data_finish(dev);
+	if (data && data->blocks) { 
+		int ret = ocsdc_data_finish(dev);
+		if (ret == 0) {
+			spisdc_read_fifo(data);
+		}
+		return ret;
+	}
 	else return 0;
 }
 
