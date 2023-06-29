@@ -3,5 +3,7 @@
 Oct 14 2022
 05:20:55
 C:/Users/Eddie/Documents/GitHub/Certain-Synthesizer-FPGA-DAW/fpga_daw_untracked/fpga_daw_untracked.sim/sim_1/behav/xsim/glbl.v,1665704903,verilog,,,,glbl,,uvm,,,,,,
-C:/Users/Eddie/Documents/GitHub/Certain-Synthesizer-FPGA-DAW/fpga_daw_untracked/fpga_daw_untracked.srcs/sources_1/new/processor_core.sv,1687997858,systemVerilog,,C:/Users/Eddie/Documents/GitHub/Certain-Synthesizer-FPGA-DAW/fpga_daw_untracked/fpga_daw_untracked.srcs/sources_1/new/processor_core_tb.sv,,processor_core,,uvm,,,,,,
-C:/Users/Eddie/Documents/GitHub/Certain-Synthesizer-FPGA-DAW/fpga_daw_untracked/fpga_daw_untracked.srcs/sources_1/new/processor_core_tb.sv,1687998264,systemVerilog,,,,processor_core_tb,,uvm,,,,,,
+C:/Users/Eddie/Documents/GitHub/Certain-Synthesizer-FPGA-DAW/fpga_daw_untracked/fpga_daw_untracked.srcs/sources_1/new/dsp_macro.sv,1688000435,systemVerilog,,C:/Users/Eddie/Documents/GitHub/Certain-Synthesizer-FPGA-DAW/fpga_daw_untracked/fpga_daw_untracked.srcs/sources_1/new/instruction_decoder.sv,,dsp_macro,,uvm,,,,,,
+C:/Users/Eddie/Documents/GitHub/Certain-Synthesizer-FPGA-DAW/fpga_daw_untracked/fpga_daw_untracked.srcs/sources_1/new/instruction_decoder.sv,1687999714,systemVerilog,,C:/Users/Eddie/Documents/GitHub/Certain-Synthesizer-FPGA-DAW/fpga_daw_untracked/fpga_daw_untracked.srcs/sources_1/new/processor_core.sv,,instruction_decoder,,uvm,,,,,,
+C:/Users/Eddie/Documents/GitHub/Certain-Synthesizer-FPGA-DAW/fpga_daw_untracked/fpga_daw_untracked.srcs/sources_1/new/processor_core.sv,1688000380,systemVerilog,,C:/Users/Eddie/Documents/GitHub/Certain-Synthesizer-FPGA-DAW/fpga_daw_untracked/fpga_daw_untracked.srcs/sources_1/new/processor_core_tb.sv,,processor_core,,uvm,,,,,,
+C:/Users/Eddie/Documents/GitHub/Certain-Synthesizer-FPGA-DAW/fpga_daw_untracked/fpga_daw_untracked.srcs/sources_1/new/processor_core_tb.sv,1687999987,systemVerilog,,,,processor_core_tb,,uvm,,,,,,

@@ -1,3 +1,4 @@
+`timescale 1ns / 1ps
 module processor_core_tb#(
 	parameter SAMPLE_BLOCK_ADDRESS_BIT_WIDTH = 8,
 	parameter SAMPLE_BIT_WIDTH = 16,
@@ -20,11 +21,11 @@ logic monarch_axi_tready;
 logic [SAMPLE_BIT_WIDTH-1:0] sample_axi_tdata;
 logic [SAMPLE_BLOCK_ADDRESS_BIT_WIDTH-1:0] sample_axi_taddress;
 logic sample_axi_tbusy;
-logic sample_axi_twrite;
+logic sample_axi_tread;
 logic [COEFFI_BIT_WIDTH-1:0] coeffi_axi_tdata;
 logic [COEFFI_BLOCK_ADDRESS_BIT_WIDTH-1:0] coeffi_axi_taddress;
 logic coeffi_axi_tbusy;
-logic coeffi_axi_twrite;
+logic coeffi_axi_tread;
 logic [OUTPUT_BIT_WIDTH-1:0] output_axi_tdata;
 logic [OUTPUT_BLOCK_ADDRESS_BIT_WIDTH-1:0] output_axi_taddress;
 logic output_axi_tbusy;
@@ -40,14 +41,14 @@ processor_core processor_core_0(    .clk(clk),
                                     .sample_axi_tdata(sample_axi_tdata),
                                     .sample_axi_taddress(sample_axi_taddress),
                                     .sample_axi_tbusy(sample_axi_tbusy),
-                                    .sample_axi_twrite(sample_axi_twrite),
+                                    .sample_axi_tread(sample_axi_tread),
                                     .coeffi_axi_tdata(coeffi_axi_tdata),
                                     .coeffi_axi_taddress(coeffi_axi_taddress),
                                     .coeffi_axi_tbusy(coeffi_axi_tbusy),
-                                    .coeffi_axi_twrite(coeffi_axi_twrite),
+                                    .coeffi_axi_tread(coeffi_axi_tread),
                                     .output_axi_tdata(output_axi_tdata),
                                     .output_axi_taddress(output_axi_taddress),
-                                    .output_axi_tbusy(output_axi_t),
+                                    .output_axi_tbusy(output_axi_tbusy),
                                     .output_axi_twrite(output_axi_twrite));
 
 
@@ -60,6 +61,22 @@ initial begin
 end
 
 initial begin
+    resetn = 0;
+    
+    monarch_axi_tdata = 0;
+    monarch_axi_taddress = 0;
+    monarch_axi_tvalid = 0;
+    
+    sample_axi_tdata = 0;
+    sample_axi_tbusy = 0;
+    
+    coeffi_axi_tdata = 0;
+    coeffi_axi_tbusy = 0;
+    
+    output_axi_tdata = 0;
+    output_axi_tbusy = 0;
+    #20;
+    resetn=1;
     #2000;
 end
 

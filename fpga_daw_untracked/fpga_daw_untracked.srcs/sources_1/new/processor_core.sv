@@ -30,13 +30,13 @@ module processor_core#(
 	input  [SAMPLE_BIT_WIDTH-1:0] sample_axi_tdata,
 	output [SAMPLE_BLOCK_ADDRESS_BIT_WIDTH-1:0] sample_axi_taddress,
 	input  sample_axi_tbusy,
-	output sample_axi_twrite,
+	output sample_axi_tread,
 	
 	//axi interface to read coefficient data
 	input  [COEFFI_BIT_WIDTH-1:0] coeffi_axi_tdata,
 	output [COEFFI_BLOCK_ADDRESS_BIT_WIDTH-1:0] coeffi_axi_taddress,
 	input  coeffi_axi_tbusy,
-	output coeffi_axi_twrite,
+	output coeffi_axi_tread,
 	
 	//axi interface to write output to spram
 	output [OUTPUT_BIT_WIDTH-1:0] output_axi_tdata,
@@ -103,18 +103,16 @@ logic output_axi_twrite_int;
 assign sample 			= sample_axi_tdata;		//sample and coef constantly multiplied everycc. result is latched on the cc following a valid read.
 assign coefficient 		= sample_axi_tdata;
 assign output_axi_tdata 	= accumulator_out;		//output constantly tied to result. output valid only on cc when calculation is complete.
-assign sample_axi_tvalid 	= sample_axi_tvalid_int;
-assign coeffi_axi_tvalid 	= coeffi_axi_tvalid_int;
+assign coeffi_axi_tread 	= sample_axi_tvalid_int;
+assign coeffi_axi_tread 	= coeffi_axi_tvalid_int;
 assign output_axi_twrite	= output_axi_twrite_int;
 assign proceed_to_next_microinstruction = output_axi_tbusy;	//TODO: think more about what sorts of blocking conditions for writeback may exist. Think about how long it takes computation to be valid.
+assign monarch_axi_tready   = (program_counter == 0);
 
 //dsp state machine implementation
 always @(posedge clk) begin
 	if(resetn == 0)begin
-		sample 		<= 0;
-		coefficient 	<= 0;
 		accumulator_in 	<= 0;
-		accumulator_out <= 0;
 		dsp_state	<= 0;					//0 is reset/wait state. 1 is active/hold state.
 		sample_axi_tvalid_int <= 0;
 		coeffi_axi_tvalid_int <= 0;
@@ -173,13 +171,15 @@ always @(posedge clk)begin
 				2'b00: spr_sample_base_pointer 		<= monarch_axi_tdata[SAMPLE_BLOCK_ADDRESS_BIT_WIDTH-1:0];
 				2'b01: spr_coeffi_base_pointer 		<= monarch_axi_tdata[COEFFI_BLOCK_ADDRESS_BIT_WIDTH-1:0];
 				2'b10: spr_output_base_pointer 		<= monarch_axi_tdata[OUTPUT_BLOCK_ADDRESS_BIT_WIDTH-1:0];
-				2'b11: program_counter_base		<= monarch_axi_tdata[PROGRAM_COUNTER_BIT_WIDTH-1:0];
+				2'b11: program_counter_base		    <= monarch_axi_tdata[PROGRAM_COUNTER_BIT_WIDTH-1:0];
 			endcase	
 		end
 	end
 end
 
-
+assign sample_axi_taddress = spr_sample_pointer;
+assign coeffi_axi_taddress = spr_coeffi_pointer;
+assign output_axi_taddress = spr_output_pointer;
 
 //control counters
 always @(posedge clk) begin
