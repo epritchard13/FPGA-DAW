@@ -1,19 +1,19 @@
 // designed for one chip but will be expanded to drive 8
 
-module thing#(
-	parameter MONARCH_DATA_WIDTH = 8;
-	parameter MONARCH_ADDRESS_WIDTH = 2;
+module psram_controller#(
+	parameter MONARCH_DATA_WIDTH = 8,
+	parameter MONARCH_ADDRESS_WIDTH = 2,
 
-	parameter SPRAM_DATA_WIDTH = 16;
-	parameter SPRAM_ADDRESS_WIDTH = 8;
+	parameter SPRAM_DATA_WIDTH = 16,
+	parameter SPRAM_ADDRESS_WIDTH = 8,
 
-	parameter SD_DATA_WIDTH = 8;
-	parameter SD_ADDRESS_WIDTH = 16;
+	parameter SD_DATA_WIDTH = 8,
+	parameter SD_ADDRESS_WIDTH = 16,
 
-	parameter PSRAM_DATA_WIDTH = 8;
-	parameter PSRAM_ADDRESS_WIDTH = 22;
+	parameter PSRAM_DATA_WIDTH = 8,
+	parameter PSRAM_ADDRESS_WIDTH = 22,
 
-	parameter PSRAM_BLOCK_SIZE = 1023;
+	parameter PSRAM_BLOCK_SIZE = 1023
 	)(
 	input  clk,
 	input  resetn,
@@ -54,16 +54,16 @@ module thing#(
 	inout  sosio1_0,
 	inout  sio2_0,
 	inout  sio3_0,
-	output sclk,
+	output sclk
 
 	);
 
 //constants used for sending psram commands			(double check and verify)
-const SPI_ENTER_QUAD_MODE_COMMAND	= 8'b00110101;
-const QPI_FAST_QUAD_READ_COMMAND 	= 8'b11101011;
-const QPI_QUAD_WRITE_COMMAND 		= 8'h00111000;
-const QPI_EXIT_QUAD_MODE_COMMAND	= 8'h11110101;
-const SPI_RW_COOLDOWN 				= 10;		//measured in cc
+const bit [7:0] SPI_ENTER_QUAD_MODE_COMMAND	= 8'b00110101;
+const bit [7:0] QPI_FAST_QUAD_READ_COMMAND 	= 8'b11101011;
+const bit [7:0] QPI_QUAD_WRITE_COMMAND 		= 8'b00111000;
+const bit [7:0] QPI_EXIT_QUAD_MODE_COMMAND	= 8'b11110101;
+const int SPI_RW_COOLDOWN 				= 10;		//measured in cc
 
 
 //buffer parallel data to be read/written in serial. concurrent read/writes may be supported with multiple chips? (consider address space overlap)
@@ -81,20 +81,15 @@ chip_state_enum chip_0_action;
 
 logic want_to_read;
 logic want_to_write;
-logic [1:0] idle_read_write_rthenw; //00 is idle, 01 is read, 10 is write, 11 is read. (higher preference is a read)
 
-assign idle_read_write_rthenw = {want_to_read,want_to_write};
-assign chip_0_action = 	(idle_read_write_rthenw==2'b00)?idle:
-						(idle_read_write_rthenw==2'b01)?read_cmd:
-						(idle_read_write_rthenw==2'b10)?write_cmd:
-						(idle_read_write_rthenw==2'b11)?read_cmd;
+assign chip_0_action = 	(want_to_read == 1) ? read_cmd : write_cmd;     //need flow control to only jump into next state when read or write 
 
 always @(posedge clk) begin
 	if(resetn == 0)begin
 		chip_0_next_state <= idle;
 	end else begin
 		case(chip_0_state)
-			idle:			chip_0_next_state	<= chip_0_action
+			idle:			chip_0_next_state	<= chip_0_action;
 			read_cmd:		chip_0_next_state	<= reading;
 			reading:		chip_0_next_state	<= blocked;
 			write_cmd:		chip_0_next_state	<= writing;
@@ -176,8 +171,8 @@ logic [SPRAM_ADDRESS_WIDTH-1:0] selected_driver_address;			//output from module	
 logic selected_driver_valid;										//input  into module	(mux)
 logic selected_driver_ready;										//output from module	(decoder)
 
-assign selected_driver_data 		= (instruction[2] == 0)?spram_read_axi_tdata	:(instruction[2] == 1)?streamlined_sd_read_data;
-assign selected_driver_ready		= (instruction[2] == 0)?spram_read_axi_tready	:(instruction[2] == 1)?streamlined_sd_read_ready;
+assign selected_driver_data 		= (instruction[2] == 0)?spram_read_axi_tdata	: streamlined_sd_read_data;
+assign selected_driver_ready		= (instruction[2] == 0)?spram_read_axi_tready	: streamlined_sd_read_ready;
 
 assign spram_read_axi_taddress 		= selected_driver_address;
 assign spram_read_axi_tvalid		= selected_driver_valid & ~instruction[2];
@@ -191,7 +186,7 @@ logic [SPRAM_ADDRESS_WIDTH-1:0] selected_endpoint_address;			//output from modul
 logic selected_endpoint_valid;										//output from module	(decoder)
 logic selected_endpoint_ready;										//input  into module	(mux)
 
-assign selected_endpoint_ready		= (instruction[3] == 0)?spram_write_axi_tready	:(instruction[3] == 1)?streamlined_sd_write_ready;
+assign selected_endpoint_ready		= (instruction[3] == 0)?spram_write_axi_tready	: streamlined_sd_write_ready;
 
 assign spram_write_axi_tdata		= selected_endpoint_data;
 assign spram_write_axi_taddress		= selected_endpoint_address;
@@ -222,7 +217,7 @@ int parallel_to_serial_bit_index;
 int address_within_block;
 
 //blocker length
-int blocked_counter
+int blocked_counter;
 
 always @(posedge clk)begin
 	if(resetn == 0)begin
@@ -234,7 +229,7 @@ always @(posedge clk)begin
 		spi_build_byte <= 0;
 		blocked_counter <= 0;
 	end else begin
-		if(state == read_cmd)begin
+		if(chip_0_state == read_cmd)begin
 			if(command_word_index == 7)begin		//final clock cycle 
 				command_word_index <= 0;
 				chip_0_state <= chip_0_next_state;		//continue to read block
@@ -242,7 +237,7 @@ always @(posedge clk)begin
 				spi_serial_out <= QPI_FAST_QUAD_READ_COMMAND[command_word_index];	//transmit read cmd bit by bit.
 				command_word_index <= command_word_index + 1;
 			end
-		end else if(state == reading)begin //read an entire block
+		end else if(chip_0_state == reading)begin //read an entire block
 			if(serial_to_parallel_bit_index == SPRAM_DATA_WIDTH)begin				//collect every serial bit into a parallel vector
 				//BYTE COLLECTION COMPLETE
 				serial_to_parallel_bit_index <= 0;
@@ -259,7 +254,7 @@ always @(posedge clk)begin
 				serial_to_parallel_bit_index <= serial_to_parallel_bit_index + 1;
 				spi_build_byte[serial_to_parallel_bit_index] = spi_serial_in;		//collect serial in into byte builder
 			end
-		end else if(state == write_cmd)begin
+		end else if(chip_0_state == write_cmd)begin
 			if(command_word_index == 7)begin
 				command_word_index <= 0;
 				chip_0_state <= chip_0_next_state;		//continue to write block
@@ -267,7 +262,7 @@ always @(posedge clk)begin
 				spi_serial_out <= QPI_QUAD_WRITE_COMMAND[command_word_index];		//transmit write cmd bit by bit
 				command_word_index <= command_word_index + 1;
 			end
-		end else if(state == writing)begin
+		end else if(chip_0_state == writing)begin
 			if(parallel_to_serial_bit_index == SPRAM_DATA_WIDTH)begin
 				parallel_to_serial_bit_index <= 0;
 				if(address_within_block == PSRAM_BLOCK_SIZE)begin
@@ -285,7 +280,7 @@ always @(posedge clk)begin
 				parallel_to_serial_bit_index <= parallel_to_serial_bit_index + 1;
 				spi_serial_out <= spi_send_byte[parallel_to_serial_bit_index];
 			end
-		end else if(state == blocked)begin
+		end else if(chip_0_state == blocked)begin
 			if(blocked_counter == SPI_RW_COOLDOWN)begin
 				blocked_counter <= 0;
 			end else begin

@@ -1,18 +1,16 @@
 Vivado Simulator v2022.2
 Copyright 1986-1999, 2001-2022 Xilinx, Inc. All Rights Reserved.
-Running: C:/Xilinx/Vivado/2022.2/bin/unwrapped/win64.o/xelab.exe --incr --debug typical --relax --mt 2 -L xil_defaultlib -L uvm -L unisims_ver -L unimacro_ver -L secureip --snapshot processor_core_tb_behav xil_defaultlib.processor_core_tb xil_defaultlib.glbl -log elaborate.log 
+Running: C:/Xilinx/Vivado/2022.2/bin/unwrapped/win64.o/xelab.exe --incr --debug typical --relax --mt 2 -L xil_defaultlib -L uvm -L unisims_ver -L unimacro_ver -L secureip --snapshot psram_controller_tb_behav xil_defaultlib.psram_controller_tb xil_defaultlib.glbl -log elaborate.log 
 Using 2 slave threads.
 Starting static elaboration
 Pass Through NonSizing Optimizer
-WARNING: [VRFC 10-3823] variable 'output_axi_tdata' might have multiple concurrent drivers [C:/Users/Eddie/Documents/GitHub/Certain-Synthesizer-FPGA-DAW/fpga_daw_untracked/fpga_daw_untracked.srcs/sources_1/new/processor_core_tb.sv:63]
-WARNING: [VRFC 10-3705] select index 15 into 'monarch_axi_tdata' is out of bounds [C:/Users/Eddie/Documents/GitHub/Certain-Synthesizer-FPGA-DAW/fpga_daw_untracked/fpga_daw_untracked.srcs/sources_1/new/processor_core.sv:174]
 Completed static elaboration
 Starting simulation data flow analysis
+WARNING: [XSIM 43-4099] "C:/Users/Eddie/Documents/GitHub/Certain-Synthesizer-FPGA-DAW/rtl/thing.sv" Line 3. Module psram_controller doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "C:/Users/Eddie/Documents/GitHub/Certain-Synthesizer-FPGA-DAW/rtl/thing.sv" Line 3. Module psram_controller doesn't have a timescale but at least one module in design has a timescale.
 Completed simulation data flow analysis
 Time Resolution for simulation is 1ps
-Compiling module xil_defaultlib.instruction_decoder
-Compiling module xil_defaultlib.dsp_macro
-Compiling module xil_defaultlib.processor_core
-Compiling module xil_defaultlib.processor_core_tb
+Compiling module xil_defaultlib.psram_controller
+Compiling module xil_defaultlib.psram_controller_tb
 Compiling module xil_defaultlib.glbl
-Built simulation snapshot processor_core_tb_behav
+Built simulation snapshot psram_controller_tb_behav
