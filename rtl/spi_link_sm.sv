@@ -4,6 +4,7 @@
 `define WRITE_8BIT_REG 8'h87 		//write a value to the test dac
 `define RX_DATA 8'h88 				//receive a packet
 `define RX_SD_DATA 8'h89 			//SD card operation
+`define READ_SD_FIFO 8'h8A 			//read from the SD card FIFO
 
 module spi_link_sm(
 	input clk,
@@ -19,14 +20,17 @@ module spi_link_sm(
 	output reg [6:0] sd_addr,
 	output reg sd_we,
 	output reg [7:0] sd_data_o,
-	input [7:0] sd_data_i
+	input [7:0] sd_data_i,
+
+	output reg sd_fifo_rd,
+	input [7:0] sd_fifo_data
 );
 
 enum logic [2:0] {
 	WAITING,
-	WRITING_8BIT_REG,
-	RECEIVING_RX_HEADER,
-	RECEIVING_RX_BODY,
+	WRITE_8BIT_REG,
+	RECEIVE_RX_HEADER,
+	RECEIVE_RX_BODY,
 	RX_SD_DATA,
 	READ_SD_REG,
 	WRITE_SD_REG
@@ -36,16 +40,18 @@ enum logic [2:0] {
 reg [7:0] header [(`HEADER_SIZE - 1):0]; //rx header
 reg [15:0] ctr0; //right now just used for rx headers, but could be used for other stuff
 
-assign spi_data_out = sd_data_i;
+assign spi_data_out = state == READ_SD_REG ? sd_data_i : sd_fifo_data;
 
 always @(posedge clk) begin
 	if (rst) begin
 		state <= WAITING;
 		spi_tx_valid <= 1'b0;
 		sd_we <= 1'b0;
+		sd_fifo_rd <= 1'b0;
 	end
 
 	if (spi_tx_valid == 1'b1) spi_tx_valid <= 1'b0;
+	if (sd_fifo_rd == 1'b1) sd_fifo_rd <= 1'b0;
 
 	if (valid) begin
 		//run the state machine
@@ -54,34 +60,38 @@ always @(posedge clk) begin
 		WAITING: begin
 			sd_we <= 1'b0;
 			//see if the opcode is a command
-			if (spi_data == `WRITE_8BIT_REG)
-				state <= WRITING_8BIT_REG;
-			else if (spi_data == `RX_DATA) begin
-				state <= RECEIVING_RX_HEADER;
-				ctr0 <= 0;
-			end else if (spi_data == `RX_SD_DATA) begin
-				state <= RX_SD_DATA;
-			end
+			case (spi_data)
+				`WRITE_8BIT_REG: state <= WRITE_8BIT_REG;
+				`RX_DATA: begin
+					state <= RECEIVE_RX_HEADER;
+					ctr0 <= 0;
+				end
+				`RX_SD_DATA: state <= RX_SD_DATA;
+				`READ_SD_FIFO: begin
+					sd_fifo_rd <= 1'b1;
+					spi_tx_valid <= 1'b1;
+				end
+			endcase
 		end
 		
 		//writing to dac state
-		WRITING_8BIT_REG: begin
+		WRITE_8BIT_REG: begin
 			state <= WAITING; //go back to waiting
 			dac_state <= spi_data;
 		end
 		
 		//receiving data rx header
-		RECEIVING_RX_HEADER: begin
+		RECEIVE_RX_HEADER: begin
 			ctr0 <= ctr0 + 1;
 			header[ctr0] <= spi_data;
 			if (ctr0 == `HEADER_SIZE - 1) begin
-				state <= RECEIVING_RX_BODY;
+				state <= RECEIVE_RX_BODY;
 				ctr0 <= 0;
 			end
 		end
 		
 		//receiving the data itself
-		RECEIVING_RX_BODY: begin
+		RECEIVE_RX_BODY: begin
 			ctr0 <= ctr0 + 1;
 			dac_state <= spi_data;
 			if (ctr0 == {header[1], header[0]}) begin //the header should be one less than the actual data size

@@ -11,7 +11,7 @@ module sd_fake (
     // SD-card signals, connect to a SD-host, such as a SDcard Reader
     input  wire         sdclk,
     input wire          sdcmdin,
-    output reg          sdcmdout = 1'b1,
+    output              sdcmd,
 
     output wire [ 3:0]  sddat,
     // data read interface, connect to a RAM which contains SD-card's data.
@@ -59,11 +59,12 @@ always @ (negedge sdclk or negedge rstn_async)
 
 
 reg        sdcmdoe  = 1'b0;
+reg        sdcmdout = 1'b1;
 reg        sddatoe  = 1'b0;
 reg  [3:0] sddatout = 4'hF;
 
-//assign sdcmd = sdcmdoe ? sdcmdout : 1'bz;
-assign sddat = sddatoe ? sddatout : 4'bz;
+assign sdcmd = sdcmdoe ? sdcmdout : 1'b1;
+assign sddat = sddatout;
 
 
 function  [6:0] CalcCrcCMD;
@@ -433,7 +434,7 @@ begin
             end
         end else begin
             if         (read_idx<DATASTARTLEN+(BLOCK_SIZE*8)) begin
-                if( readbyteidx==4'hf ) begin
+                if( readbyteidx==4'h0 ) begin
                     rdreq<=1'b0;  rdaddr <= rdaddr+40'h1;
                 end else if( readbyteidx==4'h0 ) begin
                     if(read_idx<DATASTARTLEN+(BLOCK_SIZE*8)-1) rdreq<=1'b1;
@@ -625,7 +626,7 @@ always @ (negedge sdclk or negedge rstn_sdclk_n)
                           response_init( 1, 0 , request_cmd ,  32 ,  cardstatus                    );
                           cardstatus_illegal_command = 1'b0;
                       end
-            51      : if(last_is_acmd &&  cardstatus_current_state==TRAN) begin                       // SEND_SCR
+            51      : if(cardstatus_current_state==TRAN) begin                       // SEND_SCR
                           cardstatus_app_cmd = 1'b1;
                           response_init( 1, 0 , request_cmd ,  32 ,  cardstatus                    );
                           data_response_scr_init;
