@@ -11,12 +11,12 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="0.000 ns"></ZoomStartTime>
-      <ZoomEndTime time="74.251 ns"></ZoomEndTime>
-      <Cursor1Time time="22.000 ns"></Cursor1Time>
+      <ZoomStartTime time="63.440 ns"></ZoomStartTime>
+      <ZoomEndTime time="94.701 ns"></ZoomEndTime>
+      <Cursor1Time time="70.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="286"></NameColumnWidth>
+      <NameColumnWidth column_width="208"></NameColumnWidth>
       <ValueColumnWidth column_width="90"></ValueColumnWidth>
    </column_width_setting>
    <WVObjectSize size="11" />
@@ -123,7 +123,6 @@
    <wvobject fp_name="group1040" type="group">
       <obj_property name="label">State Machine and Control Signals</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="isExpanded"></obj_property>
       <wvobject fp_name="/psram_controller_tb/psram_controller_0/chip_0_state" type="array">
          <obj_property name="ElementShortName">chip_0_state[31:0]</obj_property>
          <obj_property name="ObjectShortName">chip_0_state[31:0]</obj_property>
@@ -148,21 +147,26 @@
          <obj_property name="CustomSignalColor">#A0A0A4</obj_property>
          <obj_property name="UseCustomSignalColor">true</obj_property>
       </wvobject>
-      <wvobject fp_name="group1041" type="group">
-         <obj_property name="label">Unused Controls</obj_property>
-         <obj_property name="DisplayName">label</obj_property>
-         <wvobject fp_name="/psram_controller_tb/psram_controller_0/control_reg_1" type="array">
-            <obj_property name="ElementShortName">control_reg_1[7:0]</obj_property>
-            <obj_property name="ObjectShortName">control_reg_1[7:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/psram_controller_tb/psram_controller_0/control_reg_2" type="array">
-            <obj_property name="ElementShortName">control_reg_2[7:0]</obj_property>
-            <obj_property name="ObjectShortName">control_reg_2[7:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/psram_controller_tb/psram_controller_0/control_reg_3" type="array">
-            <obj_property name="ElementShortName">control_reg_3[7:0]</obj_property>
-            <obj_property name="ObjectShortName">control_reg_3[7:0]</obj_property>
-         </wvobject>
+      <wvobject fp_name="/psram_controller_tb/psram_controller_0/address_LSB" type="array">
+         <obj_property name="ElementShortName">address_LSB[7:0]</obj_property>
+         <obj_property name="ObjectShortName">address_LSB[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/psram_controller_tb/psram_controller_0/address_CSB" type="array">
+         <obj_property name="ElementShortName">address_CSB[7:0]</obj_property>
+         <obj_property name="ObjectShortName">address_CSB[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/psram_controller_tb/psram_controller_0/address_MSB" type="array">
+         <obj_property name="ElementShortName">address_MSB[7:0]</obj_property>
+         <obj_property name="ObjectShortName">address_MSB[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/psram_controller_tb/psram_controller_0/read_write_address" type="array">
+         <obj_property name="ElementShortName">read_write_address[23:0]</obj_property>
+         <obj_property name="ObjectShortName">read_write_address[23:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/psram_controller_tb/psram_controller_0/address_tx_index" type="array">
+         <obj_property name="ElementShortName">address_tx_index[31:0]</obj_property>
+         <obj_property name="ObjectShortName">address_tx_index[31:0]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
       </wvobject>
    </wvobject>
    <wvobject fp_name="group1042" type="group">
@@ -227,7 +231,6 @@
       <wvobject fp_name="group1483" type="group">
          <obj_property name="label">Write Intf. (PSRAM READ)</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <obj_property name="isExpanded"></obj_property>
          <wvobject fp_name="/psram_controller_tb/psram_controller_0/selected_endpoint_address" type="array">
             <obj_property name="ElementShortName">selected_endpoint_address[15:0]</obj_property>
             <obj_property name="ObjectShortName">selected_endpoint_address[15:0]</obj_property>
@@ -254,12 +257,12 @@
          <obj_property name="ObjectShortName">clk</obj_property>
       </wvobject>
       <wvobject fp_name="/psram_controller_tb/psram_controller_0/spi_build_byte" type="array">
-         <obj_property name="ElementShortName">spi_build_byte[15:0]</obj_property>
-         <obj_property name="ObjectShortName">spi_build_byte[15:0]</obj_property>
+         <obj_property name="ElementShortName">spi_build_byte[7:0]</obj_property>
+         <obj_property name="ObjectShortName">spi_build_byte[7:0]</obj_property>
       </wvobject>
       <wvobject fp_name="/psram_controller_tb/psram_controller_0/spi_send_byte" type="array">
-         <obj_property name="ElementShortName">spi_send_byte[15:0]</obj_property>
-         <obj_property name="ObjectShortName">spi_send_byte[15:0]</obj_property>
+         <obj_property name="ElementShortName">spi_send_byte[7:0]</obj_property>
+         <obj_property name="ObjectShortName">spi_send_byte[7:0]</obj_property>
       </wvobject>
       <wvobject fp_name="/psram_controller_tb/psram_controller_0/command_word_index" type="array">
          <obj_property name="ElementShortName">command_word_index[31:0]</obj_property>

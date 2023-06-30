@@ -206,9 +206,11 @@ assign streamlined_sd_write_valid	= selected_endpoint_valid & instruction[3];
 
 //TODO: add the valid bit controlling to allow latching when finished reading a byte from psram. (happens just before byte is cleared)
 
+//TODO: FIX DATA WIDTH SHIT!
 
-logic [SPRAM_DATA_WIDTH-1:0] spi_build_byte;
-logic [SPRAM_DATA_WIDTH-1:0] spi_send_byte;
+
+logic [PSRAM_DATA_WIDTH-1:0] spi_build_byte;
+logic [PSRAM_DATA_WIDTH-1:0] spi_send_byte;
 
 //spi builder / receiver indices
 int command_word_index;
@@ -242,7 +244,7 @@ always @(posedge clk)begin
 		selected_driver_address <= 0;
 		selected_driver_valid <= 0;
 		chip_enable_0_internal <= 1;
-		address_tx_index <= 0;
+		address_tx_index <= PSRAM_ADDRESS_WIDTH-1;
 	end else begin
 	   chip_enable_0_internal <= ~((chip_0_state != idle) && (chip_0_state != blocked));
 	   if(chip_0_state == idle)begin
@@ -261,10 +263,10 @@ always @(posedge clk)begin
 			end
 		end else if(chip_0_state == send_read_addr)begin	
 		    spi_serial_out <= read_write_address[address_tx_index];
-			if(address_tx_index == PSRAM_ADDRESS_WIDTH)begin
+			if(address_tx_index == 0)begin
 			     chip_0_state <= chip_0_next_state;
 			end else begin
-			     address_tx_index <= address_tx_index + 1;
+			     address_tx_index <= address_tx_index - 1;
 			end
 			
 			
@@ -290,33 +292,44 @@ always @(posedge clk)begin
 				serial_to_parallel_bit_index <= serial_to_parallel_bit_index + 1;
 				spi_build_byte[serial_to_parallel_bit_index] = spi_serial_in;		//collect serial in into byte builder
 			end
+			
+			
+			
+			
 		end else if(chip_0_state == write_cmd)begin
+		    spi_serial_out <= SPI_QUAD_WRITE_COMMAND[command_word_index];		//transmit write cmd bit by bit
 			if(command_word_index == 7)begin
-			    spi_serial_out <= spi_send_byte[parallel_to_serial_bit_index];           //jump-the-gun type write
-			    parallel_to_serial_bit_index <= parallel_to_serial_bit_index + 1;
 				command_word_index <= 0;
 				chip_0_state <= chip_0_next_state;		//continue to write block
 			end else begin 
-				spi_serial_out <= SPI_QUAD_WRITE_COMMAND[command_word_index];		//transmit write cmd bit by bit
 				command_word_index <= command_word_index + 1;
 			end
 		end else if(chip_0_state == send_write_addr)begin	
 			spi_serial_out <= read_write_address[address_tx_index];
-			if(address_tx_index == PSRAM_ADDRESS_WIDTH)begin
+			if(address_tx_index == 1)begin
+			     selected_driver_valid <= 1;             //jump-the-gun provoke a read
+			     address_tx_index <= address_tx_index - 1;
+			             //TODO: FIX BIT WIDTH SHIT!
+			end else if(address_tx_index == 0)begin                           //ask for byte to write!!!
+			     selected_driver_valid <= 0;
 			     chip_0_state <= chip_0_next_state;
+			     //spi_send_byte <= selected_driver_data[PSRAM_DATA_WIDTH-1:0];
 			end else begin
-			     address_tx_index <= address_tx_index + 1;
+			     address_tx_index <= address_tx_index - 1;
 			end
-			
-			
-			
-			
-			
-			
 		end else if(chip_0_state == writing)begin
+			spi_serial_out <= spi_send_byte[parallel_to_serial_bit_index];
+			if(parallel_to_serial_bit_index == 0)begin
+			     spi_send_byte <= selected_driver_data[PSRAM_DATA_WIDTH-1:0];	//CHANGE THIS OR GATE IT USING A VALID GATE
+			     parallel_to_serial_bit_index <= parallel_to_serial_bit_index + 1;
+			end else if(parallel_to_serial_bit_index == SPRAM_DATA_WIDTH - 1)begin
+			     selected_driver_valid <= 1;
+			     parallel_to_serial_bit_index <= parallel_to_serial_bit_index + 1;
+			     
+			end else 
 			if(parallel_to_serial_bit_index == SPRAM_DATA_WIDTH)begin
 				parallel_to_serial_bit_index <= 0;
-				selected_driver_valid <= 1;
+				selected_driver_valid <= 0;
 				selected_driver_address <= address_within_block;
 				if(address_within_block == PSRAM_BLOCK_SIZE)begin
 					//BLOCK WRITE COMPLETE
@@ -327,12 +340,11 @@ always @(posedge clk)begin
 					address_within_block <= address_within_block + 1;
 					//TODO: fetch next byte to write. 
 					//the concern here is that this condition only happens one cc, so no returning if valid was low.
-					spi_send_byte <= selected_driver_data;	//CHANGE THIS OR GATE IT USING A VALID GATE
+					
 				end
 			end else begin
 			    selected_driver_valid <= 0;
 				parallel_to_serial_bit_index <= parallel_to_serial_bit_index + 1;
-				spi_serial_out <= spi_send_byte[parallel_to_serial_bit_index];
 			end
 		end else if(chip_0_state == blocked)begin
 		      selected_endpoint_valid <= 0;

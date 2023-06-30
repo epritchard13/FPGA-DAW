@@ -82,9 +82,9 @@ always @(posedge sclk)begin
         serial_out_internal <= 0;
         data_internal <= 0;
     end else begin
-        command_input_buffer = {command_input_buffer[COMMAND_LEN-2:0],serial_in};
-        address_input_buffer = {address_input_buffer[ADDR_WIDTH-2:0],serial_in};
-        data_input_buffer = {data_input_buffer[DATA_WIDTH-2:0],serial_in};
+        command_input_buffer <= {command_input_buffer[COMMAND_LEN-2:0],serial_in};
+        address_input_buffer <= {address_input_buffer[ADDR_WIDTH-2:0],serial_in};
+        data_input_buffer <= {data_input_buffer[DATA_WIDTH-2:0],serial_in};
         
         if(state == idle)begin
             if(command_input_buffer == 8'b00001011)begin        //enter idle condition
