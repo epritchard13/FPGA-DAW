@@ -11,9 +11,9 @@ module psram_controller#(
 	parameter SD_ADDRESS_WIDTH = 16,   //need to ^^
 
 	parameter PSRAM_DATA_WIDTH = 8,
-	parameter PSRAM_ADDRESS_WIDTH = 22,
+	parameter PSRAM_ADDRESS_WIDTH = 24,
 
-	parameter PSRAM_BLOCK_SIZE = 15
+	parameter PSRAM_BLOCK_SIZE = 1023
 	)(
 	input  clk,
 	input  resetn,
@@ -86,7 +86,7 @@ assign sclk = clk;
 
 
 //state machine for shuttling
-typedef enum {idle,read_cmd,reading,write_cmd,writing,blocked} chip_state_enum;
+typedef enum {idle,read_cmd,send_read_addr,reading,write_cmd,send_write_addr,writing,blocked} chip_state_enum;
 chip_state_enum chip_0_state;
 chip_state_enum chip_0_next_state;
 
@@ -101,9 +101,11 @@ always @(posedge clk) begin
 	end else begin
 		case(chip_0_state)
 			idle:			chip_0_next_state	<= idle;
-			read_cmd:		chip_0_next_state	<= reading;
+			read_cmd:		chip_0_next_state	<= send_read_addr;
+			send_read_addr: chip_0_next_state   <= reading;
 			reading:		chip_0_next_state	<= blocked;
-			write_cmd:		chip_0_next_state	<= writing;
+			write_cmd:		chip_0_next_state	<= send_write_addr;
+			send_write_addr:chip_0_next_state   <= writing;
 			writing:		chip_0_next_state	<= blocked;
 			blocked:		chip_0_next_state	<= idle;
 			default:		chip_0_next_state	<= idle;
@@ -114,27 +116,29 @@ end
 
 //latch and decipher the monarch's command
 logic [MONARCH_DATA_WIDTH-1:0] instruction;
-logic [MONARCH_DATA_WIDTH-1:0] control_reg_1;
-logic [MONARCH_DATA_WIDTH-1:0] control_reg_2;
-logic [MONARCH_DATA_WIDTH-1:0] control_reg_3;
+logic [MONARCH_DATA_WIDTH-1:0] address_LSB;
+logic [MONARCH_DATA_WIDTH-1:0] address_CSB;
+logic [MONARCH_DATA_WIDTH-1:0] address_MSB;
 
 //monarch instruction decoder
 assign want_to_read  = instruction[0];
 assign want_to_write = instruction[1];
+logic [PSRAM_ADDRESS_WIDTH-1:0] read_write_address;
+assign read_write_address = {address_MSB, address_CSB, address_LSB};
 
 always @(posedge clk) begin
 	if(resetn==0)begin
 		instruction   <= 0;
-		control_reg_1 <= 0;
-		control_reg_2 <= 0;
-		control_reg_3 <= 0;
+		address_LSB <= 0;
+		address_CSB <= 0;
+		address_MSB <= 0;
 	end else begin
 		if(monarch_axi_tvalid)begin
 			case(monarch_axi_taddress)
 				2'b00	:	instruction   <= monarch_axi_tdata;
-				2'b01	:	control_reg_1 <= monarch_axi_tdata;
-				2'b10	:	control_reg_2 <= monarch_axi_tdata;
-				2'b11	:	control_reg_3 <= monarch_axi_tdata;
+				2'b01	:	address_LSB <= monarch_axi_tdata;
+				2'b10	:	address_CSB <= monarch_axi_tdata;
+				2'b11	:	address_MSB <= monarch_axi_tdata;
 			endcase
 		end	
 	end
@@ -211,6 +215,8 @@ int command_word_index;
 int serial_to_parallel_bit_index;
 int parallel_to_serial_bit_index;
 int address_within_block;
+int address_tx_index;
+
 
 //blocker length
 int blocked_counter;
@@ -236,6 +242,7 @@ always @(posedge clk)begin
 		selected_driver_address <= 0;
 		selected_driver_valid <= 0;
 		chip_enable_0_internal <= 1;
+		address_tx_index <= 0;
 	end else begin
 	   chip_enable_0_internal <= ~((chip_0_state != idle) && (chip_0_state != blocked));
 	   if(chip_0_state == idle)begin
@@ -252,6 +259,16 @@ always @(posedge clk)begin
 				spi_serial_out <= SPI_FAST_QUAD_READ_COMMAND[command_word_index];	//transmit read cmd bit by bit.
 				command_word_index <= command_word_index + 1;
 			end
+		end else if(chip_0_state == send_read_addr)begin	
+		    spi_serial_out <= read_write_address[address_tx_index];
+			if(address_tx_index == PSRAM_ADDRESS_WIDTH)begin
+			     chip_0_state <= chip_0_next_state;
+			end else begin
+			     address_tx_index <= address_tx_index + 1;
+			end
+			
+			
+			
 		end else if(chip_0_state == reading)begin //read an entire block
 			if(serial_to_parallel_bit_index == SPRAM_DATA_WIDTH)begin				//collect every serial bit into a parallel vector
 				//BYTE COLLECTION COMPLETE
@@ -283,6 +300,19 @@ always @(posedge clk)begin
 				spi_serial_out <= SPI_QUAD_WRITE_COMMAND[command_word_index];		//transmit write cmd bit by bit
 				command_word_index <= command_word_index + 1;
 			end
+		end else if(chip_0_state == send_write_addr)begin	
+			spi_serial_out <= read_write_address[address_tx_index];
+			if(address_tx_index == PSRAM_ADDRESS_WIDTH)begin
+			     chip_0_state <= chip_0_next_state;
+			end else begin
+			     address_tx_index <= address_tx_index + 1;
+			end
+			
+			
+			
+			
+			
+			
 		end else if(chip_0_state == writing)begin
 			if(parallel_to_serial_bit_index == SPRAM_DATA_WIDTH)begin
 				parallel_to_serial_bit_index <= 0;

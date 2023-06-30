@@ -7,7 +7,7 @@ module psram_controller_tb#(
 	parameter SD_DATA_WIDTH = 16,
 	parameter SD_ADDRESS_WIDTH = 16,
 	parameter PSRAM_DATA_WIDTH = 8,
-	parameter PSRAM_ADDRESS_WIDTH = 22,
+	parameter PSRAM_ADDRESS_WIDTH = 24,
 	parameter PSRAM_BLOCK_SIZE = 1023
     )();
     logic  clk;
