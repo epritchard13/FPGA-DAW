@@ -3,8 +3,8 @@ module psram_controller_tb#(
     parameter MONARCH_DATA_WIDTH = 8,
 	parameter MONARCH_ADDRESS_WIDTH = 2,
 	parameter SPRAM_DATA_WIDTH = 16,
-	parameter SPRAM_ADDRESS_WIDTH = 8,
-	parameter SD_DATA_WIDTH = 8,
+	parameter SPRAM_ADDRESS_WIDTH = 16,
+	parameter SD_DATA_WIDTH = 16,
 	parameter SD_ADDRESS_WIDTH = 16,
 	parameter PSRAM_DATA_WIDTH = 8,
 	parameter PSRAM_ADDRESS_WIDTH = 22,
@@ -45,18 +45,18 @@ module psram_controller_tb#(
 	
 	//chip interfaces
 	logic  chip_enable_0;
-	wire  sosio0_0;
-	wire  sosio1_0;
-	wire  sio2_0;
-	wire  sio3_0;
+	logic  sisio0_0;
+	logic  sosio1_0;
+	//wire  sio2_0;
+	//wire  sio3_0;
 	logic  sclk;
 	
 	
 	psram_controller psram_controller_0(   .clk(clk),
-	                                       .resetn(res),
+	                                       .resetn(resetn),
 	                                       .monarch_axi_tdata(monarch_axi_tdata),
 	                                       .monarch_axi_taddress(monarch_axi_taddress),
-	                                       .monarch_axi_tvalid(monarch_axi_tv),
+	                                       .monarch_axi_tvalid(monarch_axi_tvalid),
 	                                       .monarch_axi_tready(monarch_axi_tready),
 	                                       .spram_write_axi_tdata(spram_write_axi_tdata),
 	                                       .spram_write_axi_taddress(spram_write_axi_taddress),
@@ -75,15 +75,33 @@ module psram_controller_tb#(
 	                                       .sd_read_axi_tvalid(sd_read_axi_tvalid),
 	                                       .sd_read_axi_tready(sd_read_axi_tready),
 	                                       .chip_enable_0(chip_enable_0),
-	                                       .sosio0_0(sosio0_0),
+	                                       .sisio0_0(sisio0_0),
 	                                       .sosio1_0(sosio1_0),
-	                                       .sio2_0(sio2_0),
-	                                       .sio3_0(sio3_0),
+	                                       //.sio2_0(sio2_0),
+	                                       //.sio3_0(sio3_0),
 	                                       .sclk(sclk));
 	                              
+	psram_simulator_tb psram_0(    .sclk(sclk),
+	                               .chip_enable_n(chip_enable_0),
+	                               .serial_in(sosio1_0),
+	                               .serial_out(sisio0_0));              
+	              
 	                                       
     initial begin
         clk = 0;
+        monarch_axi_tdata = 0;
+        monarch_axi_taddress = 0;
+        monarch_axi_tvalid = 0;
+        
+        spram_write_axi_tready = 0;
+        spram_read_axi_tdata = 0;
+        spram_read_axi_tready = 0;
+        
+        sd_write_axi_tready = 0;
+        sd_read_axi_tdata = 0;
+        sd_read_axi_tready = 0;
+        //sisio0_0 = 0;
+        
         while(1)begin
             clk = ~clk;
             #1;
@@ -92,9 +110,18 @@ module psram_controller_tb#(
     
     initial begin
         resetn = 0;
-        #20;
+        #1;
         resetn = 1;
-        #2000;
+        #1;
+        
+        //send a test command: block write 
+        monarch_axi_tdata = 8'b00000010;
+        monarch_axi_taddress = 2'b00;
+        monarch_axi_tvalid = 1'b1;
+        #1;
+        monarch_axi_tvalid = 1'b0;
+        
+        
     end
 
 endmodule

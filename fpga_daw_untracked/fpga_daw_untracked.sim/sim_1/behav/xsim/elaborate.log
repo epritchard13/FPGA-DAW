@@ -6,11 +6,10 @@ Starting static elaboration
 Pass Through NonSizing Optimizer
 Completed static elaboration
 Starting simulation data flow analysis
-WARNING: [XSIM 43-4099] "C:/Users/Eddie/Documents/GitHub/Certain-Synthesizer-FPGA-DAW/rtl/thing.sv" Line 3. Module psram_controller doesn't have a timescale but at least one module in design has a timescale.
-WARNING: [XSIM 43-4099] "C:/Users/Eddie/Documents/GitHub/Certain-Synthesizer-FPGA-DAW/rtl/thing.sv" Line 3. Module psram_controller doesn't have a timescale but at least one module in design has a timescale.
 Completed simulation data flow analysis
 Time Resolution for simulation is 1ps
 Compiling module xil_defaultlib.psram_controller
+Compiling module xil_defaultlib.psram_simulator_tb
 Compiling module xil_defaultlib.psram_controller_tb
 Compiling module xil_defaultlib.glbl
 Built simulation snapshot psram_controller_tb_behav
