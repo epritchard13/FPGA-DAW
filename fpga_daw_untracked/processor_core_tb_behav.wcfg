@@ -11,13 +11,13 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="63.440 ns"></ZoomStartTime>
-      <ZoomEndTime time="94.701 ns"></ZoomEndTime>
-      <Cursor1Time time="70.000 ns"></Cursor1Time>
+      <ZoomStartTime time="3.000 ns"></ZoomStartTime>
+      <ZoomEndTime time="48.901 ns"></ZoomEndTime>
+      <Cursor1Time time="12.060 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="208"></NameColumnWidth>
-      <ValueColumnWidth column_width="90"></ValueColumnWidth>
+      <NameColumnWidth column_width="353"></NameColumnWidth>
+      <ValueColumnWidth column_width="171"></ValueColumnWidth>
    </column_width_setting>
    <WVObjectSize size="11" />
    <wvobject fp_name="/psram_controller_tb/psram_controller_0/clk" type="logic">
@@ -55,10 +55,6 @@
          <obj_property name="ElementShortName">spram_write_axi_tdata[15:0]</obj_property>
          <obj_property name="ObjectShortName">spram_write_axi_tdata[15:0]</obj_property>
       </wvobject>
-      <wvobject fp_name="/psram_controller_tb/psram_controller_0/spram_write_axi_taddress" type="array">
-         <obj_property name="ElementShortName">spram_write_axi_taddress[15:0]</obj_property>
-         <obj_property name="ObjectShortName">spram_write_axi_taddress[15:0]</obj_property>
-      </wvobject>
       <wvobject fp_name="/psram_controller_tb/psram_controller_0/spram_write_axi_tvalid" type="logic">
          <obj_property name="ElementShortName">spram_write_axi_tvalid</obj_property>
          <obj_property name="ObjectShortName">spram_write_axi_tvalid</obj_property>
@@ -70,10 +66,6 @@
       <wvobject fp_name="/psram_controller_tb/psram_controller_0/spram_read_axi_tdata" type="array">
          <obj_property name="ElementShortName">spram_read_axi_tdata[15:0]</obj_property>
          <obj_property name="ObjectShortName">spram_read_axi_tdata[15:0]</obj_property>
-      </wvobject>
-      <wvobject fp_name="/psram_controller_tb/psram_controller_0/spram_read_axi_taddress" type="array">
-         <obj_property name="ElementShortName">spram_read_axi_taddress[15:0]</obj_property>
-         <obj_property name="ObjectShortName">spram_read_axi_taddress[15:0]</obj_property>
       </wvobject>
       <wvobject fp_name="/psram_controller_tb/psram_controller_0/spram_read_axi_tvalid" type="logic">
          <obj_property name="ElementShortName">spram_read_axi_tvalid</obj_property>
@@ -91,10 +83,6 @@
          <obj_property name="ElementShortName">sd_write_axi_tdata[15:0]</obj_property>
          <obj_property name="ObjectShortName">sd_write_axi_tdata[15:0]</obj_property>
       </wvobject>
-      <wvobject fp_name="/psram_controller_tb/psram_controller_0/sd_write_axi_taddress" type="array">
-         <obj_property name="ElementShortName">sd_write_axi_taddress[15:0]</obj_property>
-         <obj_property name="ObjectShortName">sd_write_axi_taddress[15:0]</obj_property>
-      </wvobject>
       <wvobject fp_name="/psram_controller_tb/psram_controller_0/sd_write_axi_tvalid" type="logic">
          <obj_property name="ElementShortName">sd_write_axi_tvalid</obj_property>
          <obj_property name="ObjectShortName">sd_write_axi_tvalid</obj_property>
@@ -106,10 +94,6 @@
       <wvobject fp_name="/psram_controller_tb/psram_controller_0/sd_read_axi_tdata" type="array">
          <obj_property name="ElementShortName">sd_read_axi_tdata[15:0]</obj_property>
          <obj_property name="ObjectShortName">sd_read_axi_tdata[15:0]</obj_property>
-      </wvobject>
-      <wvobject fp_name="/psram_controller_tb/psram_controller_0/sd_read_axi_taddress" type="array">
-         <obj_property name="ElementShortName">sd_read_axi_taddress[15:0]</obj_property>
-         <obj_property name="ObjectShortName">sd_read_axi_taddress[15:0]</obj_property>
       </wvobject>
       <wvobject fp_name="/psram_controller_tb/psram_controller_0/sd_read_axi_tvalid" type="logic">
          <obj_property name="ElementShortName">sd_read_axi_tvalid</obj_property>
@@ -123,22 +107,11 @@
    <wvobject fp_name="group1040" type="group">
       <obj_property name="label">State Machine and Control Signals</obj_property>
       <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
       <wvobject fp_name="/psram_controller_tb/psram_controller_0/chip_0_state" type="array">
          <obj_property name="ElementShortName">chip_0_state[31:0]</obj_property>
          <obj_property name="ObjectShortName">chip_0_state[31:0]</obj_property>
          <obj_property name="CustomSignalColor">#FFFF00</obj_property>
-         <obj_property name="UseCustomSignalColor">true</obj_property>
-      </wvobject>
-      <wvobject fp_name="/psram_controller_tb/psram_controller_0/want_to_read" type="logic">
-         <obj_property name="ElementShortName">want_to_read</obj_property>
-         <obj_property name="ObjectShortName">want_to_read</obj_property>
-         <obj_property name="CustomSignalColor">#008080</obj_property>
-         <obj_property name="UseCustomSignalColor">true</obj_property>
-      </wvobject>
-      <wvobject fp_name="/psram_controller_tb/psram_controller_0/want_to_write" type="logic">
-         <obj_property name="ElementShortName">want_to_write</obj_property>
-         <obj_property name="ObjectShortName">want_to_write</obj_property>
-         <obj_property name="CustomSignalColor">#008080</obj_property>
          <obj_property name="UseCustomSignalColor">true</obj_property>
       </wvobject>
       <wvobject fp_name="/psram_controller_tb/psram_controller_0/instruction" type="array">
@@ -147,63 +120,14 @@
          <obj_property name="CustomSignalColor">#A0A0A4</obj_property>
          <obj_property name="UseCustomSignalColor">true</obj_property>
       </wvobject>
-      <wvobject fp_name="/psram_controller_tb/psram_controller_0/address_LSB" type="array">
-         <obj_property name="ElementShortName">address_LSB[7:0]</obj_property>
-         <obj_property name="ObjectShortName">address_LSB[7:0]</obj_property>
-      </wvobject>
-      <wvobject fp_name="/psram_controller_tb/psram_controller_0/address_CSB" type="array">
-         <obj_property name="ElementShortName">address_CSB[7:0]</obj_property>
-         <obj_property name="ObjectShortName">address_CSB[7:0]</obj_property>
-      </wvobject>
-      <wvobject fp_name="/psram_controller_tb/psram_controller_0/address_MSB" type="array">
-         <obj_property name="ElementShortName">address_MSB[7:0]</obj_property>
-         <obj_property name="ObjectShortName">address_MSB[7:0]</obj_property>
-      </wvobject>
       <wvobject fp_name="/psram_controller_tb/psram_controller_0/read_write_address" type="array">
          <obj_property name="ElementShortName">read_write_address[23:0]</obj_property>
          <obj_property name="ObjectShortName">read_write_address[23:0]</obj_property>
-      </wvobject>
-      <wvobject fp_name="/psram_controller_tb/psram_controller_0/address_tx_index" type="array">
-         <obj_property name="ElementShortName">address_tx_index[31:0]</obj_property>
-         <obj_property name="ObjectShortName">address_tx_index[31:0]</obj_property>
-         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
       </wvobject>
    </wvobject>
    <wvobject fp_name="group1042" type="group">
       <obj_property name="label">Internal SD Bit Width Exchange</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-      <wvobject fp_name="/psram_controller_tb/psram_controller_0/streamlined_sd_read_data" type="array">
-         <obj_property name="ElementShortName">streamlined_sd_read_data[15:0]</obj_property>
-         <obj_property name="ObjectShortName">streamlined_sd_read_data[15:0]</obj_property>
-      </wvobject>
-      <wvobject fp_name="/psram_controller_tb/psram_controller_0/streamlined_sd_read_address" type="array">
-         <obj_property name="ElementShortName">streamlined_sd_read_address[15:0]</obj_property>
-         <obj_property name="ObjectShortName">streamlined_sd_read_address[15:0]</obj_property>
-      </wvobject>
-      <wvobject fp_name="/psram_controller_tb/psram_controller_0/streamlined_sd_read_valid" type="logic">
-         <obj_property name="ElementShortName">streamlined_sd_read_valid</obj_property>
-         <obj_property name="ObjectShortName">streamlined_sd_read_valid</obj_property>
-      </wvobject>
-      <wvobject fp_name="/psram_controller_tb/psram_controller_0/streamlined_sd_read_ready" type="logic">
-         <obj_property name="ElementShortName">streamlined_sd_read_ready</obj_property>
-         <obj_property name="ObjectShortName">streamlined_sd_read_ready</obj_property>
-      </wvobject>
-      <wvobject fp_name="/psram_controller_tb/psram_controller_0/streamlined_sd_write_data" type="array">
-         <obj_property name="ElementShortName">streamlined_sd_write_data[15:0]</obj_property>
-         <obj_property name="ObjectShortName">streamlined_sd_write_data[15:0]</obj_property>
-      </wvobject>
-      <wvobject fp_name="/psram_controller_tb/psram_controller_0/streamlined_sd_write_address" type="array">
-         <obj_property name="ElementShortName">streamlined_sd_write_address[15:0]</obj_property>
-         <obj_property name="ObjectShortName">streamlined_sd_write_address[15:0]</obj_property>
-      </wvobject>
-      <wvobject fp_name="/psram_controller_tb/psram_controller_0/streamlined_sd_write_valid" type="logic">
-         <obj_property name="ElementShortName">streamlined_sd_write_valid</obj_property>
-         <obj_property name="ObjectShortName">streamlined_sd_write_valid</obj_property>
-      </wvobject>
-      <wvobject fp_name="/psram_controller_tb/psram_controller_0/streamlined_sd_write_ready" type="logic">
-         <obj_property name="ElementShortName">streamlined_sd_write_ready</obj_property>
-         <obj_property name="ObjectShortName">streamlined_sd_write_ready</obj_property>
-      </wvobject>
    </wvobject>
    <wvobject fp_name="group1059" type="group">
       <obj_property name="label">Internal SD / SPRAM Exchange</obj_property>
@@ -214,10 +138,6 @@
          <wvobject fp_name="/psram_controller_tb/psram_controller_0/selected_driver_data" type="array">
             <obj_property name="ElementShortName">selected_driver_data[15:0]</obj_property>
             <obj_property name="ObjectShortName">selected_driver_data[15:0]</obj_property>
-         </wvobject>
-         <wvobject fp_name="/psram_controller_tb/psram_controller_0/selected_driver_address" type="array">
-            <obj_property name="ElementShortName">selected_driver_address[15:0]</obj_property>
-            <obj_property name="ObjectShortName">selected_driver_address[15:0]</obj_property>
          </wvobject>
          <wvobject fp_name="/psram_controller_tb/psram_controller_0/selected_driver_valid" type="logic">
             <obj_property name="ElementShortName">selected_driver_valid</obj_property>
@@ -231,10 +151,6 @@
       <wvobject fp_name="group1483" type="group">
          <obj_property name="label">Write Intf. (PSRAM READ)</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <wvobject fp_name="/psram_controller_tb/psram_controller_0/selected_endpoint_address" type="array">
-            <obj_property name="ElementShortName">selected_endpoint_address[15:0]</obj_property>
-            <obj_property name="ObjectShortName">selected_endpoint_address[15:0]</obj_property>
-         </wvobject>
          <wvobject fp_name="/psram_controller_tb/psram_controller_0/selected_endpoint_data" type="array">
             <obj_property name="ElementShortName">selected_endpoint_data[15:0]</obj_property>
             <obj_property name="ObjectShortName">selected_endpoint_data[15:0]</obj_property>
@@ -256,42 +172,6 @@
          <obj_property name="ElementShortName">clk</obj_property>
          <obj_property name="ObjectShortName">clk</obj_property>
       </wvobject>
-      <wvobject fp_name="/psram_controller_tb/psram_controller_0/spi_build_byte" type="array">
-         <obj_property name="ElementShortName">spi_build_byte[7:0]</obj_property>
-         <obj_property name="ObjectShortName">spi_build_byte[7:0]</obj_property>
-      </wvobject>
-      <wvobject fp_name="/psram_controller_tb/psram_controller_0/spi_send_byte" type="array">
-         <obj_property name="ElementShortName">spi_send_byte[7:0]</obj_property>
-         <obj_property name="ObjectShortName">spi_send_byte[7:0]</obj_property>
-      </wvobject>
-      <wvobject fp_name="/psram_controller_tb/psram_controller_0/command_word_index" type="array">
-         <obj_property name="ElementShortName">command_word_index[31:0]</obj_property>
-         <obj_property name="ObjectShortName">command_word_index[31:0]</obj_property>
-      </wvobject>
-      <wvobject fp_name="/psram_controller_tb/psram_controller_0/serial_to_parallel_bit_index" type="array">
-         <obj_property name="ElementShortName">serial_to_parallel_bit_index[31:0]</obj_property>
-         <obj_property name="ObjectShortName">serial_to_parallel_bit_index[31:0]</obj_property>
-      </wvobject>
-      <wvobject fp_name="/psram_controller_tb/psram_controller_0/parallel_to_serial_bit_index" type="array">
-         <obj_property name="ElementShortName">parallel_to_serial_bit_index[31:0]</obj_property>
-         <obj_property name="ObjectShortName">parallel_to_serial_bit_index[31:0]</obj_property>
-      </wvobject>
-      <wvobject fp_name="/psram_controller_tb/psram_controller_0/address_within_block" type="array">
-         <obj_property name="ElementShortName">address_within_block[31:0]</obj_property>
-         <obj_property name="ObjectShortName">address_within_block[31:0]</obj_property>
-      </wvobject>
-      <wvobject fp_name="/psram_controller_tb/psram_controller_0/blocked_counter" type="array">
-         <obj_property name="ElementShortName">blocked_counter[31:0]</obj_property>
-         <obj_property name="ObjectShortName">blocked_counter[31:0]</obj_property>
-      </wvobject>
-      <wvobject fp_name="/psram_controller_tb/psram_controller_0/spi_serial_out" type="logic">
-         <obj_property name="ElementShortName">spi_serial_out</obj_property>
-         <obj_property name="ObjectShortName">spi_serial_out</obj_property>
-      </wvobject>
-      <wvobject fp_name="/psram_controller_tb/psram_controller_0/spi_serial_in" type="logic">
-         <obj_property name="ElementShortName">spi_serial_in</obj_property>
-         <obj_property name="ObjectShortName">spi_serial_in</obj_property>
-      </wvobject>
    </wvobject>
    <wvobject fp_name="group1036" type="group">
       <obj_property name="label">PSRAM Ctrl Serial Interface</obj_property>
@@ -301,17 +181,9 @@
          <obj_property name="ElementShortName">chip_enable_0</obj_property>
          <obj_property name="ObjectShortName">chip_enable_0</obj_property>
       </wvobject>
-      <wvobject fp_name="/psram_controller_tb/psram_controller_0/sisio0_0" type="logic">
-         <obj_property name="ElementShortName">sisio0_0</obj_property>
-         <obj_property name="ObjectShortName">sisio0_0</obj_property>
-      </wvobject>
       <wvobject fp_name="/psram_controller_tb/psram_controller_0/sclk" type="logic">
          <obj_property name="ElementShortName">sclk</obj_property>
          <obj_property name="ObjectShortName">sclk</obj_property>
-      </wvobject>
-      <wvobject fp_name="/psram_controller_tb/psram_controller_0/sosio1_0" type="logic">
-         <obj_property name="ElementShortName">sosio1_0</obj_property>
-         <obj_property name="ObjectShortName">sosio1_0</obj_property>
       </wvobject>
    </wvobject>
    <wvobject fp_name="group1954" type="group">
@@ -321,6 +193,7 @@
       <wvobject fp_name="group1955" type="group">
          <obj_property name="label">Serial Interface</obj_property>
          <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
          <wvobject fp_name="/psram_controller_tb/psram_0/sclk" type="logic">
             <obj_property name="ElementShortName">sclk</obj_property>
             <obj_property name="ObjectShortName">sclk</obj_property>

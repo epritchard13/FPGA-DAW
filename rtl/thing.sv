@@ -43,8 +43,8 @@ module psram_controller#(
 	//spram axi interface for writing to SPRAM (Reading from PSRAM)
 	output logic   [SPRAM_DATA_WIDTH-1:0] spram_write_axi_tdata,
 	//output logic   [SPRAM_ADDRESS_WIDTH-1:0] spram_write_axi_taddress,   //see above notes about why this may not be necessary.
-	output logic   spram_write_axi_tvalid,
 	input          spram_write_axi_tready,
+	output logic   spram_write_axi_tvalid,
 
 	//spram axi interface for reading from SPRAM (Writing to PSRAM)
 	input          [SPRAM_DATA_WIDTH-1:0] spram_read_axi_tdata,
@@ -121,9 +121,9 @@ logic  selected_endpoint_ready;										//output from module	(decoder)
 logic  selected_endpoint_valid;										//input  into module	(mux)
 assign spram_write_axi_tdata		= selected_endpoint_data;
 assign sd_write_axi_tdata	        = selected_endpoint_data;
-assign spram_write_axi_tready		= selected_endpoint_ready & ~instruction[3];
-assign sd_write_axi_tready      	= selected_endpoint_ready & instruction[3];
-assign selected_endpoint_valid		= (instruction[3] == 0)?spram_write_axi_tvalid	: sd_write_axi_tvalid;
+assign spram_write_axi_tvalid		= selected_endpoint_valid & ~instruction[3];
+assign sd_write_axi_tvalid      	= selected_endpoint_valid & instruction[3];
+assign selected_endpoint_ready		= (instruction[3] == 0)?spram_write_axi_tready	: sd_write_axi_tready;
 
 //SPI and state machine control signals
 logic [PSRAM_DATA_WIDTH-1:0] spi_byte;                  //internal structure used to serialize / deserialize input / output spi data
