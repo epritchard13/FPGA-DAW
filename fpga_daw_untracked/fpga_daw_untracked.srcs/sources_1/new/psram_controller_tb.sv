@@ -21,34 +21,32 @@ module psram_controller_tb#(
 
 	//spram axi interface for writing - MSB of address will freeze a block of spram in order to write.
 	logic  [SPRAM_DATA_WIDTH-1:0] spram_write_axi_tdata;
-	logic  [SPRAM_ADDRESS_WIDTH-1:0] spram_write_axi_taddress;
+	//logic  [SPRAM_ADDRESS_WIDTH-1:0] spram_write_axi_taddress;
 	logic  spram_write_axi_tvalid;
 	logic  spram_write_axi_tready;
 
 	//spram axi interface for reading - MSB of address will freeze a block of spram in order to read.
 	logic  [SPRAM_DATA_WIDTH-1:0] spram_read_axi_tdata;
-	logic  [SPRAM_ADDRESS_WIDTH-1:0] spram_read_axi_taddress;
+	//logic  [SPRAM_ADDRESS_WIDTH-1:0] spram_read_axi_taddress;
 	logic  spram_read_axi_tvalid;
 	logic  spram_read_axi_tready;
 
 	//sd axi interface for writing
 	logic  [SD_DATA_WIDTH-1:0] sd_write_axi_tdata;
-	logic  [SD_ADDRESS_WIDTH-1:0] sd_write_axi_taddress;
+	//logic  [SD_ADDRESS_WIDTH-1:0] sd_write_axi_taddress;
 	logic  sd_write_axi_tvalid;
 	logic  sd_write_axi_tready;
 
 	//sd axi interface for reading
 	logic  [SD_DATA_WIDTH-1:0] sd_read_axi_tdata;
-	logic  [SD_ADDRESS_WIDTH-1:0] sd_read_axi_taddress;
+	//logic  [SD_ADDRESS_WIDTH-1:0] sd_read_axi_taddress;
 	logic  sd_read_axi_tvalid;
 	logic  sd_read_axi_tready;
 	
 	//chip interfaces
 	logic  chip_enable_0;
-	logic  sisio0_0;
-	logic  sosio1_0;
-	//wire  sio2_0;
-	//wire  sio3_0;
+	logic  serial_in_0;
+	logic  serial_out_0;
 	logic  sclk;
 	
 	
@@ -59,32 +57,30 @@ module psram_controller_tb#(
 	                                       .monarch_axi_tvalid(monarch_axi_tvalid),
 	                                       .monarch_axi_tready(monarch_axi_tready),
 	                                       .spram_write_axi_tdata(spram_write_axi_tdata),
-	                                       .spram_write_axi_taddress(spram_write_axi_taddress),
+	                                       //.spram_write_axi_taddress(spram_write_axi_taddress),
 	                                       .spram_write_axi_tvalid(spram_write_axi_tvalid),
 	                                       .spram_write_axi_tready(spram_write_axi_tready),
 	                                       .spram_read_axi_tdata(spram_read_axi_tdata),
-	                                       .spram_read_axi_taddress(spram_read_axi_taddress),
+	                                       //.spram_read_axi_taddress(spram_read_axi_taddress),
 	                                       .spram_read_axi_tvalid(spram_read_axi_tvalid),
 	                                       .spram_read_axi_tready(spram_read_axi_tready),
 	                                       .sd_write_axi_tdata(sd_write_axi_tdata),
-	                                       .sd_write_axi_taddress(sd_write_axi_taddress),
+	                                       //.sd_write_axi_taddress(sd_write_axi_taddress),
 	                                       .sd_write_axi_tvalid(sd_write_axi_tvali),
 	                                       .sd_write_axi_tready(sd_write_axi_tready),
 	                                       .sd_read_axi_tdata(sd_read_axi_tdata),
-	                                       .sd_read_axi_taddress(sd_read_axi_taddress),
+	                                       //.sd_read_axi_taddress(sd_read_axi_taddress),
 	                                       .sd_read_axi_tvalid(sd_read_axi_tvalid),
 	                                       .sd_read_axi_tready(sd_read_axi_tready),
 	                                       .chip_enable_0(chip_enable_0),
-	                                       .sisio0_0(sisio0_0),
-	                                       .sosio1_0(sosio1_0),
-	                                       //.sio2_0(sio2_0),
-	                                       //.sio3_0(sio3_0),
+	                                       .serial_in_0(serial_in_0),
+	                                       .serial_out_0(serial_out_0),
 	                                       .sclk(sclk));
 	                              
 	psram_simulator_tb psram_0(    .sclk(sclk),
 	                               .chip_enable_n(chip_enable_0),
-	                               .serial_in(sosio1_0),
-	                               .serial_out(sisio0_0));              
+	                               .serial_in(serial_in_0),
+	                               .serial_out(serial_out_0));              
 	              
 	                                       
     initial begin

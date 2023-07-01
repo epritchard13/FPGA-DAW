@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="psram_controller_tb_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="glbl" />
+            <top_module name="psram_controller_tb" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="0 ps"></ZoomStartTime>
+      <ZoomEndTime time="13 ps"></ZoomEndTime>
+      <Cursor1Time time="0 ps"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="202"></NameColumnWidth>
+      <ValueColumnWidth column_width="90"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="50" />
+   <wvobject fp_name="/psram_controller_tb/psram_controller_0/clk" type="logic">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/psram_controller_tb/psram_controller_0/resetn" type="logic">
+      <obj_property name="ElementShortName">resetn</obj_property>
+      <obj_property name="ObjectShortName">resetn</obj_property>
+   </wvobject>
+   <wvobject fp_name="/psram_controller_tb/psram_controller_0/monarch_axi_tdata" type="array">
+      <obj_property name="ElementShortName">monarch_axi_tdata[7:0]</obj_property>
+      <obj_property name="ObjectShortName">monarch_axi_tdata[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/psram_controller_tb/psram_controller_0/monarch_axi_taddress" type="array">
+      <obj_property name="ElementShortName">monarch_axi_taddress[1:0]</obj_property>
+      <obj_property name="ObjectShortName">monarch_axi_taddress[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/psram_controller_tb/psram_controller_0/monarch_axi_tvalid" type="logic">
+      <obj_property name="ElementShortName">monarch_axi_tvalid</obj_property>
+      <obj_property name="ObjectShortName">monarch_axi_tvalid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/psram_controller_tb/psram_controller_0/monarch_axi_tready" type="logic">
+      <obj_property name="ElementShortName">monarch_axi_tready</obj_property>
+      <obj_property name="ObjectShortName">monarch_axi_tready</obj_property>
+   </wvobject>
+   <wvobject fp_name="/psram_controller_tb/psram_controller_0/spram_write_axi_tdata" type="array">
+      <obj_property name="ElementShortName">spram_write_axi_tdata[15:0]</obj_property>
+      <obj_property name="ObjectShortName">spram_write_axi_tdata[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/psram_controller_tb/psram_controller_0/spram_write_axi_tvalid" type="logic">
+      <obj_property name="ElementShortName">spram_write_axi_tvalid</obj_property>
+      <obj_property name="ObjectShortName">spram_write_axi_tvalid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/psram_controller_tb/psram_controller_0/spram_write_axi_tready" type="logic">
+      <obj_property name="ElementShortName">spram_write_axi_tready</obj_property>
+      <obj_property name="ObjectShortName">spram_write_axi_tready</obj_property>
+   </wvobject>
+   <wvobject fp_name="/psram_controller_tb/psram_controller_0/spram_read_axi_tdata" type="array">
+      <obj_property name="ElementShortName">spram_read_axi_tdata[15:0]</obj_property>
+      <obj_property name="ObjectShortName">spram_read_axi_tdata[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/psram_controller_tb/psram_controller_0/spram_read_axi_tready" type="logic">
+      <obj_property name="ElementShortName">spram_read_axi_tready</obj_property>
+      <obj_property name="ObjectShortName">spram_read_axi_tready</obj_property>
+   </wvobject>
+   <wvobject fp_name="/psram_controller_tb/psram_controller_0/spram_read_axi_tvalid" type="logic">
+      <obj_property name="ElementShortName">spram_read_axi_tvalid</obj_property>
+      <obj_property name="ObjectShortName">spram_read_axi_tvalid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/psram_controller_tb/psram_controller_0/sd_write_axi_tdata" type="array">
+      <obj_property name="ElementShortName">sd_write_axi_tdata[15:0]</obj_property>
+      <obj_property name="ObjectShortName">sd_write_axi_tdata[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/psram_controller_tb/psram_controller_0/sd_write_axi_tvalid" type="logic">
+      <obj_property name="ElementShortName">sd_write_axi_tvalid</obj_property>
+      <obj_property name="ObjectShortName">sd_write_axi_tvalid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/psram_controller_tb/psram_controller_0/sd_write_axi_tready" type="logic">
+      <obj_property name="ElementShortName">sd_write_axi_tready</obj_property>
+      <obj_property name="ObjectShortName">sd_write_axi_tready</obj_property>
+   </wvobject>
+   <wvobject fp_name="/psram_controller_tb/psram_controller_0/sd_read_axi_tdata" type="array">
+      <obj_property name="ElementShortName">sd_read_axi_tdata[15:0]</obj_property>
+      <obj_property name="ObjectShortName">sd_read_axi_tdata[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/psram_controller_tb/psram_controller_0/sd_read_axi_tready" type="logic">
+      <obj_property name="ElementShortName">sd_read_axi_tready</obj_property>
+      <obj_property name="ObjectShortName">sd_read_axi_tready</obj_property>
+   </wvobject>
+   <wvobject fp_name="/psram_controller_tb/psram_controller_0/sd_read_axi_tvalid" type="logic">
+      <obj_property name="ElementShortName">sd_read_axi_tvalid</obj_property>
+      <obj_property name="ObjectShortName">sd_read_axi_tvalid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/psram_controller_tb/psram_controller_0/chip_enable_0" type="logic">
+      <obj_property name="ElementShortName">chip_enable_0</obj_property>
+      <obj_property name="ObjectShortName">chip_enable_0</obj_property>
+   </wvobject>
+   <wvobject fp_name="/psram_controller_tb/psram_controller_0/serial_in_0" type="logic">
+      <obj_property name="ElementShortName">serial_in_0</obj_property>
+      <obj_property name="ObjectShortName">serial_in_0</obj_property>
+   </wvobject>
+   <wvobject fp_name="/psram_controller_tb/psram_controller_0/serial_out_0" type="logic">
+      <obj_property name="ElementShortName">serial_out_0</obj_property>
+      <obj_property name="ObjectShortName">serial_out_0</obj_property>
+   </wvobject>
+   <wvobject fp_name="/psram_controller_tb/psram_controller_0/sclk" type="logic">
+      <obj_property name="ElementShortName">sclk</obj_property>
+      <obj_property name="ObjectShortName">sclk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/psram_controller_tb/psram_controller_0/SPI_FAST_READ_COMMAND" type="array">
+      <obj_property name="ElementShortName">SPI_FAST_READ_COMMAND[7:0]</obj_property>
+      <obj_property name="ObjectShortName">SPI_FAST_READ_COMMAND[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/psram_controller_tb/psram_controller_0/SPI_WRITE_COMMAND" type="array">
+      <obj_property name="ElementShortName">SPI_WRITE_COMMAND[7:0]</obj_property>
+      <obj_property name="ObjectShortName">SPI_WRITE_COMMAND[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/psram_controller_tb/psram_controller_0/SPI_RW_COOLDOWN" type="array">
+      <obj_property name="ElementShortName">SPI_RW_COOLDOWN[31:0]</obj_property>
+      <obj_property name="ObjectShortName">SPI_RW_COOLDOWN[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/psram_controller_tb/psram_controller_0/chip_0_state" type="array">
+      <obj_property name="ElementShortName">chip_0_state[31:0]</obj_property>
+      <obj_property name="ObjectShortName">chip_0_state[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/psram_controller_tb/psram_controller_0/chip_0_next_state" type="array">
+      <obj_property name="ElementShortName">chip_0_next_state[31:0]</obj_property>
+      <obj_property name="ObjectShortName">chip_0_next_state[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/psram_controller_tb/psram_controller_0/instruction" type="array">
+      <obj_property name="ElementShortName">instruction[7:0]</obj_property>
+      <obj_property name="ObjectShortName">instruction[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/psram_controller_tb/psram_controller_0/read_write_address" type="array">
+      <obj_property name="ElementShortName">read_write_address[23:0]</obj_property>
+      <obj_property name="ObjectShortName">read_write_address[23:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/psram_controller_tb/psram_controller_0/selected_driver_data" type="array">
+      <obj_property name="ElementShortName">selected_driver_data[15:0]</obj_property>
+      <obj_property name="ObjectShortName">selected_driver_data[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/psram_controller_tb/psram_controller_0/selected_driver_valid" type="logic">
+      <obj_property name="ElementShortName">selected_driver_valid</obj_property>
+      <obj_property name="ObjectShortName">selected_driver_valid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/psram_controller_tb/psram_controller_0/selected_driver_ready" type="logic">
+      <obj_property name="ElementShortName">selected_driver_ready</obj_property>
+      <obj_property name="ObjectShortName">selected_driver_ready</obj_property>
+   </wvobject>
+   <wvobject fp_name="/psram_controller_tb/psram_controller_0/selected_endpoint_data" type="array">
+      <obj_property name="ElementShortName">selected_endpoint_data[15:0]</obj_property>
+      <obj_property name="ObjectShortName">selected_endpoint_data[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/psram_controller_tb/psram_controller_0/selected_endpoint_ready" type="logic">
+      <obj_property name="ElementShortName">selected_endpoint_ready</obj_property>
+      <obj_property name="ObjectShortName">selected_endpoint_ready</obj_property>
+   </wvobject>
+   <wvobject fp_name="/psram_controller_tb/psram_controller_0/selected_endpoint_valid" type="logic">
+      <obj_property name="ElementShortName">selected_endpoint_valid</obj_property>
+      <obj_property name="ObjectShortName">selected_endpoint_valid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/psram_controller_tb/psram_controller_0/spi_byte" type="array">
+      <obj_property name="ElementShortName">spi_byte[7:0]</obj_property>
+      <obj_property name="ObjectShortName">spi_byte[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/psram_controller_tb/psram_controller_0/s_m_counter" type="array">
+      <obj_property name="ElementShortName">s_m_counter[4:0]</obj_property>
+      <obj_property name="ObjectShortName">s_m_counter[4:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/psram_controller_tb/psram_controller_0/block_counter" type="array">
+      <obj_property name="ElementShortName">block_counter[9:0]</obj_property>
+      <obj_property name="ObjectShortName">block_counter[9:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/psram_controller_tb/psram_controller_0/state_about_to_switch" type="logic">
+      <obj_property name="ElementShortName">state_about_to_switch</obj_property>
+      <obj_property name="ObjectShortName">state_about_to_switch</obj_property>
+   </wvobject>
+   <wvobject fp_name="/psram_controller_tb/psram_controller_0/MONARCH_DATA_WIDTH" type="array">
+      <obj_property name="ElementShortName">MONARCH_DATA_WIDTH[31:0]</obj_property>
+      <obj_property name="ObjectShortName">MONARCH_DATA_WIDTH[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/psram_controller_tb/psram_controller_0/MONARCH_ADDRESS_WIDTH" type="array">
+      <obj_property name="ElementShortName">MONARCH_ADDRESS_WIDTH[31:0]</obj_property>
+      <obj_property name="ObjectShortName">MONARCH_ADDRESS_WIDTH[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/psram_controller_tb/psram_controller_0/SPRAM_DATA_WIDTH" type="array">
+      <obj_property name="ElementShortName">SPRAM_DATA_WIDTH[31:0]</obj_property>
+      <obj_property name="ObjectShortName">SPRAM_DATA_WIDTH[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/psram_controller_tb/psram_controller_0/SPRAM_ADDRESS_WIDTH" type="array">
+      <obj_property name="ElementShortName">SPRAM_ADDRESS_WIDTH[31:0]</obj_property>
+      <obj_property name="ObjectShortName">SPRAM_ADDRESS_WIDTH[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/psram_controller_tb/psram_controller_0/SD_DATA_WIDTH" type="array">
+      <obj_property name="ElementShortName">SD_DATA_WIDTH[31:0]</obj_property>
+      <obj_property name="ObjectShortName">SD_DATA_WIDTH[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/psram_controller_tb/psram_controller_0/SD_ADDRESS_WIDTH" type="array">
+      <obj_property name="ElementShortName">SD_ADDRESS_WIDTH[31:0]</obj_property>
+      <obj_property name="ObjectShortName">SD_ADDRESS_WIDTH[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/psram_controller_tb/psram_controller_0/PSRAM_DATA_WIDTH" type="array">
+      <obj_property name="ElementShortName">PSRAM_DATA_WIDTH[31:0]</obj_property>
+      <obj_property name="ObjectShortName">PSRAM_DATA_WIDTH[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/psram_controller_tb/psram_controller_0/PSRAM_ADDRESS_WIDTH" type="array">
+      <obj_property name="ElementShortName">PSRAM_ADDRESS_WIDTH[31:0]</obj_property>
+      <obj_property name="ObjectShortName">PSRAM_ADDRESS_WIDTH[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/psram_controller_tb/psram_controller_0/PSRAM_BLOCK_SIZE_BITS" type="array">
+      <obj_property name="ElementShortName">PSRAM_BLOCK_SIZE_BITS[31:0]</obj_property>
+      <obj_property name="ObjectShortName">PSRAM_BLOCK_SIZE_BITS[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/psram_controller_tb/psram_controller_0/PSRAM_BLOCK_SIZE" type="array">
+      <obj_property name="ElementShortName">PSRAM_BLOCK_SIZE[31:0]</obj_property>
+      <obj_property name="ObjectShortName">PSRAM_BLOCK_SIZE[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/psram_controller_tb/psram_controller_0/PSRAM_CMD_LENGTH" type="array">
+      <obj_property name="ElementShortName">PSRAM_CMD_LENGTH[31:0]</obj_property>
+      <obj_property name="ObjectShortName">PSRAM_CMD_LENGTH[31:0]</obj_property>
+   </wvobject>
+</wave_config>
