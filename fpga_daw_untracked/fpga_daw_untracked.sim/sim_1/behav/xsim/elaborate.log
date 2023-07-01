@@ -6,6 +6,12 @@ Starting static elaboration
 Pass Through NonSizing Optimizer
 WARNING: [VRFC 10-3823] variable 'serial_out_0' might have multiple concurrent drivers [C:/Users/Eddie/Documents/GitHub/Certain-Synthesizer-FPGA-DAW/fpga_daw_untracked/fpga_daw_untracked.srcs/sources_1/new/psram_controller_tb.sv:83]
 WARNING: [VRFC 10-3823] variable 'spram_read_axi_tready' might have multiple concurrent drivers [C:/Users/Eddie/Documents/GitHub/Certain-Synthesizer-FPGA-DAW/fpga_daw_untracked/fpga_daw_untracked.srcs/sources_1/new/psram_controller_tb.sv:86]
-WARNING: [VRFC 10-3823] variable 'selected_endpoint_valid' might have multiple concurrent drivers [C:/Users/Eddie/Documents/GitHub/Certain-Synthesizer-FPGA-DAW/rtl/thing.sv:157]
 Completed static elaboration
-INFO: [XSIM 43-4323] No Change in HDL. Linking previously generated obj files to create kernel
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling module xil_defaultlib.psram_controller
+Compiling module xil_defaultlib.psram_simulator_tb
+Compiling module xil_defaultlib.psram_controller_tb
+Compiling module xil_defaultlib.glbl
+Built simulation snapshot psram_controller_tb_behav
