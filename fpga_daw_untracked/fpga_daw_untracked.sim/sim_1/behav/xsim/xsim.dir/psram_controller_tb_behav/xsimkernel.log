@@ -1,4 +1,4 @@
-Running: xsim.dir/psram_controller_tb_behav/xsimk.exe -simmode gui -wdb psram_controller_tb_behav.wdb -simrunnum 0 -socket 64568
+Running: xsim.dir/psram_controller_tb_behav/xsimk.exe -simmode gui -wdb psram_controller_tb_behav.wdb -simrunnum 0 -socket 49308
 Design successfully loaded
-Design Loading Memory Usage: 7884 KB (Peak: 7884 KB)
-Design Loading CPU Usage: 0 ms
+Design Loading Memory Usage: 7876 KB (Peak: 7876 KB)
+Design Loading CPU Usage: 15 ms

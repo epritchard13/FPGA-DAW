@@ -209,6 +209,11 @@ assign streamlined_sd_write_valid	= selected_endpoint_valid & instruction[3];
 //TODO: FIX DATA WIDTH SHIT!
 
 
+
+//currently working on (7/1/2023): combining the index counter to all be the same counter.
+
+
+
 logic [PSRAM_DATA_WIDTH-1:0] spi_build_byte;
 logic [PSRAM_DATA_WIDTH-1:0] spi_send_byte;
 

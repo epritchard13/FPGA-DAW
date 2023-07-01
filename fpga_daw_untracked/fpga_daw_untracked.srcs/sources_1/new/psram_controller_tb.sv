@@ -110,28 +110,28 @@ module psram_controller_tb#(
     
     initial begin
         resetn = 0;
-        #1;
+        #2;
         resetn = 1;
-        #1;
+        #2;
         
         //send address to psram controller          (this can be simplified later) 
-        monarch_axi_tdata = 8'b00000101;
-        monarch_axi_taddress = 2'b01;       //send to lsb
+        monarch_axi_tdata = 8'b00000101;            
+        monarch_axi_taddress = 2'b01;       //this means write "5" to the LSB block of the address registers.
         monarch_axi_tvalid = 1'b1;
-        #1;
-        monarch_axi_tvalid = 1'b0;
-        #1;
+        #2;
+
         
         //send a test command: block write 
         monarch_axi_tdata = 8'b00000110;            //this means write SD data to PSRAM!!
         monarch_axi_taddress = 2'b00;
         monarch_axi_tvalid = 1'b1;
-        #1;
+        #2;
+        monarch_axi_tdata = 8'b00000000;
         monarch_axi_tvalid = 1'b0;  
         while(sd_read_axi_tvalid != 1) begin
             #2;
         end
-        #1;
+        #2;
         sd_read_axi_tdata = 16'b1010010110100101;   //test data
         #2;
         sd_read_axi_tdata = 0;   //test data
