@@ -16,7 +16,7 @@ this working without a clock divide by 2.
 Page 12 and beyond is the important stuff:
 https://www.apmemory.com/wp-content/uploads/APM_PSRAM_E3_QSPI_APS6404L-3SQN-v2.6-KGD_PKG.pdf
 */
-module psram_controller(
+module psram_controller_concept(
 	input clk,			// probably 100MHz
 	input rst,			// active high reset
 
