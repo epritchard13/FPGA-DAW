@@ -51,7 +51,7 @@
 struct mmc * ocsdc_mmc_init(int clk_freq);
 
 #define BLKSIZE 512
-#define BLKCNT 10
+#define BLKCNT 2
 
 char buff[BLKSIZE*BLKCNT] = {'\0'};
 
@@ -107,13 +107,30 @@ int example_main() {
 
 	//read 1 block
 	printf("attempting to read 1 block\n\r");
-	if (mmc_bread(drv, 0, 1, buff) == 0) {
-		printf("mmc_bread failed\n\r");
-		return -1;
-	}
-	printf("mmc_bread success\n\r");
+    for (int i = 0; i < 1000; i += BLKCNT) {
+        if (i % 100 == 0) {
+            printf("attempting to read block %d\n\r", i);
+        }
 
-	printHex(buff, BLKSIZE);
+        if (mmc_bread(drv, i + 200000, BLKCNT, buff) == 0) {
+            printf("mmc_bread failed\n\r");
+            return -1;
+        }
+        //printf("mmc_bread success\n\r");
+        // see if anything is nonzero
+        int numNonZero = 0;
+        for (int j = 0; j < BLKSIZE; j++) {
+            if (buff[j] != 0) {
+                numNonZero++;
+            }
+        }
+        if (numNonZero > 0) {
+            printf("numNonZero = %d\n\r", numNonZero);
+            printHex(buff, BLKSIZE*BLKCNT);
+        }
+
+        //printHex(buff, BLKSIZE*BLKCNT);
+    }
 
 	return EXIT_SUCCESS;
 }

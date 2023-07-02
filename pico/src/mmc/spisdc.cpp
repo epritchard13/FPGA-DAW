@@ -116,6 +116,11 @@ void spisdc_read_fifo(struct mmc_data *data) {
 	int bytes = data->blocksize * data->blocks;
 	printf("spisdc_read_fifo: %d\n", bytes);
 	char *buf = data->dest;
+	
+	// throw away a byte
+	uint8_t cmd[] = { 0x8A, 0, 0};
+	spi_write_read_blocking(SPI_PORT, cmd, cmd, sizeof(cmd));
+
 	for (int i = 0; i < bytes; i++) {
 		uint8_t cmd[] = { 0x8A, 0, 0};
 		spi_write_read_blocking(SPI_PORT, cmd, cmd, sizeof(cmd));
@@ -152,7 +157,7 @@ static void ocsdc_set_buswidth(struct spisdc * dev, uint width) {
 /* Set clock prescalar value based on the required clock in HZ */
 static void ocsdc_set_clock(struct spisdc * dev, uint clock)
 {
-	int clk_div = dev->clk_freq / (2.0 * clock) - 1;
+	int clk_div = dev->clk_freq / clock - 1;
 
 	printf("ocsdc_set_clock %d, div %d\n\r", clock, clk_div);
 	//software reset
@@ -285,16 +290,13 @@ static int ocsdc_init(struct mmc *mmc)
 	struct spisdc * dev = (struct spisdc*) mmc->priv;
 
 	//set timeout
-	ocsdc_write(dev, OCSDC_TIMEOUT, 0x7FFF);
+	ocsdc_write(dev, OCSDC_TIMEOUT, 0x7FFF); // max 0xFFFFFF
 	//disable all interrupts
 	ocsdc_write(dev, OCSDC_CMD_INT_ENABLE, 0);
 	ocsdc_write(dev, OCSDC_DAT_INT_ENABLE, 0);
 	//clear all interrupts
 	ocsdc_write(dev, OCSDC_CMD_INT_STATUS, 0);
 	ocsdc_write(dev, OCSDC_DAT_INT_STATUS, 0);
-	//set clock to maximum (devide by 2)
-	ocsdc_set_clock(dev, dev->clk_freq/2);
-
 	return 0;
 }
 
@@ -330,7 +332,7 @@ struct mmc * ocsdc_mmc_init(int clk_freq)
 	mmc->init = ocsdc_init;
 	mmc->getcd = NULL;
 
-	mmc->f_min = priv->clk_freq/6; /*maximum clock division 64 */
+	mmc->f_min = priv->clk_freq/99; /*maximum clock division 99 */
 	mmc->f_max = priv->clk_freq/2; /*minimum clock division 2 */
 	mmc->voltages = MMC_VDD_32_33 | MMC_VDD_33_34;
 	mmc->host_caps = MMC_MODE_4BIT;//MMC_MODE_HS | MMC_MODE_HS_52MHz | MMC_MODE_4BIT;
