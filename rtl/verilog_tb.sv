@@ -175,11 +175,16 @@ spi_link_sm spi_link_sm(
 );
 
 wire sd_clk;
-wire sd_cmd_out;
-wire sd_cmd_in;
+wire sd_cmd;
+pullup(sd_cmd);
 
-wire [3:0] sd_data_in;
-wire [3:0] sd_data_out;
+wire [3:0] sd_dat;
+
+genvar i;
+generate
+for (i = 0; i < 4; i++)
+    pullup(sd_dat[i]);
+endgenerate
 
 sdc_controller sdc_controller (
     .clk(clk),
@@ -189,10 +194,8 @@ sdc_controller sdc_controller (
     .data_out(data_out),
     .we(we),
 
-    .sd_cmd_out_o(sd_cmd_out),
-    .sd_cmd_dat_i(sd_cmd_in),
-    .sd_dat_dat_i(sd_data_in),
-    .sd_dat_out_o(sd_data_out),
+    .sd_cmd(sd_cmd),
+    .sd_dat(sd_dat),
 
     .sd_clk_o_pad(sd_clk),
 
@@ -206,9 +209,8 @@ wire [39:0] rdaddr;
 sd_fake sd_fake(
     .rstn_async(~rst),
     .sdclk(sd_clk),
-    .sdcmd(sd_cmd_in),
-    .sdcmdin(sd_cmd_out),
-    .sddat(sd_data_in),
+    .sdcmd(sd_cmd),
+    .sddat(sd_dat),
 
     .rdaddr(rdaddr),
     .rddata(rddata)

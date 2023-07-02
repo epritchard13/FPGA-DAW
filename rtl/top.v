@@ -9,7 +9,12 @@ module top(
 	output MISO,
 	
 	output A_OUT,
-	output [3:0] LED
+	output [3:0] LED,
+
+	inout SD_CMD,
+	inout [3:0] SD_DAT,
+	output SD_CLK
+
 );
 
 reg rst = 0;
@@ -72,13 +77,6 @@ spi_link_sm spi_sm(
     .sd_fifo_data(sd_fifo_data)
 );
 
-wire sd_clk;
-wire sd_cmd_out;
-wire sd_cmd_in;
-
-wire [3:0] sd_data_in;
-
-wire [3:0] sd_data_out;
 wire [15:0] rddata;
 wire [39:0] rdaddr;
 
@@ -91,17 +89,15 @@ sdc_controller sdc_controller0(
 	.data_in(sd_data_o),
 	.data_out(sd_data_i),
 
-	.sd_cmd_out_o(sd_cmd_out),
-	.sd_cmd_dat_i(sd_cmd_in),
-	.sd_dat_dat_i(sd_data_in),
-	.sd_dat_out_o(sd_data_out),
+	.sd_cmd(SD_CMD),
+	.sd_dat(SD_DAT),
 
-	.sd_clk_o_pad(sd_clk),
+	.sd_clk_o_pad(SD_CLK),
 
 	.rd_en_i(sd_fifo_rd),
     .rd_dat_o(sd_fifo_data)
 );
-
+/*
 sd_fake sd_fake(
 	.rstn_async(~rst),
 	.sdclk(sd_clk),
@@ -118,7 +114,7 @@ brom brom(
 	.en(1'b1),
 	.addr(rdaddr),
 	.dout(rddata)
-);
+);*/
 
 pwm_dac pwmdac(
 	.clk(SYSCLK),
