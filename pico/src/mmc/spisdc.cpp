@@ -117,10 +117,6 @@ void spisdc_read_fifo(struct mmc_data *data) {
 	printf("spisdc_read_fifo: %d\n", bytes);
 	char *buf = data->dest;
 	
-	// throw away a byte
-	uint8_t cmd[] = { 0x8A, 0, 0};
-	spi_write_read_blocking(SPI_PORT, cmd, cmd, sizeof(cmd));
-
 	for (int i = 0; i < bytes; i++) {
 		uint8_t cmd[] = { 0x8A, 0, 0};
 		spi_write_read_blocking(SPI_PORT, cmd, cmd, sizeof(cmd));
