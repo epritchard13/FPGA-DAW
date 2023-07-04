@@ -50,15 +50,18 @@ always @(posedge clk) begin
 		sd_fifo_rd <= 1'b0;
 	end
 
+	if (sd_we == 1'b1) sd_we <= 1'b0;
 	if (spi_tx_valid == 1'b1) spi_tx_valid <= 1'b0;
-	if (sd_fifo_rd == 1'b1) sd_fifo_rd <= 1'b0;
+	if (sd_fifo_rd == 1'b1) begin
+		sd_fifo_rd <= 1'b0;
+		spi_tx_valid <= 1'b1;
+	end
 
 	if (valid) begin
 		//run the state machine
 		case (state)
 		//waiting state
 		WAITING: begin
-			sd_we <= 1'b0;
 			//see if the opcode is a command
 			case (spi_data)
 				`WRITE_8BIT_REG: state <= WRITE_8BIT_REG;
@@ -69,7 +72,6 @@ always @(posedge clk) begin
 				`RX_SD_DATA: state <= RX_SD_DATA;
 				`READ_SD_FIFO: begin
 					sd_fifo_rd <= 1'b1;
-					spi_tx_valid <= 1'b1;
 				end
 			endcase
 		end

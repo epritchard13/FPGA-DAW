@@ -775,8 +775,7 @@ static int mmc_read_blocks(struct mmc *mmc, void *dst, size_t start, size_t blkc
 	else
 		cmd.cmdarg = start * mmc->read_bl_len;
 
-	//TODO: for some reason, there's no response when higher clock speeds are used
-	cmd.resp_type = MMC_RSP_NONE;		
+	cmd.resp_type = MMC_RSP_R1;		
 
 	data.dest = (char*) dst;
 	data.blocks = blkcnt;
@@ -790,8 +789,7 @@ static int mmc_read_blocks(struct mmc *mmc, void *dst, size_t start, size_t blkc
 		cmd.cmdidx = MMC_CMD_STOP_TRANSMISSION;
 		cmd.cmdarg = 0;
 
-		//TODO: no response here either for some reason
-		cmd.resp_type = MMC_RSP_NONE;
+		cmd.resp_type = MMC_RSP_R1b;
 		if (mmc_send_cmd(mmc, &cmd, NULL)) {
 			printf("mmc fail to send stop cmd\n");
 			return 0;
@@ -875,6 +873,27 @@ size_t mmc_bread(struct mmc *mmc, size_t start, size_t blkcnt, void *dst)
 	} while (blocks_todo > 0);
 
 	return blkcnt;
+}
+
+size_t mmc_bwrite(struct mmc *mmc, size_t start, size_t blkcnt, const void *src)
+{
+	struct mmc_cmd cmd;
+
+	if (blkcnt > 1)
+		cmd.cmdidx = MMC_CMD_WRITE_MULTIPLE_BLOCK;
+	else
+		cmd.cmdidx = MMC_CMD_WRITE_SINGLE_BLOCK;
+
+	if (mmc->high_capacity)
+		cmd.cmdarg = start;
+	else
+		cmd.cmdarg = start * mmc->read_bl_len;
+
+	cmd.resp_type = MMC_RSP_R1b;		
+
+	if (mmc_send_cmd(mmc, &cmd, NULL))
+		return 0;
+	return 1;
 }
 
 void print_mmcinfo(struct mmc *mmc)

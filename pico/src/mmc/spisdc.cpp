@@ -286,7 +286,7 @@ static int ocsdc_init(struct mmc *mmc)
 	struct spisdc * dev = (struct spisdc*) mmc->priv;
 
 	//set timeout
-	ocsdc_write(dev, OCSDC_TIMEOUT, 0x7FFF); // max 0xFFFFFF
+	ocsdc_write(dev, OCSDC_TIMEOUT, 0xFFFFFF); // max 0xFFFFFF
 	//disable all interrupts
 	ocsdc_write(dev, OCSDC_CMD_INT_ENABLE, 0);
 	ocsdc_write(dev, OCSDC_DAT_INT_ENABLE, 0);
