@@ -124,6 +124,19 @@ void spisdc_read_fifo(struct mmc_data *data) {
 	}
 }
 
+void spisdc_write_fifo(struct mmc_data *data) {
+	int bytes = data->blocksize * data->blocks;
+	printf("spisdc_write_fifo: %d\n", bytes);
+	const char *buf = data->src;
+
+	for (int i = 0; i < bytes; i++) {
+		uint8_t cmd[] = { 0x8B, buf[i]};
+		spi_write_blocking(SPI_PORT, cmd, sizeof(cmd));
+	}
+	uint8_t cmd[] = { 0x8B, 0};
+	spi_write_blocking(SPI_PORT, cmd, sizeof(cmd));
+}
+
 static inline uint32_t ocsdc_read(struct spisdc *dev, int offset)
 {
 	//return readl(dev->iobase + offset);
@@ -219,16 +232,17 @@ static int ocsdc_data_finish(struct spisdc * dev) {
 }
 
 static void ocsdc_setup_data_xfer(struct spisdc * dev, struct mmc_cmd *cmd, struct mmc_data *data) {
-	/*
+	//*
 	//invalidate cache
 	if (data->flags & MMC_DATA_READ) {
 		//flush_dcache_range(data->dest, data->dest+data->blocksize*data->blocks);
-		ocsdc_write(dev, OCSDC_DST_SRC_ADDR, (uint32_t)data->dest);
+		//ocsdc_write(dev, OCSDC_DST_SRC_ADDR, (uint32_t)data->dest);
 	}
 	else {
 		//flush_dcache_range((void *)data->src, (void *)data->src+data->blocksize*data->blocks);
-		ocsdc_write(dev, OCSDC_DST_SRC_ADDR, (uint32_t)data->src);
-	}*/
+		//ocsdc_write(dev, OCSDC_DST_SRC_ADDR, (uint32_t)data->src);
+		spisdc_write_fifo(data);
+	}
 	ocsdc_write(dev, OCSDC_BLOCK_SIZE, data->blocksize-1);
 	ocsdc_write(dev, OCSDC_BLOCK_COUNT, data->blocks-1);
 
@@ -272,7 +286,7 @@ static int ocsdc_send_cmd(struct mmc *mmc, struct mmc_cmd *cmd, struct mmc_data 
 	if (ocsdc_finish(dev, cmd) < 0) return -1;
 	if (data && data->blocks) { 
 		int ret = ocsdc_data_finish(dev);
-		if (ret == 0) {
+		if (ret == 0 && (data->flags & MMC_DATA_READ)) {
 			spisdc_read_fifo(data);
 		}
 		return ret;

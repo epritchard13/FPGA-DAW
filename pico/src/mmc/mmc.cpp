@@ -799,6 +799,45 @@ static int mmc_read_blocks(struct mmc *mmc, void *dst, size_t start, size_t blkc
 	return blkcnt;
 }
 
+static int mmc_write_blocks(struct mmc *mmc, const void *src, size_t start, size_t blkcnt)
+{
+	struct mmc_cmd cmd;
+	struct mmc_data data;
+
+	if (blkcnt > 1)
+		cmd.cmdidx = MMC_CMD_WRITE_MULTIPLE_BLOCK;
+	else
+		cmd.cmdidx = MMC_CMD_WRITE_SINGLE_BLOCK;
+
+	if (mmc->high_capacity)
+		cmd.cmdarg = start;
+	else
+		cmd.cmdarg = start * mmc->write_bl_len;
+
+	cmd.resp_type = MMC_RSP_R1;		
+
+	data.src = (char*) src;
+	data.blocks = blkcnt;
+	data.blocksize = mmc->write_bl_len;
+	data.flags = MMC_DATA_WRITE;
+
+	if (mmc_send_cmd(mmc, &cmd, &data))
+		return 0;
+
+	if (blkcnt > 1) {
+		cmd.cmdidx = MMC_CMD_STOP_TRANSMISSION;
+		cmd.cmdarg = 0;
+
+		cmd.resp_type = MMC_RSP_R1b;
+		if (mmc_send_cmd(mmc, &cmd, NULL)) {
+			printf("mmc fail to send stop cmd\n");
+			return 0;
+		}
+	}
+
+	return blkcnt;
+}
+
 int mmc_init(struct mmc *mmc)
 {
 	int err;
@@ -877,23 +916,30 @@ size_t mmc_bread(struct mmc *mmc, size_t start, size_t blkcnt, void *dst)
 
 size_t mmc_bwrite(struct mmc *mmc, size_t start, size_t blkcnt, const void *src)
 {
-	struct mmc_cmd cmd;
+	size_t cur, blocks_todo = blkcnt;
 
-	if (blkcnt > 1)
-		cmd.cmdidx = MMC_CMD_WRITE_MULTIPLE_BLOCK;
-	else
-		cmd.cmdidx = MMC_CMD_WRITE_SINGLE_BLOCK;
-
-	if (mmc->high_capacity)
-		cmd.cmdarg = start;
-	else
-		cmd.cmdarg = start * mmc->read_bl_len;
-
-	cmd.resp_type = MMC_RSP_R1b;		
-
-	if (mmc_send_cmd(mmc, &cmd, NULL))
+	if (blkcnt == 0)
 		return 0;
-	return 1;
+
+	if ((start + blkcnt) > mmc->capacity / mmc->write_bl_len) {
+		printf("MMC: block number 0x%lx exceeds max(0x%lx)\n",
+			start + blkcnt, mmc->capacity / mmc->write_bl_len);
+		return 0;
+	}
+
+	if (mmc_set_blocklen(mmc, mmc->write_bl_len))
+		return 0;
+
+	do {
+		cur = (blocks_todo > mmc->b_max) ?  mmc->b_max : blocks_todo;
+		if(mmc_write_blocks(mmc, src, start, cur) != cur)
+			return 0;
+		blocks_todo -= cur;
+		start += cur;
+		src += cur * mmc->write_bl_len;
+	} while (blocks_todo > 0);
+
+	return blkcnt;
 }
 
 void print_mmcinfo(struct mmc *mmc)

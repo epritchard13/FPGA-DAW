@@ -58,6 +58,9 @@ wire [7:0] sd_data_i;
 wire sd_fifo_rd;
 wire [7:0] sd_fifo_data;
 
+wire sd_fifo_we;
+wire [7:0] spi_fifo_data_wr;
+
 spi_link_sm spi_sm(
 	.clk(SYSCLK),
 	.rst(rst),
@@ -74,7 +77,10 @@ spi_link_sm spi_sm(
 	.sd_data_i(sd_data_i),
 
 	.sd_fifo_rd(sd_fifo_rd),
-    .sd_fifo_data(sd_fifo_data)
+    .sd_fifo_data(sd_fifo_data),
+
+	.sd_fifo_we(spi_fifo_we),
+    .sd_fifo_data_out(spi_fifo_data_wr)
 );
 
 wire [15:0] rddata;
@@ -95,7 +101,10 @@ sdc_controller sdc_controller0(
 	.sd_clk_o_pad(SD_CLK),
 
 	.rd_en_i(sd_fifo_rd),
-    .rd_dat_o(sd_fifo_data)
+    .rd_dat_o(sd_fifo_data),
+
+	.wr_en_i(spi_fifo_we),
+    .wr_dat_i(spi_fifo_data_wr)
 );
 /*
 sd_fake sd_fake(

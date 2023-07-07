@@ -8,7 +8,7 @@
 
 ##Clock signal
 set_property -dict { PACKAGE_PIN K17   IOSTANDARD LVCMOS33 } [get_ports { SYSCLK }]; #IO_L12P_T1_MRCC_35 Sch=sysclk
-create_clock -add -name sys_clk_pin -period 7.52 -waveform {0 4} [get_ports { SYSCLK }]; # 7.52ns period (~133MHz clock)
+create_clock -add -name sys_clk_pin -period 10.00 -waveform {0 4} [get_ports { SYSCLK }]; # 7.52ns period (~133MHz clock)
 
 set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets SCLK_IBUF]
 
@@ -115,12 +115,12 @@ set_property -dict { PACKAGE_PIN D18   IOSTANDARD LVCMOS33 } [get_ports { LED[3]
  
 
 ##Pmod Header JB (Zybo Z7-20 only)
-#set_property -dict { PACKAGE_PIN V8    IOSTANDARD LVCMOS33     } [get_ports { jb[0] }]; #IO_L15P_T2_DQS_13 Sch=jb_p[1]		 
-#set_property -dict { PACKAGE_PIN W8    IOSTANDARD LVCMOS33     } [get_ports { jb[1] }]; #IO_L15N_T2_DQS_13 Sch=jb_n[1]         
-#set_property -dict { PACKAGE_PIN U7    IOSTANDARD LVCMOS33     } [get_ports { jb[2] }]; #IO_L11P_T1_SRCC_13 Sch=jb_p[2]        
-#set_property -dict { PACKAGE_PIN V7    IOSTANDARD LVCMOS33     } [get_ports { jb[3] }]; #IO_L11N_T1_SRCC_13 Sch=jb_n[2]        
-#set_property -dict { PACKAGE_PIN Y7    IOSTANDARD LVCMOS33     } [get_ports { jb[4] }]; #IO_L13P_T2_MRCC_13 Sch=jb_p[3]        
-#set_property -dict { PACKAGE_PIN Y6    IOSTANDARD LVCMOS33     } [get_ports { jb[5] }]; #IO_L13N_T2_MRCC_13 Sch=jb_n[3]        
+set_property -dict { PACKAGE_PIN V8    IOSTANDARD LVCMOS33     } [get_ports { SD_DAT[3] }]; #IO_L15P_T2_DQS_13 Sch=jb_p[1]		 
+set_property -dict { PACKAGE_PIN W8    IOSTANDARD LVCMOS33     } [get_ports { SD_CMD }]; #IO_L15N_T2_DQS_13 Sch=jb_n[1]         
+set_property -dict { PACKAGE_PIN U7    IOSTANDARD LVCMOS33     } [get_ports { SD_DAT[0] }]; #IO_L11P_T1_SRCC_13 Sch=jb_p[2]        
+set_property -dict { PACKAGE_PIN V7    IOSTANDARD LVCMOS33     } [get_ports { SD_CLK }]; #IO_L11N_T1_SRCC_13 Sch=jb_n[2]        
+set_property -dict { PACKAGE_PIN Y7    IOSTANDARD LVCMOS33     } [get_ports { SD_DAT[1] }]; #IO_L13P_T2_MRCC_13 Sch=jb_p[3]        
+set_property -dict { PACKAGE_PIN Y6    IOSTANDARD LVCMOS33     } [get_ports { SD_DAT[2] }]; #IO_L13N_T2_MRCC_13 Sch=jb_n[3]        
 #set_property -dict { PACKAGE_PIN V6    IOSTANDARD LVCMOS33     } [get_ports { jb[6] }]; #IO_L22P_T3_13 Sch=jb_p[4]             
 #set_property -dict { PACKAGE_PIN W6    IOSTANDARD LVCMOS33     } [get_ports { jb[7] }]; #IO_L22N_T3_13 Sch=jb_n[4]             
                                                                                                                                  
@@ -198,5 +198,4 @@ set_property -dict { PACKAGE_PIN V13   IOSTANDARD LVCMOS33 } [get_ports { A_OUT 
 #set_property PACKAGE_PIN W11 [get_ports {netic19_w11}]; #IO_L18P_T2_13
 #set_property PACKAGE_PIN W9 [get_ports {netic19_w9}]; #IO_L16N_T2_13
 #set_property PACKAGE_PIN Y9 [get_ports {netic19_y9}]; #IO_L14P_T2_SRCC_13
-
 
