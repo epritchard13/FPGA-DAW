@@ -107,7 +107,7 @@ int example_main() {
 
     //*
     for (int i = 0; i < BLKSIZE*BLKCNT; i++) {
-        buff[i] = i % 16;
+        buff[i] = i % 256;
     }
 
     char str[] = "shit";
@@ -115,7 +115,7 @@ int example_main() {
         buff[i + 100] = str[i];
     }
 
-    
+    //*
     for (int i = 0; i < 1; i += BLKCNT) {
         if (i % 100 == 0) {
             printf("attempting to write block %d\n\r", i);

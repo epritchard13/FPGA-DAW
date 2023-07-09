@@ -166,7 +166,7 @@ static void ocsdc_set_buswidth(struct spisdc * dev, uint width) {
 /* Set clock prescalar value based on the required clock in HZ */
 static void ocsdc_set_clock(struct spisdc * dev, uint clock)
 {
-	int clk_div = dev->clk_freq / clock - 1;
+	int clk_div = dev->clk_freq / (2*clock) - 1;
 
 	printf("ocsdc_set_clock %d, div %d\n\r", clock, clk_div);
 	//software reset
