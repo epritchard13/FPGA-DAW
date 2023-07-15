@@ -5,6 +5,7 @@
 `define RX_DATA 8'h88 				//receive a packet
 `define RX_SD_DATA 8'h89 			//SD card operation
 `define READ_SD_FIFO 8'h8A 			//read from the SD card FIFO
+`define WRITE_SD_FIFO 8'h8B 		//write to the SD card FIFO
 
 module spi_link_sm(
 	input clk,
@@ -23,7 +24,10 @@ module spi_link_sm(
 	input [7:0] sd_data_i,
 
 	output reg sd_fifo_rd,
-	input [7:0] sd_fifo_data
+	input [7:0] sd_fifo_data,
+
+	output reg sd_fifo_we,
+	output reg [7:0] sd_fifo_data_out // TODO: make this not a register?
 );
 
 enum logic [2:0] {
@@ -33,7 +37,8 @@ enum logic [2:0] {
 	RECEIVE_RX_BODY,
 	RX_SD_DATA,
 	READ_SD_REG,
-	WRITE_SD_REG
+	WRITE_SD_REG,
+	WRITE_SD_FIFO
 } state = WAITING;
 
 `define HEADER_SIZE 2 //size of header in bytes
@@ -48,17 +53,23 @@ always @(posedge clk) begin
 		spi_tx_valid <= 1'b0;
 		sd_we <= 1'b0;
 		sd_fifo_rd <= 1'b0;
+		sd_fifo_we <= 1'b0;
+		sd_fifo_data_out <= 8'h00;
 	end
 
+	if (sd_we == 1'b1) sd_we <= 1'b0;
 	if (spi_tx_valid == 1'b1) spi_tx_valid <= 1'b0;
-	if (sd_fifo_rd == 1'b1) sd_fifo_rd <= 1'b0;
+	if (sd_fifo_rd == 1'b1) begin
+		sd_fifo_rd <= 1'b0;
+		spi_tx_valid <= 1'b1;
+	end
+	if (sd_fifo_we == 1'b1) sd_fifo_we <= 1'b0;
 
 	if (valid) begin
 		//run the state machine
 		case (state)
 		//waiting state
 		WAITING: begin
-			sd_we <= 1'b0;
 			//see if the opcode is a command
 			case (spi_data)
 				`WRITE_8BIT_REG: state <= WRITE_8BIT_REG;
@@ -69,8 +80,8 @@ always @(posedge clk) begin
 				`RX_SD_DATA: state <= RX_SD_DATA;
 				`READ_SD_FIFO: begin
 					sd_fifo_rd <= 1'b1;
-					spi_tx_valid <= 1'b1;
 				end
+				`WRITE_SD_FIFO: state <= WRITE_SD_FIFO;
 			endcase
 		end
 		
@@ -117,6 +128,12 @@ always @(posedge clk) begin
 
 		READ_SD_REG: begin
 			state <= WAITING;
+		end
+
+		WRITE_SD_FIFO: begin
+			state <= WAITING;
+			sd_fifo_we <= 1'b1;
+			sd_fifo_data_out <= spi_data[7:0];
 		end
 
 		//end of state machine

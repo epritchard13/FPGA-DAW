@@ -6,7 +6,7 @@ reg [7:0] spi_data = 0;
 reg valid = 0;
 
 initial begin
-    repeat(4096*24) begin
+    repeat(4096*36) begin
         #1 clk = !clk;
     end
 end
@@ -61,6 +61,16 @@ task fifo_read();
     #2 valid = 0;
 endtask
 
+task fifo_write(input [7:0] data);
+    spi_data = 8'h8B;
+    #16 valid = 1;
+    #2 valid = 0;
+
+    spi_data = data;
+    #16 valid = 1;
+    #2 valid = 0;
+endtask
+
 initial begin
     #10 rst = 1;
     #6 rst = 0;
@@ -98,14 +108,36 @@ initial begin
     write(0, 0);
     #2000;*/
 
-    write('h44, 7);
-    write('h45, 0);
+    write('h44, 'd7);
+    write('h45, 'd0);
 
     write(5, 51);
     write(4, 'b01_1_1101);
     write(2, 0);
     write(0, 0);
-    #10000;
+    #20000;
+
+    for (int i = 0; i < 2048; i++) begin
+        if (i % 2 == 0)
+            fifo_write('hfe);
+        else
+            fifo_write('hba);
+    end
+    
+    //CMD24 (write single block)
+    //*
+    write('h1c, 1);
+    write('h3c, 0);
+    write('h48, 0);
+    write('h44, 'hff);
+    write('h45, 1);
+    write(3, 0);
+    write(5, 24);
+    write(4, 'b10_0_0000);
+    write(3, 0);
+    write(2, 0);
+    write(0, 0);
+    #60000;
 
     //for (int i = 0; i < 16; i++)
     //    fifo_read();
@@ -157,6 +189,9 @@ wire we;
 wire sd_fifo_rd;
 wire [7:0] sd_fifo_data;
 
+wire sd_fifo_we;
+wire [7:0] spi_fifo_data_wr;
+
 spi_link_sm spi_link_sm(
     .clk(clk),
     .rst(rst),
@@ -170,16 +205,24 @@ spi_link_sm spi_link_sm(
     .sd_fifo_rd(sd_fifo_rd),
     .sd_fifo_data(sd_fifo_data),
 
+    .sd_fifo_we(spi_fifo_we),
+    .sd_fifo_data_out(spi_fifo_data_wr),
+
     .spi_data_out(spi_data_tx),
     .spi_tx_valid(spi_tx_valid)
 );
 
 wire sd_clk;
-wire sd_cmd_out;
-wire sd_cmd_in;
+wire sd_cmd;
+pullup(sd_cmd);
 
-wire [3:0] sd_data_in;
-wire [3:0] sd_data_out;
+wire [3:0] sd_dat;
+
+genvar i;
+generate
+for (i = 0; i < 4; i++)
+    pullup(sd_dat[i]);
+endgenerate
 
 sdc_controller sdc_controller (
     .clk(clk),
@@ -189,15 +232,16 @@ sdc_controller sdc_controller (
     .data_out(data_out),
     .we(we),
 
-    .sd_cmd_out_o(sd_cmd_out),
-    .sd_cmd_dat_i(sd_cmd_in),
-    .sd_dat_dat_i(sd_data_in),
-    .sd_dat_out_o(sd_data_out),
+    .sd_cmd(sd_cmd),
+    .sd_dat(sd_dat),
 
     .sd_clk_o_pad(sd_clk),
 
     .rd_en_i(sd_fifo_rd),
-    .rd_dat_o(sd_fifo_data)
+    .rd_dat_o(sd_fifo_data),
+
+    .wr_en_i(spi_fifo_we),
+    .wr_dat_i(spi_fifo_data_wr)
 );
 
 wire [15:0] rddata;
@@ -206,9 +250,8 @@ wire [39:0] rdaddr;
 sd_fake sd_fake(
     .rstn_async(~rst),
     .sdclk(sd_clk),
-    .sdcmd(sd_cmd_in),
-    .sdcmdin(sd_cmd_out),
-    .sddat(sd_data_in),
+    .sdcmd(sd_cmd),
+    .sddat(sd_dat),
 
     .rdaddr(rdaddr),
     .rddata(rddata)

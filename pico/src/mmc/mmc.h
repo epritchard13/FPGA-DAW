@@ -263,6 +263,7 @@ struct mmc {
 
 int mmc_init(struct mmc *mmc);
 size_t mmc_bread(struct mmc *mmc, size_t start, size_t blkcnt, void *dst);
+size_t mmc_bwrite(struct mmc *mmc, size_t start, size_t blkcnt, const void *src);
 void print_mmcinfo(struct mmc *mmc);
 
 #endif /* _MMC_H_ */

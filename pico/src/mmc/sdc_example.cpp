@@ -51,7 +51,7 @@
 struct mmc * ocsdc_mmc_init(int clk_freq);
 
 #define BLKSIZE 512
-#define BLKCNT 10
+#define BLKCNT 2
 
 char buff[BLKSIZE*BLKCNT] = {'\0'};
 
@@ -105,15 +105,45 @@ int example_main() {
 
 	print_mmcinfo(drv);
 
-	//read 1 block
-	printf("attempting to read 1 block\n\r");
-	if (mmc_bread(drv, 0, 1, buff) == 0) {
-		printf("mmc_bread failed\n\r");
-		return -1;
-	}
-	printf("mmc_bread success\n\r");
+    //*
+    for (int i = 0; i < BLKSIZE*BLKCNT; i++) {
+        buff[i] = i % 256;
+    }
 
-	printHex(buff, BLKSIZE);
+    char str[] = "shit";
+    for (int i = 0; i < sizeof(str); i++) {
+        buff[i + 100] = str[i];
+    }
 
+    //*
+    for (int i = 0; i < 1; i += BLKCNT) {
+        if (i % 100 == 0) {
+            printf("attempting to write block %d\n\r", i);
+        }
+
+        if (mmc_bwrite(drv, i, BLKCNT, buff) == 0) {
+            printf("mmc_bwrite failed\n\r");
+            return -1;
+        }
+        printf("mmc_bwrite success\n\r");
+        //printHex(buff, BLKSIZE*BLKCNT);
+    }
+    //*/
+
+    //*
+    for (int i = 0; i < 1; i += BLKCNT) {
+        if (i % 100 == 0) {
+            printf("attempting to read block %d\n\r", i);
+        }
+
+        if (mmc_bread(drv, i, BLKCNT, buff) == 0) {
+            printf("mmc_bread failed\n\r");
+            return -1;
+        }
+        //printf("mmc_bread success\n\r");
+        printHex(buff, BLKSIZE*BLKCNT);
+
+        //printHex(buff, BLKSIZE*BLKCNT);
+    }//*/
 	return EXIT_SUCCESS;
 }

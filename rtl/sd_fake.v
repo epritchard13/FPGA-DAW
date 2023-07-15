@@ -10,9 +10,7 @@ module sd_fake (
     input  wire         rstn_async,
     // SD-card signals, connect to a SD-host, such as a SDcard Reader
     input  wire         sdclk,
-    input wire          sdcmdin,
-    output              sdcmd,
-
+    inout               sdcmd,
     output wire [ 3:0]  sddat,
     // data read interface, connect to a RAM which contains SD-card's data.
     output reg          rdreq,
@@ -63,8 +61,8 @@ reg        sdcmdout = 1'b1;
 reg        sddatoe  = 1'b0;
 reg  [3:0] sddatout = 4'hF;
 
-assign sdcmd = sdcmdoe ? sdcmdout : 1'b1;
-assign sddat = sddatout;
+assign sdcmd = sdcmdoe ? sdcmdout : 1'bz;
+assign sddat = sddatoe ? sddatout : 4'bz;
 
 
 function  [6:0] CalcCrcCMD;
@@ -483,7 +481,7 @@ always @ (posedge sdclk or negedge rstn_sdclk_p)
                     else
                         request   <= 50'h3ffffffffffff;
                 end else begin
-                    request <= {request[48:0], sdcmdin};
+                    request <= {request[48:0], sdcmd};
                 end
             LOADRESP  :
                 respstate <= RESPING;
