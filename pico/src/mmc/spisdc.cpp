@@ -88,6 +88,7 @@ bool enable_read = true;
 void set_read_enabled(bool val) {
 	enable_read = val;
 }
+void printHex(const void *lpvbits, const unsigned int n);
 
 struct spisdc {
 	int clk_freq;
@@ -128,6 +129,8 @@ void spisdc_read_fifo(struct mmc_data *data) {
 		spi_write_read_blocking(SPI_PORT, cmd, cmd, sizeof(cmd));
 		buf[i] = cmd[2];
 	}
+	
+	//printHex(buf, bytes);
 }
 
 void spisdc_write_fifo(struct mmc_data *data) {
@@ -353,7 +356,7 @@ struct mmc * ocsdc_mmc_init(int clk_freq)
 	mmc->voltages = MMC_VDD_32_33 | MMC_VDD_33_34;
 	mmc->host_caps = MMC_MODE_4BIT;//MMC_MODE_HS | MMC_MODE_HS_52MHz | MMC_MODE_4BIT;
 
-	mmc->b_max = 256;
+	mmc->b_max = 1;
 
 	return mmc;
 

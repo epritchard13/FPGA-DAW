@@ -127,7 +127,7 @@ brom brom(
 
 pwm_dac pwmdac(
 	.clk(SYSCLK),
-	.val(sdc_controller0.sd_data_serial_host0.debug_out),
+	//.val(sdc_controller0.sd_data_serial_host0.debug_out),
 	.analog(A_OUT)
 );
 

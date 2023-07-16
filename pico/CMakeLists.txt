@@ -41,8 +41,9 @@ add_executable(daw
 
   src/fatfs/ffsystem.cpp
   src/fatfs/ff.cpp
-  #src/fatfs/diskio.cpp
+  src/fatfs/diskio.cpp
   src/fatfs/ffunicode.cpp
+  src/fatfs/fat_example.cpp
 )
 
 pico_set_program_name(daw "daw")

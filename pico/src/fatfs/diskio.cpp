@@ -10,11 +10,20 @@
 #include "ff.h"			/* Obtains integer types */
 #include "diskio.h"		/* Declarations of disk functions */
 
-/* Definitions of physical drive number for each drive */
-#define DEV_RAM		0	/* Example: Map Ramdisk to physical drive 0 */
-#define DEV_MMC		1	/* Example: Map MMC/SD card to physical drive 1 */
-#define DEV_USB		2	/* Example: Map USB MSD to physical drive 2 */
+#include "../mmc/mmc.h"
+#include <stdio.h>
 
+struct mmc * ocsdc_mmc_init(int clk_freq);
+
+struct mmc* drv = NULL;
+
+/* Definitions of physical drive number for each drive */
+#define DEV_MMC		0	/* Example: Map MMC/SD card to physical drive 1 */
+
+DWORD get_fattime(void) //TODO: actually write this
+{
+	return 0;
+}
 
 /*-----------------------------------------------------------------------*/
 /* Get Drive Status                                                      */
@@ -24,30 +33,12 @@ DSTATUS disk_status (
 	BYTE pdrv		/* Physical drive nmuber to identify the drive */
 )
 {
-	DSTATUS stat;
-	int result;
-
 	switch (pdrv) {
-	case DEV_RAM :
-		result = RAM_disk_status();
-
-		// translate the reslut code here
-
-		return stat;
-
 	case DEV_MMC :
-		result = MMC_disk_status();
-
-		// translate the reslut code here
-
-		return stat;
-
-	case DEV_USB :
-		result = USB_disk_status();
-
-		// translate the reslut code here
-
-		return stat;
+		if (drv)
+			return 0;
+		else
+			return STA_NOINIT;
 	}
 	return STA_NOINIT;
 }
@@ -62,32 +53,28 @@ DSTATUS disk_initialize (
 	BYTE pdrv				/* Physical drive nmuber to identify the drive */
 )
 {
-	DSTATUS stat;
-	int result;
+	if (pdrv != DEV_MMC) return STA_NOINIT;
 
-	switch (pdrv) {
-	case DEV_RAM :
-		result = RAM_disk_initialize();
-
-		// translate the reslut code here
-
-		return stat;
-
-	case DEV_MMC :
-		result = MMC_disk_initialize();
-
-		// translate the reslut code here
-
-		return stat;
-
-	case DEV_USB :
-		result = USB_disk_initialize();
-
-		// translate the reslut code here
-
-		return stat;
+	//init ocsdc driver
+	if (!drv) {
+		drv = ocsdc_mmc_init(100000000);
 	}
-	return STA_NOINIT;
+	if (!drv) {
+		printf("ocsdc_mmc_init failed\n\r");
+		return -1;
+	}
+	printf("ocsdc_mmc_init success\n\r");
+
+	drv->has_init = 0;
+	int err = mmc_init(drv);
+	if (err != 0 || drv->has_init == 0) {
+		printf("mmc_init failed\n\r");
+		return -1;
+	}
+	printf("mmc_init success\n\r");
+
+	print_mmcinfo(drv);
+	return 0;
 }
 
 
@@ -103,38 +90,18 @@ DRESULT disk_read (
 	UINT count		/* Number of sectors to read */
 )
 {
-	DRESULT res;
 	int result;
 
 	switch (pdrv) {
-	case DEV_RAM :
-		// translate the arguments here
-
-		result = RAM_disk_read(buff, sector, count);
-
-		// translate the reslut code here
-
-		return res;
-
 	case DEV_MMC :
 		// translate the arguments here
-
-		result = MMC_disk_read(buff, sector, count);
-
-		// translate the reslut code here
-
-		return res;
-
-	case DEV_USB :
-		// translate the arguments here
-
-		result = USB_disk_read(buff, sector, count);
-
-		// translate the reslut code here
-
-		return res;
+		printf("disk_read from %llu\n\r", sector);
+		result = mmc_bread(drv, sector, count, buff);
+		//printf("disk_read: result = %d\n\r", result);
+		if (result != count)
+			return RES_ERROR;
+		return RES_OK;
 	}
-
 	return RES_PARERR;
 }
 
@@ -153,36 +120,17 @@ DRESULT disk_write (
 	UINT count			/* Number of sectors to write */
 )
 {
-	DRESULT res;
 	int result;
 
 	switch (pdrv) {
-	case DEV_RAM :
-		// translate the arguments here
-
-		result = RAM_disk_write(buff, sector, count);
-
-		// translate the reslut code here
-
-		return res;
-
 	case DEV_MMC :
 		// translate the arguments here
+		printf("disk_write: DEV_MMC\n\r");
+		result = mmc_bwrite(drv, sector, count, buff);
 
-		result = MMC_disk_write(buff, sector, count);
-
-		// translate the reslut code here
-
-		return res;
-
-	case DEV_USB :
-		// translate the arguments here
-
-		result = USB_disk_write(buff, sector, count);
-
-		// translate the reslut code here
-
-		return res;
+		if (result != count)
+			return RES_ERROR;
+		return RES_OK;
 	}
 
 	return RES_PARERR;
@@ -201,27 +149,14 @@ DRESULT disk_ioctl (
 	void *buff		/* Buffer to send/receive control data */
 )
 {
-	DRESULT res;
 	int result;
 
 	switch (pdrv) {
-	case DEV_RAM :
-
-		// Process of the command for the RAM drive
-
-		return res;
-
 	case DEV_MMC :
 
 		// Process of the command for the MMC/SD card
-
-		return res;
-
-	case DEV_USB :
-
-		// Process of the command the USB drive
-
-		return res;
+		printf("disk_ioctl: DEV_MMC\n\r");
+		return RES_OK;
 	}
 
 	return RES_PARERR;

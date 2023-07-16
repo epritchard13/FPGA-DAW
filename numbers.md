@@ -12,7 +12,7 @@ $32\times 44100\times16=22.58$ Mbit/s, or $2.822$ MB/s worst case
 
 ## System
 FPGA sysclk is 100MHz
-* SD Card can run up to 50MHz (sysclk/2)
+* SD Card can run at up to 50MHz (sysclk/2)
 * PSRAM runs at 100MHz
 
 ### PSRAM

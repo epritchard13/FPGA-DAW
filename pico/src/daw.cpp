@@ -10,8 +10,21 @@
 #include <stdio.h>
 
 Player test_player;
-uint8_t buf[1024 * 16];
+uint8_t buf[1024];
 uint audio_size;
+
+#include "fatfs/ff.h"
+#include "fatfs/diskio.h"
+
+int fat_example_main(void);
+
+DRESULT disk_read (
+	BYTE pdrv,		/* Physical drive nmuber to identify the drive */
+	BYTE *buff,		/* Data buffer to store read data */
+	LBA_t sector,	/* Start sector in LBA */
+	UINT count		/* Number of sectors to read */
+);
+void printHex(const void *lpvbits, const unsigned int n);
 
 void read_stdin()
 {
@@ -27,11 +40,7 @@ void read_stdin()
             scanf("%d %d %d %d", &track, &data, &timestamp, &size);
             //printf("track: %d, data: %d, size: %d, timestamp: %d\n", track, data, size, timestamp);
             test_player.addClip(track, data, timestamp, size);
-        } else if (strcmp(cmd, "audio") == 0) {
-
-        }// else if (strcmp(cmd, "get") == 0) {
-        //    std::cout << test_player << std::endl;
-        //} 
+        }
         else if (strcmp(cmd, "status") == 0) {
             printf("nominal\n");
         }
@@ -56,15 +65,21 @@ void read_stdin()
             scanf("%x", &val);
             printf("%x\n", spisdc_readb(val));
         } 
-        //else if (strcmp(cmd, "memory") == 0) {
-        //    std::cout << test_player.queue.mem << std::endl;
-        //}
         else if (strcmp(cmd, "json") == 0) {
             std::cout << test_player.toJson() << std::endl;
         }
         else if (strcmp(cmd, "init") == 0) {
-            example_main();
+            //example_main();
+            int status = fat_example_main();
+            printf("fat_example_main returned %d\n", status);
         } 
+        else if (strcmp(cmd, "bread") == 0) {
+            unsigned long long val;
+            scanf("%llu", &val);
+            uint8_t buf[512];
+            disk_read(0, buf, val, 1);
+            printHex(buf, 512);
+        }
         else if (strcmp(cmd, "fifo") == 0) {
             int val;
             scanf("%d", &val);
