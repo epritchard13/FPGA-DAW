@@ -38,6 +38,11 @@ add_executable(daw
   src/mmc/mmc.cpp
   src/mmc/sdc_example.cpp
   src/mmc/spisdc.cpp
+
+  src/fatfs/ffsystem.cpp
+  src/fatfs/ff.cpp
+  #src/fatfs/diskio.cpp
+  src/fatfs/ffunicode.cpp
 )
 
 pico_set_program_name(daw "daw")
@@ -63,6 +68,7 @@ target_link_libraries(daw
         hardware_pio
         hardware_timer
         hardware_clocks
+        pico_time
         )
 
 pico_add_extra_outputs(daw)

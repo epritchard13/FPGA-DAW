@@ -48,7 +48,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "pico/time.h"
+
 struct mmc * ocsdc_mmc_init(int clk_freq);
+void set_read_enabled(bool val);
 
 #define BLKSIZE 512
 #define BLKCNT 2
@@ -84,6 +87,12 @@ void printHex(const void *lpvbits, const unsigned int n) {
     printf(" | %s\n\r", line);
 }
 
+void benchmark(struct mmc* mmc, int blkcount) {
+    printf("starting... ");
+    mmc_bread(mmc, 96 * 1024*1024*2, blkcount, NULL);
+    printf("done.\n\r");
+}
+
 int example_main() {
 	printf("Hello World !!!\n\r");
 
@@ -115,7 +124,7 @@ int example_main() {
         buff[i + 100] = str[i];
     }
 
-    //*
+    /*
     for (int i = 0; i < 1; i += BLKCNT) {
         if (i % 100 == 0) {
             printf("attempting to write block %d\n\r", i);
@@ -130,7 +139,7 @@ int example_main() {
     }
     //*/
 
-    //*
+    /*
     for (int i = 0; i < 1; i += BLKCNT) {
         if (i % 100 == 0) {
             printf("attempting to read block %d\n\r", i);
@@ -145,5 +154,20 @@ int example_main() {
 
         //printHex(buff, BLKSIZE*BLKCNT);
     }//*/
+    int num_blocks = 1024*2*20;
+
+    set_read_enabled(false);
+
+    uint64_t time = to_us_since_boot(get_absolute_time());
+    benchmark(drv, num_blocks);
+
+    time = to_us_since_boot(get_absolute_time()) - time;
+    printf("benchmark took %d ms\n\r", (int)(time / 1000));
+    uint num_bytes = num_blocks * BLKSIZE;
+    
+    // print data rate mbyte/s
+    printf("data rate: %d.%d mbyte/s\n\r", (int)(num_bytes / time), (int)((num_bytes * 10 / time) % 10));
+
+    set_read_enabled(true);
 	return EXIT_SUCCESS;
 }
