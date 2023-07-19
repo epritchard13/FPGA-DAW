@@ -204,10 +204,10 @@ spi_link_sm spi_link_sm(
     .sd_data_i(data_out),
 
     .sd_fifo_rd(sd_fifo_rd),
-    .sd_fifo_data(sd_fifo_data),
+    .sd_fifo_data_i(sd_fifo_data),
 
     .sd_fifo_we(spi_fifo_we),
-    .sd_fifo_data_out(spi_fifo_data_wr),
+    .sd_fifo_data_o(spi_fifo_data_wr),
 
     .spi_data_out(spi_data_tx),
     .spi_tx_valid(spi_tx_valid)

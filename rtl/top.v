@@ -77,10 +77,10 @@ spi_link_sm spi_sm(
 	.sd_data_i(sd_data_i),
 
 	.sd_fifo_rd(sd_fifo_rd),
-    .sd_fifo_data(sd_fifo_data),
+    .sd_fifo_data_i(sd_fifo_data),
 
 	.sd_fifo_we(spi_fifo_we),
-    .sd_fifo_data_out(spi_fifo_data_wr)
+    .sd_fifo_data_o(spi_fifo_data_wr)
 );
 
 wire [15:0] rddata;
