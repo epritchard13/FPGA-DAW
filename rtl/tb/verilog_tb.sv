@@ -76,7 +76,7 @@ initial begin
     #6 rst = 0;
     #10;
 
-    write('h24, 2); //set clock divider
+    write('h24, 0); //set clock divider
     //write('h19, 10);
 
     //CMD0 (reset)
@@ -108,20 +108,20 @@ initial begin
     write(0, 0);
     #2000;*/
 
-    write('h44, 'd7);
+    /*write('h44, 'd7);
     write('h45, 'd0);
 
     write(5, 51);
     write(4, 'b01_1_1101);
     write(2, 0);
     write(0, 0);
-    #20000;
+    #20000;*/
 
-    for (int i = 0; i < 2048; i++) begin
+    for (int i = 0; i < 512; i++) begin
         if (i % 2 == 0)
-            fifo_write('hfe);
+            fifo_write('d1);
         else
-            fifo_write('hba);
+            fifo_write('d2);
     end
     
     //CMD24 (write single block)
@@ -141,7 +141,6 @@ initial begin
 
     //for (int i = 0; i < 16; i++)
     //    fifo_read();
-
     //CMD17 (read single block)
     //*
     write('h48, 0);
@@ -152,7 +151,9 @@ initial begin
     write(4, 'b01_1_1101);
     write(3, 0);
     write(2, 0);
-    write(0, 0);
+    write(1, 0);
+    #4;
+    write(0, 1);
     #60000;
 
     for (int i = 0; i < 512 + 16; i++)
