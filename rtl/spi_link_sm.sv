@@ -26,12 +26,9 @@ module spi_link_sm(
 	output reg sd_fifo_rd,
 	input [7:0] sd_fifo_data_i,
 
-	output sd_fifo_we,
-	output [7:0] sd_fifo_data_o // TODO: make this not a register?
+	output reg sd_fifo_we,
+	output reg [7:0] sd_fifo_data_o // TODO: make this not a register?
 );
-
-assign sd_fifo_data_o = spi_data;
-assign sd_fifo_we = valid && state == WRITE_SD_FIFO;
 
 enum logic [2:0] {
 	WAITING,
@@ -56,6 +53,8 @@ always @(posedge clk) begin
 		spi_tx_valid <= 1'b0;
 		sd_we <= 1'b0;
 		sd_fifo_rd <= 1'b0;
+		sd_fifo_we <= 1'b0;
+		sd_fifo_data_o <= 8'h00;
 	end
 
 	if (sd_we == 1'b1) sd_we <= 1'b0;
@@ -64,6 +63,7 @@ always @(posedge clk) begin
 		sd_fifo_rd <= 1'b0;
 		spi_tx_valid <= 1'b1;
 	end
+	if (sd_fifo_we == 1'b1) sd_fifo_we <= 1'b0;
 
 	if (valid) begin
 		//run the state machine
@@ -126,8 +126,15 @@ always @(posedge clk) begin
 			sd_we <= 1'b1;
 		end
 
-		READ_SD_REG: state <= WAITING;
-		WRITE_SD_FIFO: state <= WAITING;
+		READ_SD_REG: begin
+			state <= WAITING;
+		end
+
+		WRITE_SD_FIFO: begin
+			state <= WAITING;
+			sd_fifo_we <= 1'b1;
+			sd_fifo_data_o <= spi_data[7:0];
+		end
 
 		//end of state machine
 		endcase
