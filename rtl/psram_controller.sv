@@ -22,7 +22,7 @@ module psram_controller_concept(
 
 	input start_read, 		// start a read
 	input start_write, 		// start a write
-	input [8:0] count, // number of bytes to read/write (max 512)
+	input [8:0] count, 		// number of bytes to read/write (max ???)
 
 	input [`DEPTH - 1:0] address_in,	// The address to start a read/write from
 	output reg [`DEPTH - 1:0] address,	// The address being written to or read from
