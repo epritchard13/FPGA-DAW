@@ -33,7 +33,7 @@ class SanityTest(unittest.TestCase):
             assert test
 
     def test_fat_init(self):
-        for i in range(10):
+        for i in range(20):
             self.ser.write(b'/init\n')
             while True:
                 line = self.ser.readline().strip()
