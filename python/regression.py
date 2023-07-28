@@ -5,6 +5,8 @@ class SanityTest(unittest.TestCase):
     def setUp(self):
         self.ser = serial.Serial('COM5', 9600)
         self.ser.write(b'h')
+        while self.ser.in_waiting > 0:
+            self.ser.read()
     
     def tearDown(self):
         while self.ser.in_waiting > 0:
