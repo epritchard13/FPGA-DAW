@@ -390,8 +390,8 @@ retry_scr:
 	mmc->scr[0] = scr[0];
 	mmc->scr[1] = scr[1];
 
-	printf("SCR: %08x\n\r", mmc->scr[0]);
-	printf("     %08x\n\r", mmc->scr[1]);
+	//printf("SCR: %08x\n\r", mmc->scr[0]);
+	//printf("     %08x\n\r", mmc->scr[1]);
 
 	switch ((mmc->scr[0] >> 24) & 0xf) {
 		case 0:

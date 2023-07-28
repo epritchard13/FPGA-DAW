@@ -26,7 +26,7 @@ int fat_example_main(void)
     FATFS fs;
     FIL fil;
 
-    printf("running fat_example_main\n");
+    //printf("running fat_example_main\n");
 
     //fs.pdrv = 1; // use mmc
     /* Open or create a log file and ready to append */

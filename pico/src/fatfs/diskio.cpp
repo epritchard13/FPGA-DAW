@@ -63,7 +63,7 @@ DSTATUS disk_initialize (
 		printf("ocsdc_mmc_init failed\n\r");
 		return -1;
 	}
-	printf("ocsdc_mmc_init success\n\r");
+	//printf("ocsdc_mmc_init success\n\r");
 
 	drv->has_init = 0;
 	int err = mmc_init(drv);
@@ -71,9 +71,9 @@ DSTATUS disk_initialize (
 		printf("mmc_init failed\n\r");
 		return -1;
 	}
-	printf("mmc_init success\n\r");
+	//printf("mmc_init success\n\r");
 
-	print_mmcinfo(drv);
+	//print_mmcinfo(drv);
 	return 0;
 }
 
@@ -95,7 +95,7 @@ DRESULT disk_read (
 	switch (pdrv) {
 	case DEV_MMC :
 		// translate the arguments here
-		printf("disk_read from %llu\n\r", sector);
+		//printf("disk_read from %llu\n\r", sector);
 		result = mmc_bread(drv, sector, count, buff);
 		//printf("disk_read: result = %d\n\r", result);
 		if (result != count)
@@ -125,7 +125,7 @@ DRESULT disk_write (
 	switch (pdrv) {
 	case DEV_MMC :
 		// translate the arguments here
-		printf("disk_write: DEV_MMC\n\r");
+		//printf("disk_write: DEV_MMC\n\r");
 		result = mmc_bwrite(drv, sector, count, buff);
 
 		if (result != count)
@@ -155,7 +155,7 @@ DRESULT disk_ioctl (
 	case DEV_MMC :
 
 		// Process of the command for the MMC/SD card
-		printf("disk_ioctl: DEV_MMC\n\r");
+		//printf("disk_ioctl: DEV_MMC\n\r");
 		return RES_OK;
 	}
 
