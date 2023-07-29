@@ -142,8 +142,6 @@ void spisdc_write_fifo(struct mmc_data *data) {
 		uint8_t cmd[] = { 0x8B, buf[i]};
 		spi_write_blocking(SPI_PORT, cmd, sizeof(cmd));
 	}
-	uint8_t cmd[] = { 0x8B, 0};
-	spi_write_blocking(SPI_PORT, cmd, sizeof(cmd));
 }
 
 static inline uint32_t ocsdc_read(struct spisdc *dev, int offset)
