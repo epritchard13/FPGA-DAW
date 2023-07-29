@@ -105,7 +105,7 @@ DRESULT disk_read (
 	return RES_PARERR;
 }
 
-
+void printHex(const void *lpvbits, const unsigned int n);
 
 /*-----------------------------------------------------------------------*/
 /* Write Sector(s)                                                       */
@@ -126,7 +126,12 @@ DRESULT disk_write (
 	case DEV_MMC :
 		// translate the arguments here
 		//printf("disk_write: DEV_MMC\n\r");
+		//char test_buf[512];
+		//mmc_bread(drv, sector, 1, test_buf);
+		//printHex(test_buf, 512);
 		result = mmc_bwrite(drv, sector, count, buff);
+		//mmc_bread(drv, sector, 1, test_buf);
+		//printHex(test_buf, 512);
 
 		if (result != count)
 			return RES_ERROR;

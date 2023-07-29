@@ -34,12 +34,23 @@ class SanityTest(unittest.TestCase):
                 print('Expected:', num, ', Got:', res)
             assert test
 
+    # test reading a file
     def test_fat_init(self):
         for i in range(20):
             self.ser.write(b'/init\n')
             while True:
                 line = self.ser.readline().strip()
                 if line.startswith(b'fat_example_main returned'):
+                    assert line.endswith(b'0')
+                    break
+    
+    # test writing to a file
+    def test_fat_write(self):
+        for i in range(2):
+            self.ser.write(b'/test_write\n')
+            while True:
+                line = self.ser.readline().strip()
+                if line.startswith(b'fat_test_write returned'):
                     assert line.endswith(b'0')
                     break
 

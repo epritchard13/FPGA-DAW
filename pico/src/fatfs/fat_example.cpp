@@ -52,3 +52,32 @@ int fat_example_main(void)
 
     return 0;
 }
+
+int fat_test_write(void)
+{
+    FRESULT fr;
+    FATFS fs;
+    FIL fil;
+
+    //printf("running fat_example_main\n");
+
+    //fs.pdrv = 1; // use mmc
+    /* Open or create a log file and ready to append */
+    f_mount(&fs, "", 0);
+
+    fr = f_open(&fil, "testwrite.txt", FA_WRITE | FA_OPEN_ALWAYS);
+    if (fr) return (int)fr;
+
+    /* Append a line */
+    //f_printf(&fil, "hello from fpga");
+    UINT bw;
+    f_write(&fil, "hello from fpga", 15, &bw);
+
+    if (bw != 15) {
+        f_close(&fil);
+        return -1;
+    }
+    f_close(&fil);
+
+    return 0;
+}

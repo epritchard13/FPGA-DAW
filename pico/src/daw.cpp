@@ -17,6 +17,7 @@ uint audio_size;
 #include "fatfs/diskio.h"
 
 int fat_example_main(void);
+int fat_test_write(void);
 
 DRESULT disk_read (
 	BYTE pdrv,		/* Physical drive nmuber to identify the drive */
@@ -73,6 +74,11 @@ void read_stdin()
             int status = fat_example_main();
             printf("fat_example_main returned %d\n", status);
         } 
+        else if (strcmp(cmd, "test_write") == 0) {
+            //example_main();
+            int status = fat_test_write();
+            printf("fat_test_write returned %d\n", status);
+        }
         else if (strcmp(cmd, "bread") == 0) {
             unsigned long long val;
             scanf("%llu", &val);
