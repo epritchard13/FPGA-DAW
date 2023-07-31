@@ -108,7 +108,7 @@ void flush_dcache_range(void * start, void * end) {
 
 void spisdc_writeb(uint8_t offset, uint8_t data) {
 	uint8_t cmd[] = { SPI_CMD_SD, (uint8_t) (0b10000000 | offset), data};
-	//printf("spisdc_writeb: %02x %02x\n", cmd[1] & 0b1111111, cmd[2]);
+	////printf("spisdc_writeb: %02x %02x\n", cmd[1] & 0b1111111, cmd[2]);
 	//sleep_us(8);
 	spi_write_blocking(SPI_PORT, cmd, sizeof(cmd));
 }
@@ -121,7 +121,7 @@ uint8_t spisdc_readb(uint8_t offset) {
 
 void spisdc_read_fifo(struct mmc_data *data) {
 	int bytes = data->blocksize * data->blocks;
-	printf("spisdc_read_fifo: %d\n", bytes);
+	//printf("spisdc_read_fifo: %d\n", bytes);
 	char *buf = data->dest;
 	
 	for (int i = 0; i < bytes; i++) {
@@ -135,7 +135,7 @@ void spisdc_read_fifo(struct mmc_data *data) {
 
 void spisdc_write_fifo(struct mmc_data *data) {
 	int bytes = data->blocksize * data->blocks;
-	printf("spisdc_write_fifo: %d\n", bytes);
+	//printf("spisdc_write_fifo: %d\n", bytes);
 	const char *buf = data->src;
 
 	for (int i = 0; i < bytes; i++) {
@@ -175,7 +175,7 @@ static void ocsdc_set_clock(struct spisdc * dev, uint clock)
 {
 	int clk_div = dev->clk_freq / (2*clock) - 1;
 
-	printf("ocsdc_set_clock %d, div %d\n\r", clock, clk_div);
+	//printf("ocsdc_set_clock %d, div %d\n\r", clock, clk_div);
 	//software reset
 	ocsdc_write(dev, OCSDC_SOFTWARE_RESET, 1);
 	//set clock devider
@@ -190,11 +190,11 @@ static int ocsdc_finish(struct spisdc * dev, struct mmc_cmd *cmd) {
 	int retval = 0;
 	while (1) {
 		int r2 = ocsdc_read(dev, OCSDC_CMD_INT_STATUS);
-		//printf("ocsdc_finish: cmd %d, status %x\n", cmd->cmdidx, r2);
+		////printf("ocsdc_finish: cmd %d, status %x\n", cmd->cmdidx, r2);
 		if (r2 & OCSDC_CMD_INT_STATUS_EI) {
 			//clear interrupts
 			ocsdc_write(dev, OCSDC_CMD_INT_STATUS, 0);
-			printf("ocsdc_finish: cmd %d, status %x\n\r", cmd->cmdidx, r2);
+			//printf("ocsdc_finish: cmd %d, status %x\n\r", cmd->cmdidx, r2);
 			retval = -1;
 			break;
 		}
@@ -208,13 +208,13 @@ static int ocsdc_finish(struct spisdc * dev, struct mmc_cmd *cmd) {
 				cmd->response[2] = ocsdc_read(dev, OCSDC_RESPONSE_3);
 				cmd->response[3] = ocsdc_read(dev, OCSDC_RESPONSE_4);
 			}
-			printf("ocsdc_finish:  %d ok\n\r", cmd->cmdidx);
+			//printf("ocsdc_finish:  %d ok\n\r", cmd->cmdidx);
 			retval = 0;
 
 			break;
 		}
 		//else if (!(r2 & OCSDC_CMD_INT_STATUS_CIE)) {
-		//	printf("ocsdc_finish: cmd %d no exec %x\n", cmd->cmdidx, r2);
+		//	//printf("ocsdc_finish: cmd %d no exec %x\n", cmd->cmdidx, r2);
 		//}
 	}
 	return retval;
@@ -228,11 +228,11 @@ static int ocsdc_data_finish(struct spisdc * dev) {
     ocsdc_write(dev, OCSDC_DAT_INT_STATUS, 0);
 
     if (status & SDCMSC_DAT_INT_STATUS_TRS) {
-    	printf("ocsdc_data_finish: ok\n\r");
+    	//printf("ocsdc_data_finish: ok\n\r");
     	return 0;
     }
     else {
-    	printf("ocsdc_data_finish: status %x\n\r", status);
+    	//printf("ocsdc_data_finish: status %x\n\r", status);
     	return -1;
     }
 	return -1;
@@ -253,7 +253,7 @@ static void ocsdc_setup_data_xfer(struct spisdc * dev, struct mmc_cmd *cmd, stru
 	ocsdc_write(dev, OCSDC_BLOCK_SIZE, data->blocksize-1);
 	ocsdc_write(dev, OCSDC_BLOCK_COUNT, data->blocks-1);
 
-	printf("ocsdc_setup_read: addr: %x\n", (uint32_t)data->dest);
+	//printf("ocsdc_setup_read: addr: %x\n", (uint32_t)data->dest);
 }
 
 static int ocsdc_send_cmd(struct mmc *mmc, struct mmc_cmd *cmd, struct mmc_data *data)
@@ -283,7 +283,7 @@ static int ocsdc_send_cmd(struct mmc *mmc, struct mmc_cmd *cmd, struct mmc_data 
 		ocsdc_setup_data_xfer(dev, cmd, data);
 	}
 
-	printf("ocsdc_send_cmd %04x\n\r", command);
+	//printf("ocsdc_send_cmd %04x\n\r", command);
 
 //	getc();
 
@@ -342,7 +342,7 @@ struct mmc * ocsdc_mmc_init(int clk_freq)
 
 	priv->clk_freq = clk_freq;
 
-	sprintf(mmc->name, "ocsdc");
+	//sprintf(mmc->name, "ocsdc");
 	mmc->priv = priv;
 	mmc->send_cmd = ocsdc_send_cmd;
 	mmc->set_ios = ocsdc_set_ios;
