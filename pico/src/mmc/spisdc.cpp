@@ -41,7 +41,6 @@
 
 #include "mmc.h"
 #include "sdc_example.h"
-#include <malloc.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -327,15 +326,16 @@ static void ocsdc_set_ios(struct mmc *mmc)
 		ocsdc_set_clock((struct spisdc*) mmc->priv, mmc->clock);
 }
 
+struct mmc mmc0;
+struct spisdc priv0;
+
 struct mmc * ocsdc_mmc_init(int clk_freq)
 {
 	struct mmc *mmc;
 	struct spisdc *priv;
 
-	mmc = (struct mmc*) malloc(sizeof(struct mmc));
-	if (!mmc) goto MMC_ALLOC;
-	priv = (struct spisdc*) malloc(sizeof(struct spisdc));
-	if (!priv) goto OCSDC_ALLOC;
+	mmc = &mmc0;
+	priv = &priv0;
 
 	memset(mmc, 0, sizeof(struct mmc));
 	memset(priv, 0, sizeof(struct spisdc));
@@ -357,9 +357,4 @@ struct mmc * ocsdc_mmc_init(int clk_freq)
 	mmc->b_max = 1;
 
 	return mmc;
-
-OCSDC_ALLOC:
-	free(mmc);
-MMC_ALLOC:
-	return NULL;
 }
