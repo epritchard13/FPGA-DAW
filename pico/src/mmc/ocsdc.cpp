@@ -166,10 +166,11 @@ static inline void ocsdc_write(struct ocsdc *dev, int offset, uint32_t data)
  * Test a register to make sure the controller is working
 */
 bool ocsdc_selftest(struct ocsdc *dev) {
-	for (int i = 0; i < 4; i++) {
-		uint32_t data = ocsdc_read(dev, 0x24);
-		if (data != 1) return false;
+	for (int i = 0; i < 5; i++) {
+		ocsdc_write(dev, OCSDC_COMMAND, i);
+		if (ocsdc_read(dev, OCSDC_COMMAND) != i) return false;
 	}
+	ocsdc_write(dev, OCSDC_COMMAND, 0);
 	return true;
 }
 
