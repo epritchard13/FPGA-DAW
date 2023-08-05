@@ -89,7 +89,7 @@ void set_read_enabled(bool val) {
 }
 void printHex(const void *lpvbits, const unsigned int n);
 
-struct spisdc {
+struct ocsdc {
 	int clk_freq;
 };
 
@@ -143,7 +143,7 @@ void spisdc_write_fifo(struct mmc_data *data) {
 	}
 }
 
-static inline uint32_t ocsdc_read(struct spisdc *dev, int offset)
+static inline uint32_t ocsdc_read(struct ocsdc *dev, int offset)
 {
 	//return readl(dev->iobase + offset);
 	uint32_t data = 0;
@@ -154,7 +154,7 @@ static inline uint32_t ocsdc_read(struct spisdc *dev, int offset)
 	return data;
 }
 
-static inline void ocsdc_write(struct spisdc *dev, int offset, uint32_t data)
+static inline void ocsdc_write(struct ocsdc *dev, int offset, uint32_t data)
 {
 	//writel(data, dev->iobase + offset);
 	for (int i = 3; i >= 0; i--) {
@@ -162,7 +162,18 @@ static inline void ocsdc_write(struct spisdc *dev, int offset, uint32_t data)
 	}
 }
 
-static void ocsdc_set_buswidth(struct spisdc * dev, uint width) {
+/**
+ * Test a register to make sure the controller is working
+*/
+bool ocsdc_selftest(struct ocsdc *dev) {
+	for (int i = 0; i < 4; i++) {
+		uint32_t data = ocsdc_read(dev, 0x24);
+		if (data != 1) return false;
+	}
+	return true;
+}
+
+static void ocsdc_set_buswidth(struct ocsdc * dev, uint width) {
 	if (width == 4)
 		ocsdc_write(dev, OCSDC_CONTROL, 1);
 	else if (width == 1)
@@ -170,7 +181,7 @@ static void ocsdc_set_buswidth(struct spisdc * dev, uint width) {
 }
 
 /* Set clock prescalar value based on the required clock in HZ */
-static void ocsdc_set_clock(struct spisdc * dev, uint clock)
+static void ocsdc_set_clock(struct ocsdc * dev, uint clock)
 {
 	int clk_div = dev->clk_freq / (2*clock) - 1;
 
@@ -184,7 +195,7 @@ static void ocsdc_set_clock(struct spisdc * dev, uint clock)
 }
 
 
-static int ocsdc_finish(struct spisdc * dev, struct mmc_cmd *cmd) {
+static int ocsdc_finish(struct ocsdc * dev, struct mmc_cmd *cmd) {
 
 	int retval = 0;
 	while (1) {
@@ -220,7 +231,7 @@ static int ocsdc_finish(struct spisdc * dev, struct mmc_cmd *cmd) {
 }
 
 
-static int ocsdc_data_finish(struct spisdc * dev) {
+static int ocsdc_data_finish(struct ocsdc * dev) {
 	int status;
 
     while ((status = ocsdc_read(dev, OCSDC_DAT_INT_STATUS)) == 0);
@@ -237,7 +248,7 @@ static int ocsdc_data_finish(struct spisdc * dev) {
 	return -1;
 }
 
-static void ocsdc_setup_data_xfer(struct spisdc * dev, struct mmc_cmd *cmd, struct mmc_data *data) {
+static void ocsdc_setup_data_xfer(struct ocsdc * dev, struct mmc_cmd *cmd, struct mmc_data *data) {
 	//*
 	//invalidate cache
 	if (data->flags & MMC_DATA_READ) {
@@ -257,7 +268,7 @@ static void ocsdc_setup_data_xfer(struct spisdc * dev, struct mmc_cmd *cmd, stru
 
 static int ocsdc_send_cmd(struct mmc *mmc, struct mmc_cmd *cmd, struct mmc_data *data)
 {
-	struct spisdc * dev = (struct spisdc*) mmc->priv;
+	struct ocsdc * dev = (struct ocsdc*) mmc->priv;
 
 	int command = (cmd->cmdidx << 8);
 	if (cmd->resp_type & MMC_RSP_PRESENT) {
@@ -303,7 +314,10 @@ static int ocsdc_send_cmd(struct mmc *mmc, struct mmc_cmd *cmd, struct mmc_data 
 /* Initialize ocsdc controller */
 static int ocsdc_init(struct mmc *mmc)
 {
-	struct spisdc * dev = (struct spisdc*) mmc->priv;
+	struct ocsdc * dev = (struct ocsdc*) mmc->priv;
+
+	// perform a self test
+	if (!ocsdc_selftest(dev)) return -1;
 
 	//set timeout
 	ocsdc_write(dev, OCSDC_TIMEOUT, 0x7FFF); // max 0xFFFFFF
@@ -319,26 +333,26 @@ static int ocsdc_init(struct mmc *mmc)
 static void ocsdc_set_ios(struct mmc *mmc)
 {
 	/* Support only 4 bit if */
-	ocsdc_set_buswidth((struct spisdc*) mmc->priv, mmc->bus_width);
+	ocsdc_set_buswidth((struct ocsdc*) mmc->priv, mmc->bus_width);
 
 	/* Set clock speed */
 	if (mmc->clock)
-		ocsdc_set_clock((struct spisdc*) mmc->priv, mmc->clock);
+		ocsdc_set_clock((struct ocsdc*) mmc->priv, mmc->clock);
 }
 
 struct mmc mmc0;
-struct spisdc priv0;
+struct ocsdc priv0;
 
 struct mmc * ocsdc_mmc_init(int clk_freq)
 {
 	struct mmc *mmc;
-	struct spisdc *priv;
+	struct ocsdc *priv;
 
 	mmc = &mmc0;
 	priv = &priv0;
 
 	memset(mmc, 0, sizeof(struct mmc));
-	memset(priv, 0, sizeof(struct spisdc));
+	memset(priv, 0, sizeof(struct ocsdc));
 
 	priv->clk_freq = clk_freq;
 
