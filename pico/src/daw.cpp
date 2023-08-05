@@ -10,7 +10,7 @@
 #include <stdio.h>
 
 Player test_player;
-uint8_t buf[1024];
+//uint8_t buf[1024];
 uint audio_size;
 
 #include "fatfs/ff.h"
@@ -104,16 +104,16 @@ void read_stdin()
             printf("unknown command: %s\n", cmd);
         }
     }
-    else if (c == 0x53) {
+    /*else if (c == 0x53) {
         fread(&audio_size, 1, 4, stdin);
         if (audio_size <= sizeof(buf)) {
             fread(buf, 1, audio_size, stdin);
             uint16_t val = audio_size - 1;
             uint8_t cmd[] = { 0x88, (uint8_t) (val & 0xff), (uint8_t) ((val >> 8) & 0xff)};
             spi_write_blocking(SPI_PORT, cmd, sizeof(cmd));
-            spi_write_blocking(SPI_PORT, buf, audio_size); //*/
+            spi_write_blocking(SPI_PORT, buf, audio_size); 
         }
-    }
+    }*/
 }
 
 int main()

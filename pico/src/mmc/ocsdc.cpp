@@ -87,23 +87,16 @@ bool enable_read = true;
 void set_read_enabled(bool val) {
 	enable_read = val;
 }
+
 void printHex(const void *lpvbits, const unsigned int n);
 
 struct ocsdc {
 	int clk_freq;
 };
 
-/*
-#define readl(addr) (*(volatile unsigned int *) (addr))
-#define writel(b, addr) ((*(volatile unsigned int *) (addr)) = (b))
-
-
-void flush_dcache_range(void * start, void * end) {
-	while (start < end) {
-		or1k_dcache_flush((unsigned long)start);
-		start += 4;
-	}
-}*/
+// The structs used by the driver
+struct mmc mmc0;
+struct ocsdc priv0;
 
 void spisdc_writeb(uint8_t offset, uint8_t data) {
 	uint8_t cmd[] = { SPI_CMD_SD, (uint8_t) (0b10000000 | offset), data};
@@ -340,9 +333,6 @@ static void ocsdc_set_ios(struct mmc *mmc)
 	if (mmc->clock)
 		ocsdc_set_clock((struct ocsdc*) mmc->priv, mmc->clock);
 }
-
-struct mmc mmc0;
-struct ocsdc priv0;
 
 struct mmc * ocsdc_mmc_init(int clk_freq)
 {
