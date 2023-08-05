@@ -37,7 +37,7 @@ add_executable(daw
   src/json.cpp
   src/mmc/mmc.cpp
   src/mmc/sdc_example.cpp
-  src/mmc/spisdc.cpp
+  src/mmc/ocsdc.cpp
 
   src/fatfs/ffsystem.cpp
   src/fatfs/ff.cpp
