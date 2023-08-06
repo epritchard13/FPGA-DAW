@@ -16,6 +16,7 @@ Player test_player;
 
 int fat_example_main(void);
 int fat_test_write(void);
+int audio_test(void);
 
 DRESULT disk_read (
 	BYTE pdrv,		/* Physical drive nmuber to identify the drive */

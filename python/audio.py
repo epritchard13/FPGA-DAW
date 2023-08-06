@@ -6,7 +6,7 @@ import wave
 import matplotlib.pyplot as plt
 import numpy as np
 
-with wave.open('audio.wav') as fd:
+with wave.open('recipe.wav') as fd:
     params = fd.getparams()
     frames = fd.readframes(1000000000)
 
@@ -14,6 +14,12 @@ audio = np.ndarray(len(frames) // 4, dtype=np.uint8)
 print(len(frames), audio.shape)
 for i in range(audio.shape[0]):
     audio[i] = (frames[i * 4 + 1] + 128) % 256
+
+# write audio as binary file
+with open('recipe.raw', 'wb') as fd:
+    fd.write(audio.tobytes())
+
+exit()
 
 ser = serial.Serial('COM5')
 

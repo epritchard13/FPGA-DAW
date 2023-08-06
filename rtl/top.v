@@ -133,7 +133,7 @@ sdc_controller sdc_controller0(
 
 pwm_dac pwmdac(
 	.clk(SYSCLK),
-	.val(fpga_sd_rd_dat_o),
+	.val(sdc_controller0.sd_data_serial_host0.debug_out),
 	.analog(A_OUT)
 );
 

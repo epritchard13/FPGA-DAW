@@ -104,6 +104,18 @@ void benchmark(struct mmc* drv) {
     printf("done.\n\r");
 }
 
+int test_find_file(const char* name, uint* start_sector, uint* num_sectors);
+int test_audio(struct mmc* drv) {
+    uint start_sector, num_sectors;
+    uint sect = test_find_file("recipe.raw", &start_sector, &num_sectors);
+    
+    spisdc_fpga_mode(drv, true);
+    mmc_bread(drv, start_sector, num_sectors, NULL);
+    spisdc_fpga_mode(drv, false);
+    printf("done.\n\r");
+    return 0;
+}
+
 int example_main() {
 	printf("Hello World !!!\n\r");
 
@@ -123,6 +135,7 @@ int example_main() {
 
 	print_mmcinfo(drv);
     benchmark(drv);
+    //test_audio(drv);
 
 	return EXIT_SUCCESS;
 }

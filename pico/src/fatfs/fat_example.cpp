@@ -53,6 +53,36 @@ int fat_example_main(void)
     return 0;
 }
 
+void printHex(const void *lpvbits, const unsigned int n);
+int test_find_file(const char* name, uint* start_sector, uint* num_sectors)
+{
+    FRESULT fr;
+    FATFS fs;
+    FIL fil;
+    UINT br;
+
+    f_mount(&fs, "", 0);
+    
+    fr = f_open(&fil, name, FA_READ | FA_OPEN_EXISTING);
+    if (fr) return (int)fr;
+
+    f_lseek(&fil, 2000*1024);
+
+    char tmp;
+    f_read(&fil, &tmp, 1, &br);
+    printf("sector: %d\n", fil.sect);
+
+    printf("file size: %lld\n", f_size(&fil));
+
+    *start_sector = fil.sect;
+    *num_sectors = f_size(&fil) / 512;
+    printf("file size (blocks): %u\n", *num_sectors);
+
+
+    f_close(&fil);
+    return 0;
+}
+
 int fat_test_write(void)
 {
     FRESULT fr;

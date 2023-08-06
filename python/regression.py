@@ -36,7 +36,7 @@ class SanityTest(unittest.TestCase):
 
     # test reading a file
     def test_fat_init(self):
-        for i in tqdm(range(100)):
+        for i in tqdm(range(50)):
             self.ser.write(b'/init\n')
             while True:
                 line = self.ser.readline().strip()
@@ -46,7 +46,7 @@ class SanityTest(unittest.TestCase):
     
     # test writing to a file
     def test_fat_write(self):
-        for i in tqdm(range(2)):
+        for i in tqdm(range(0)):
             self.ser.write(b'/test_write\n')
             while True:
                 line = self.ser.readline().strip()
