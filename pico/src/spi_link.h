@@ -5,7 +5,7 @@
 const uint8_t QUERY_STATUS = 0x01;
 
 #define SYSCLK 133000000
-#define SPI_CLK (44100*10)
+#define SPI_CLK (10*1000*1000)
 
 #define SPI_PORT spi0
 #define PIN_MISO 16

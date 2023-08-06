@@ -30,7 +30,7 @@ pico_sdk_init()
 add_executable(daw 
   src/daw.cpp
   src/spi_link.cpp
-  src/player.cpp
+  src/daw/player.cpp
   src/stdio_mem.cpp
   src/memory/mem.cpp
   src/memory/queue.cpp
