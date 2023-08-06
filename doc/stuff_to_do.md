@@ -15,3 +15,10 @@ and send them from the pico, including data commands. Maybe don't do the above.
 ## PSRAM
 * Write the PSRAM state machine. Probably best to take inspiration from someone else's code.
 
+## Uncertainties
+* Does the software reset reg always assert for a long enough time? It's a bistable cdc, not monostable
+
+## Some Ideas
+* Add a virtual sd card regmap, so that only necessary reg writes are completed?
+* Data and command interrupt-driven SD card driver!
+* Do something about 1-bit SD mode

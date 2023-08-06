@@ -3,7 +3,7 @@ module verilog_tb;
 reg clk = 1;
 reg rst = 0;
 reg [7:0] spi_data = 0;
-reg valid = 0;
+reg spi_valid = 0;
 
 initial begin
     repeat(4096*36) begin
@@ -13,62 +13,62 @@ end
 
 task write(input [6:0] addr, input [7:0] data);
     spi_data = 8'h89;
-    #16 valid = 1;
-    #2 valid = 0;
+    #16 spi_valid = 1;
+    #2 spi_valid = 0;
 
     spi_data = {1'b1, addr[6:0]};
-    #16 valid = 1;
-    #2 valid = 0;
+    #16 spi_valid = 1;
+    #2 spi_valid = 0;
 
     spi_data = data;
-    #16 valid = 1;
-    #2 valid = 0;
+    #16 spi_valid = 1;
+    #2 spi_valid = 0;
 
     spi_data = 8'h00;
-    #16 valid = 1;
-    #2 valid = 0;
+    #16 spi_valid = 1;
+    #2 spi_valid = 0;
 endtask
 
 task read(input [6:0] addr, output [7:0] data);
     spi_data = 8'h89;
-    #16 valid = 1;
-    #2 valid = 0;
+    #16 spi_valid = 1;
+    #2 spi_valid = 0;
 
     spi_data = {1'b0, addr[6:0]};
-    #16 valid = 1;
-    #2 valid = 0;
+    #16 spi_valid = 1;
+    #2 spi_valid = 0;
 
     spi_data = 8'h00;
-    #16 valid = 1;
-    #2 valid = 0;
+    #16 spi_valid = 1;
+    #2 spi_valid = 0;
 
     spi_data = 8'h00;
-    #16 valid = 1;
-    #2 valid = 0;
+    #16 spi_valid = 1;
+    #2 spi_valid = 0;
 endtask
 
 task fifo_read();
     spi_data = 8'h8A;
-    #16 valid = 1;
-    #2 valid = 0;
+    #16 spi_valid = 1;
+    #2 spi_valid = 0;
 
     spi_data = 8'h00;
-    #16 valid = 1;
-    #2 valid = 0;
+    #16 spi_valid = 1;
+    #2 spi_valid = 0;
 
     spi_data = 8'h00;
-    #16 valid = 1;
-    #2 valid = 0;
+    #16 spi_valid = 1;
+    #2 spi_valid = 0;
 endtask
 
 task fifo_write(input [7:0] data);
     spi_data = 8'h8B;
-    #16 valid = 1;
-    #2 valid = 0;
+    #16 spi_valid = 1;
+    #2 spi_valid = 0;
 
     spi_data = data;
-    #16 valid = 1;
-    #2 valid = 0;
+    #16 spi_valid = 1;
+    #2 spi_valid = 0;
 endtask
 
 initial begin
@@ -76,6 +76,10 @@ initial begin
     #6 rst = 0;
     #10;
 
+    write (`reset, 1);
+    #4;
+    write(`reset, 0);
+    
     write('h24, 0); //set clock divider
     //write('h19, 10);
 
@@ -116,13 +120,13 @@ initial begin
     write(2, 0);
     write(0, 0);
     #20000;*/
-
+    //*
     for (int i = 0; i < 512; i++) begin
         if (i % 2 == 0)
-            fifo_write('d1);
+            fifo_write('hab);
         else
-            fifo_write('d2);
-    end
+            fifo_write('hcd);
+    end//*/
     
     //CMD24 (write single block)
     //*
@@ -137,7 +141,7 @@ initial begin
     write(3, 0);
     write(2, 0);
     write(0, 0);
-    #60000;
+    #60000;//*/
 
     //for (int i = 0; i < 16; i++)
     //    fifo_read();
@@ -182,35 +186,65 @@ SPI_Slave spslv(
 	.o_SPI_MISO(MISO)
 );
 
-wire [7:0] data_in;
-wire [7:0] data_out;
-wire [6:0] addr;
-wire we;
+wire [6:0] sd_addr;
+wire sd_we;
+wire [7:0] sd_data_o;
+wire [7:0] sd_data_i;
 
-wire sd_fifo_rd;
-wire [7:0] sd_fifo_data;
+wire sd_rd_en_i;
+wire [7:0] sd_rd_dat_o;
+wire sd_wr_en_i;
+wire [7:0] sd_wr_dat_i;
 
-wire sd_fifo_we;
-wire [7:0] spi_fifo_data_wr;
+wire spi_sd_rd_en_i;
+wire [7:0] spi_sd_rd_dat_o;
+wire spi_sd_wr_en_i;
+wire [7:0] spi_sd_wr_dat_i;
 
-spi_link_sm spi_link_sm(
-    .clk(clk),
-    .rst(rst),
-    .spi_data(spi_data),
-    .valid(valid),
-    .sd_addr(addr),
-    .sd_we(we),
-    .sd_data_o(data_in),
-    .sd_data_i(data_out),
+wire fpga_sd_rd_en_i = 1'b0;
+wire [7:0] fpga_sd_rd_dat_o;
+wire fpga_sd_wr_en_i = 1'b0;
+wire [7:0] fpga_sd_wr_dat_i = 8'b0;
 
-    .sd_fifo_rd(sd_fifo_rd),
-    .sd_fifo_data_i(sd_fifo_data),
+spi_fpga_mux spi_fpga_mux0(
+	.fpga_mode(1'b0),
 
-    .sd_fifo_we(spi_fifo_we),
-    .sd_fifo_data_o(spi_fifo_data_wr),
+	.rd_en(sd_rd_en_i),
+	.rd_dat(sd_rd_dat_o),
 
-    .spi_data_out(spi_data_tx),
-    .spi_tx_valid(spi_tx_valid)
+	.wr_en(sd_wr_en_i),
+	.wr_dat(sd_wr_dat_i),
+
+	.rd_en0(spi_sd_rd_en_i),
+	.rd_dat0(spi_sd_rd_dat_o),
+	.wr_en0(spi_sd_wr_en_i),
+	.wr_dat0(spi_sd_wr_dat_i),
+
+	.rd_en1(fpga_sd_rd_en_i),
+	.rd_dat1(fpga_sd_rd_dat_o),
+	.wr_en1(fpga_sd_wr_en_i),
+	.wr_dat1(fpga_sd_wr_dat_i)
+);
+
+spi_link_sm spi_sm(
+	.clk(clk),
+	.rst(rst),
+
+	.valid(spi_valid),
+	.spi_data(spi_data),
+	.spi_data_out(spi_data_tx),
+	.spi_tx_valid(spi_tx_valid),
+
+	.sd_addr(sd_addr),
+	.sd_we(sd_we),
+	.sd_data_o(sd_data_o),
+	.sd_data_i(sd_data_i),
+
+	.sd_fifo_rd(spi_sd_rd_en_i),
+    .sd_fifo_data_i(spi_sd_rd_dat_o),
+
+	.sd_fifo_we(spi_sd_wr_en_i),
+    .sd_fifo_data_o(spi_sd_wr_dat_i)
 );
 
 wire sd_clk;
@@ -228,21 +262,22 @@ endgenerate
 sdc_controller sdc_controller (
     .clk(clk),
     .rst(rst),
-    .addr(addr),
-    .data_in(data_in),
-    .data_out(data_out),
-    .we(we),
+
+	.addr(sd_addr),
+	.we(sd_we),
+	.data_in(sd_data_o),
+	.data_out(sd_data_i),
 
     .sd_cmd(sd_cmd),
     .sd_dat(sd_dat),
 
     .sd_clk_o_pad(sd_clk),
 
-    .rd_en_i(sd_fifo_rd),
-    .rd_dat_o(sd_fifo_data),
+	.rd_en_i(sd_rd_en_i),
+    .rd_dat_o(sd_rd_dat_o),
 
-    .wr_en_i(spi_fifo_we),
-    .wr_dat_i(spi_fifo_data_wr)
+	.wr_en_i(sd_wr_en_i),
+    .wr_dat_i(sd_wr_dat_i)
 );
 
 wire [15:0] rddata;

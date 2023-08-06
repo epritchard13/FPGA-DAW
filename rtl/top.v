@@ -55,11 +55,40 @@ wire sd_we;
 wire [7:0] sd_data_o;
 wire [7:0] sd_data_i;
 
-wire sd_fifo_rd;
-wire [7:0] sd_fifo_data;
+wire sd_rd_en_i;
+wire [7:0] sd_rd_dat_o;
+wire sd_wr_en_i;
+wire [7:0] sd_wr_dat_i;
 
-wire sd_fifo_we;
-wire [7:0] spi_fifo_data_wr;
+wire spi_sd_rd_en_i;
+wire [7:0] spi_sd_rd_dat_o;
+wire spi_sd_wr_en_i;
+wire [7:0] spi_sd_wr_dat_i;
+
+wire fpga_sd_rd_en_i = 1'b0;
+wire [7:0] fpga_sd_rd_dat_o;
+wire fpga_sd_wr_en_i = 1'b0;
+wire [7:0] fpga_sd_wr_dat_i = 8'b0;
+
+spi_fpga_mux spi_fpga_mux0(
+	.fpga_mode(1'b0),
+
+	.rd_en(sd_rd_en_i),
+	.rd_dat(sd_rd_dat_o),
+
+	.wr_en(sd_wr_en_i),
+	.wr_dat(sd_wr_dat_i),
+
+	.rd_en0(spi_sd_rd_en_i),
+	.rd_dat0(spi_sd_rd_dat_o),
+	.wr_en0(spi_sd_wr_en_i),
+	.wr_dat0(spi_sd_wr_dat_i),
+
+	.rd_en1(fpga_sd_rd_en_i),
+	.rd_dat1(fpga_sd_rd_dat_o),
+	.wr_en1(fpga_sd_wr_en_i),
+	.wr_dat1(fpga_sd_wr_dat_i)
+);
 
 spi_link_sm spi_sm(
 	.clk(SYSCLK),
@@ -69,22 +98,17 @@ spi_link_sm spi_sm(
 	.spi_data_out(spi_data_tx),
 	.spi_tx_valid(spi_tx_valid),
 
-	.dac_state(signal_out),
-
 	.sd_addr(sd_addr),
 	.sd_we(sd_we),
 	.sd_data_o(sd_data_o),
 	.sd_data_i(sd_data_i),
 
-	.sd_fifo_rd(sd_fifo_rd),
-    .sd_fifo_data_i(sd_fifo_data),
+	.sd_fifo_rd(spi_sd_rd_en_i),
+    .sd_fifo_data_i(spi_sd_rd_dat_o),
 
-	.sd_fifo_we(spi_fifo_we),
-    .sd_fifo_data_o(spi_fifo_data_wr)
+	.sd_fifo_we(spi_sd_wr_en_i),
+    .sd_fifo_data_o(spi_sd_wr_dat_i)
 );
-
-wire [15:0] rddata;
-wire [39:0] rdaddr;
 
 sdc_controller sdc_controller0(
 	.clk(SYSCLK),
@@ -100,34 +124,16 @@ sdc_controller sdc_controller0(
 
 	.sd_clk_o_pad(SD_CLK),
 
-	.rd_en_i(sd_fifo_rd),
-    .rd_dat_o(sd_fifo_data),
+	.rd_en_i(sd_rd_en_i),
+    .rd_dat_o(sd_rd_dat_o),
 
-	.wr_en_i(spi_fifo_we),
-    .wr_dat_i(spi_fifo_data_wr)
+	.wr_en_i(sd_wr_en_i),
+    .wr_dat_i(sd_wr_dat_i)
 );
-/*
-sd_fake sd_fake(
-	.rstn_async(~rst),
-	.sdclk(sd_clk),
-	.sdcmd(sd_cmd_in),
-	.sdcmdin(sd_cmd_out),
-	.sddat(sd_data_in),
-
-	.rdaddr(rdaddr),
-	.rddata(rddata)
-);
-
-brom brom(
-	.clk(sd_clk),
-	.en(1'b1),
-	.addr(rdaddr),
-	.dout(rddata)
-);*/
 
 pwm_dac pwmdac(
 	.clk(SYSCLK),
-	//.val(sdc_controller0.sd_data_serial_host0.debug_out),
+	.val(fpga_sd_rd_dat_o),
 	.analog(A_OUT)
 );
 

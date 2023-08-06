@@ -6,6 +6,8 @@
 `define RX_SD_DATA 8'h89 			//SD card operation
 `define READ_SD_FIFO 8'h8A 			//read from the SD card FIFO
 `define WRITE_SD_FIFO 8'h8B 		//write to the SD card FIFO
+`define FPGA_MODE_ON 8'h8C 			//turn on SD card FPGA mode
+`define FPGA_MODE_OFF 8'h8D 		//turn off SD card FPGA mode
 
 module spi_link_sm(
 	input clk,
@@ -27,7 +29,9 @@ module spi_link_sm(
 	input [7:0] sd_fifo_data_i,
 
 	output reg sd_fifo_we,
-	output reg [7:0] sd_fifo_data_o // TODO: make this not a register?
+	output reg [7:0] sd_fifo_data_o, // TODO: make this not a register?
+
+	output reg fpga_mode
 );
 
 enum logic [2:0] {
@@ -55,6 +59,7 @@ always @(posedge clk) begin
 		sd_fifo_rd <= 1'b0;
 		sd_fifo_we <= 1'b0;
 		sd_fifo_data_o <= 8'h00;
+		fpga_mode <= 1'b0;
 	end
 
 	if (sd_we == 1'b1) sd_we <= 1'b0;
@@ -73,15 +78,15 @@ always @(posedge clk) begin
 			//see if the opcode is a command
 			case (spi_data)
 				`WRITE_8BIT_REG: state <= WRITE_8BIT_REG;
+				`RX_SD_DATA: state <= RX_SD_DATA;
+				`READ_SD_FIFO: sd_fifo_rd <= 1'b1;
+				`WRITE_SD_FIFO: state <= WRITE_SD_FIFO;
+				`FPGA_MODE_ON: fpga_mode <= 1'b1;
+				`FPGA_MODE_OFF: fpga_mode <= 1'b0;
 				`RX_DATA: begin
 					state <= RECEIVE_RX_HEADER;
 					ctr0 <= 0;
 				end
-				`RX_SD_DATA: state <= RX_SD_DATA;
-				`READ_SD_FIFO: begin
-					sd_fifo_rd <= 1'b1;
-				end
-				`WRITE_SD_FIFO: state <= WRITE_SD_FIFO;
 			endcase
 		end
 		
@@ -89,25 +94,6 @@ always @(posedge clk) begin
 		WRITE_8BIT_REG: begin
 			state <= WAITING; //go back to waiting
 			dac_state <= spi_data;
-		end
-		
-		//receiving data rx header
-		RECEIVE_RX_HEADER: begin
-			ctr0 <= ctr0 + 1;
-			header[ctr0] <= spi_data;
-			if (ctr0 == `HEADER_SIZE - 1) begin
-				state <= RECEIVE_RX_BODY;
-				ctr0 <= 0;
-			end
-		end
-		
-		//receiving the data itself
-		RECEIVE_RX_BODY: begin
-			ctr0 <= ctr0 + 1;
-			dac_state <= spi_data;
-			if (ctr0 == {header[1], header[0]}) begin //the header should be one less than the actual data size
-				state <= WAITING;
-			end
 		end
 
 		RX_SD_DATA: begin
@@ -126,14 +112,31 @@ always @(posedge clk) begin
 			sd_we <= 1'b1;
 		end
 
-		READ_SD_REG: begin
-			state <= WAITING;
-		end
+		READ_SD_REG: state <= WAITING;
 
 		WRITE_SD_FIFO: begin
 			state <= WAITING;
 			sd_fifo_we <= 1'b1;
 			sd_fifo_data_o <= spi_data[7:0];
+		end
+
+		//receiving data rx header
+		RECEIVE_RX_HEADER: begin
+			ctr0 <= ctr0 + 1;
+			header[ctr0] <= spi_data;
+			if (ctr0 == `HEADER_SIZE - 1) begin
+				state <= RECEIVE_RX_BODY;
+				ctr0 <= 0;
+			end
+		end
+		
+		//receiving the data itself
+		RECEIVE_RX_BODY: begin
+			ctr0 <= ctr0 + 1;
+			dac_state <= spi_data;
+			if (ctr0 == {header[1], header[0]}) begin //the header should be one less than the actual data size
+				state <= WAITING;
+			end
 		end
 
 		//end of state machine
