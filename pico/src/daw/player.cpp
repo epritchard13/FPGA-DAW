@@ -17,7 +17,7 @@ bool Player::addClip(uint track, uint data, uint timestamp, uint size) {
         //std::cout << "track " << track << " does not exist" << std::endl;
         return false;
     }
-    this->tracks[track].clips.push_back({data, timestamp, size});
+    this->tracks[track].clips.push_back({0, 0, timestamp, size}); //TODO: do
 
     // sort clips by timestamp
     std::sort(this->tracks[track].clips.begin(), this->tracks[track].clips.end(), [](const Clip& a, const Clip& b) {
@@ -138,7 +138,7 @@ void Player::player_sm() {
             //uint block_size = std::min((uint) BLOCK_SIZE, );
             //printf("%d\n", seg.complete_size - BLOCK_SIZE * seg.blocks.size());
             if (should_be_loaded(virtualHeadPos, *clip, *seg)) {
-                queue.push({clip->data + seg->start, seg});
+                queue.push({clip->file_id + seg->start, seg});
             }
         }
 
@@ -158,7 +158,7 @@ std::ostream& operator<< (std::ostream &os, const Clip &s) {
     }
     ss << ']';
 
-    os << "Clip(" << s.data << ", " << s.timestamp << ", " << s.size << ", " << s.current_segment << ", " << ss.str() << ")";
+    os << "Clip(" << s.file_id << ", " << s.offset << ", " << s.timestamp << ", " << s.size << ", " << s.current_segment << ", " << ss.str() << ")";
     return os;
 }
 
@@ -213,7 +213,8 @@ std::string Player::toJson() {
                 segment_arr.push_back(segment);
             }
 
-            clip["data"] = tracks[i].clips[j].data;
+            clip["file_id"] = tracks[i].clips[j].file_id;
+            clip["offset"] = tracks[i].clips[j].offset;
             clip["timestamp"] = tracks[i].clips[j].timestamp;
             clip["size"] = tracks[i].clips[j].size;
             clip["current_segment"] = tracks[i].clips[j].current_segment;

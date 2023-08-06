@@ -12,11 +12,13 @@
  * NOTE: Timestamps are measured in samples.
  */
 struct Clip {
-	storage_ptr_t data;
-	//FIL* file;				// The file associated with this clip
-	//uint offset;				// The offset into the file where the clip starts
-	uint timestamp;				// start time of the clip
-	uint size;
+	uint file_id;				// The ID of the file associated with this clip	
+	uint offset;				// The offset into the file where the clip starts (in bytes)
+	uint size;					// Clip size in bytes
+
+	uint timestamp;				// start time of the clip in the project
+	
+	// end time of the clip in the project
 	inline constexpr uint end() const { return timestamp + size; }
 
 	uint current_segment;
@@ -52,8 +54,9 @@ struct Player { //TODO: make class
 		LOADING		// Loading is in progress.
 	} state = MOVED;
 
-public:
 	std::vector<Track> tracks;
+	std::vector<FIL*> files;
+
 	void player_sm();
 	bool movePlayhead(uint new_pos);
 	std::string toJson();
