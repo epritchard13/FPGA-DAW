@@ -51,12 +51,9 @@
 #include "pico/time.h"
 
 struct mmc * ocsdc_mmc_init(int clk_freq);
-void set_read_enabled(bool val);
+void spisdc_fpga_mode(struct mmc* mmc, bool val);
 
 #define BLKSIZE 512
-#define BLKCNT 2
-
-char buff[BLKSIZE*BLKCNT] = {'\0'};
 
 void printHex(const void *lpvbits, const unsigned int n) {
     char* data = (char*) lpvbits;
@@ -87,9 +84,23 @@ void printHex(const void *lpvbits, const unsigned int n) {
     printf(" | %s\n\r", line);
 }
 
-void benchmark(struct mmc* mmc, int blkcount) {
+void benchmark(struct mmc* drv) {
+    int num_blocks = 1024*2*10;
+
     printf("starting... ");
-    mmc_bread(mmc, 96 * 1024*1024*2, blkcount, NULL);
+    spisdc_fpga_mode(drv, true);
+
+    uint64_t time = to_us_since_boot(get_absolute_time());
+    mmc_bread(drv, 225055990, num_blocks, NULL);
+
+    time = to_us_since_boot(get_absolute_time()) - time;
+    printf("benchmark took %d ms\n\r", (int)(time / 1000));
+    uint num_bytes = num_blocks * BLKSIZE;
+    
+    // print data rate MByte/s
+    printf("data rate: %d.%d MBytes/s\n\r", (int)(num_bytes / time), (int)((num_bytes * 10 / time) % 10));
+
+    spisdc_fpga_mode(drv, false);
     printf("done.\n\r");
 }
 
@@ -102,7 +113,6 @@ int example_main() {
 		printf("ocsdc_mmc_init failed\n\r");
 		return -1;
 	}
-	printf("ocsdc_mmc_init success\n\r");
 
 	drv->has_init = 0;
 	int err = mmc_init(drv);
@@ -110,64 +120,9 @@ int example_main() {
 		printf("mmc_init failed\n\r");
 		return -1;
 	}
-	printf("mmc_init success\n\r");
 
 	print_mmcinfo(drv);
+    benchmark(drv);
 
-    //*
-    for (int i = 0; i < BLKSIZE*BLKCNT; i++) {
-        buff[i] = i % 256;
-    }
-
-    char str[] = "shit";
-    for (int i = 0; i < sizeof(str); i++) {
-        buff[i + 100] = str[i];
-    }
-
-    /*
-    for (int i = 0; i < 1; i += BLKCNT) {
-        if (i % 100 == 0) {
-            printf("attempting to write block %d\n\r", i);
-        }
-
-        if (mmc_bwrite(drv, i, BLKCNT, buff) == 0) {
-            printf("mmc_bwrite failed\n\r");
-            return -1;
-        }
-        printf("mmc_bwrite success\n\r");
-        //printHex(buff, BLKSIZE*BLKCNT);
-    }
-    //*/
-
-    /*
-    for (int i = 0; i < 1; i += BLKCNT) {
-        if (i % 100 == 0) {
-            printf("attempting to read block %d\n\r", i);
-        }
-
-        if (mmc_bread(drv, i, BLKCNT, buff) == 0) {
-            printf("mmc_bread failed\n\r");
-            return -1;
-        }
-        //printf("mmc_bread success\n\r");
-        printHex(buff, BLKSIZE*BLKCNT);
-
-        //printHex(buff, BLKSIZE*BLKCNT);
-    }//*/
-    int num_blocks = 1024*2*20;
-
-    set_read_enabled(false);
-
-    uint64_t time = to_us_since_boot(get_absolute_time());
-    benchmark(drv, num_blocks);
-
-    time = to_us_since_boot(get_absolute_time()) - time;
-    printf("benchmark took %d ms\n\r", (int)(time / 1000));
-    uint num_bytes = num_blocks * BLKSIZE;
-    
-    // print data rate mbyte/s
-    printf("data rate: %d.%d mbyte/s\n\r", (int)(num_bytes / time), (int)((num_bytes * 10 / time) % 10));
-
-    set_read_enabled(true);
 	return EXIT_SUCCESS;
 }

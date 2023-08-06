@@ -82,10 +82,19 @@
 #define SDCMSC_DAT_INT_STATUS_CRC 0x02
 #define SDCMSC_DAT_INT_STATUS_OV  0x04
 
-bool enable_read = true;
+// we can't do multi block reads to the pico - fifos are too small
+#define MAX_BLOCKS_DEFAULT 1
+#define MAX_BLOCKS_FPGA 256
 
-void set_read_enabled(bool val) {
-	enable_read = val;
+bool fpga_mode = false;
+
+void spisdc_fpga_mode(struct mmc* mmc, bool enabled) {
+	fpga_mode = enabled;
+	if (fpga_mode == false) {
+		mmc->b_max = MAX_BLOCKS_DEFAULT;
+	} else {
+		mmc->b_max = MAX_BLOCKS_FPGA;
+	}
 }
 
 void printHex(const void *lpvbits, const unsigned int n);
@@ -138,7 +147,6 @@ void spisdc_write_fifo(struct mmc_data *data) {
 
 static inline uint32_t ocsdc_read(struct ocsdc *dev, int offset)
 {
-	//return readl(dev->iobase + offset);
 	uint32_t data = 0;
 	for (int i = 3; i >= 0; i--) {
 		data <<= 8;
@@ -149,7 +157,6 @@ static inline uint32_t ocsdc_read(struct ocsdc *dev, int offset)
 
 static inline void ocsdc_write(struct ocsdc *dev, int offset, uint32_t data)
 {
-	//writel(data, dev->iobase + offset);
 	for (int i = 3; i >= 0; i--) {
 		spisdc_writeb(offset + i, (data >> (i * 8)) & 0xFF);
 	}
@@ -249,7 +256,7 @@ static void ocsdc_setup_data_xfer(struct ocsdc * dev, struct mmc_cmd *cmd, struc
 		//flush_dcache_range(data->dest, data->dest+data->blocksize*data->blocks);
 		//ocsdc_write(dev, OCSDC_DST_SRC_ADDR, (uint32_t)data->dest);
 	}
-	else {
+	else if (!fpga_mode) {
 		//flush_dcache_range((void *)data->src, (void *)data->src+data->blocksize*data->blocks);
 		//ocsdc_write(dev, OCSDC_DST_SRC_ADDR, (uint32_t)data->src);
 		spisdc_write_fifo(data);
@@ -297,7 +304,7 @@ static int ocsdc_send_cmd(struct mmc *mmc, struct mmc_cmd *cmd, struct mmc_data 
 	if (ocsdc_finish(dev, cmd) < 0) return -1;
 	if (data && data->blocks) { 
 		int ret = ocsdc_data_finish(dev);
-		if (ret == 0 && enable_read && (data->flags & MMC_DATA_READ)) {
+		if (ret == 0 && !fpga_mode && (data->flags & MMC_DATA_READ)) {
 			spisdc_read_fifo(data);
 		}
 		return ret;
@@ -359,7 +366,7 @@ struct mmc * ocsdc_mmc_init(int clk_freq)
 	mmc->voltages = MMC_VDD_32_33 | MMC_VDD_33_34;
 	mmc->host_caps = MMC_MODE_4BIT;//MMC_MODE_HS | MMC_MODE_HS_52MHz | MMC_MODE_4BIT;
 
-	mmc->b_max = 1;
+	mmc->b_max = MAX_BLOCKS_DEFAULT;
 
 	return mmc;
 }

@@ -72,6 +72,9 @@ void read_stdin()
             int status = fat_example_main();
             printf("fat_example_main returned %d\n", status);
         } 
+        else if (strcmp(cmd, "benchmark") == 0) {
+            example_main();
+        } 
         else if (strcmp(cmd, "test_write") == 0) {
             //example_main();
             int status = fat_test_write();
