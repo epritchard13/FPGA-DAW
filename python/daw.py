@@ -31,7 +31,13 @@ def pop():
 
 def get_json():
     dev.write(b'/json\n')
-    s = dev.readline().decode('utf-8')
+    s = ""
+    while not s.startswith('{'):
+        s = dev.readline().decode('utf-8')
+        if not s.startswith('{'):
+            print(s)
+
+    #print(s)
     return json.loads(s)
 
 

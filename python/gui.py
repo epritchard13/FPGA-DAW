@@ -2,7 +2,7 @@ import tkinter as tk
 import daw
 import json
 
-canvas_width = 800
+canvas_width = 800 * 2
 canvas_height = 400
 mem_window_height = 100
 
@@ -35,17 +35,17 @@ def draw():
             # overlay clips with clip segments
             segments = clip['segments']
             for segment in segments:
-                start = segment['start'] + clip['timestamp']
-                end = start + segment['complete_size']
+                start = segment['start'] * 512 + clip['timestamp'] - clip['offset'] % 512
+                end = start + segment['complete_size'] * 512
 
                 window.create_rectangle(start, i*track_height, end, (i+1)*track_height, fill=cols[1], outline="black")
 
                 # add blocks to clip segments
-                blocks = len(segment['blocks'])
-                for j in range(blocks):
-                    start = segment['start'] + clip['timestamp'] + j * block_size
-                    end = min(start + block_size, segment['start'] + clip['timestamp'] + segment['complete_size'])
-                    window.create_rectangle(start, i*track_height, end, (i+1)*track_height, fill=cols[2], outline="black")
+                # blocks = len(segment['blocks'])
+                # for j in range(blocks):
+                #     start = segment['start'] + clip['timestamp'] + j * block_size
+                #     end = min(start + block_size, segment['start'] + clip['timestamp'] + segment['complete_size'])
+                #     window.create_rectangle(start, i*track_height, end, (i+1)*track_height, fill=cols[2], outline="black")
 
 
     # draw playhead
