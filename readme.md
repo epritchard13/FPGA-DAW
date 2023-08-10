@@ -12,7 +12,7 @@ In Progress
 
 ## Project Overview
 
-This is a digital audio workstation - a tool that allows musicians or audio engineers to record, process, and mix audio digitally. It uses a very low cost microcontroller to handle basic IO and a low-cost FPGA to handle digital signal processing and read/write from storage and RAM. Data storage is provided by an SD card. Memory is provided by an 8MB Psuedo-static RAM (PSRAM), which is a DRAM IC with a memory controller attached to eliminate the need to constantly refresh the memory. This gives us a decent amount of capacity without requring a complex memory interface.
+This is a digital audio workstation - a tool that allows musicians or audio engineers to record, process, and mix audio digitally. It uses a very low cost microcontroller to handle basic IO and a low-cost FPGA to handle digital signal processing and read/write from storage and RAM. Data storage is provided by an SD card. Dynamic memory is provided by an 8MB Psuedo-static RAM (PSRAM), which is a DRAM IC with a memory controller attached to eliminate the need to constantly refresh the memory. This gives us a decent amount of capacity without requring a complex memory interface.
 
 ## Educational Value Added
 
