@@ -15,4 +15,4 @@ spi_loopback_test.sv:
 	vsim -do "vlib work; vcom spi/*.vhd; vlog tb/spi_loopback_test.sv; vsim -voptargs="+acc=npr" spi_loopback_test; do spi_loopback.do; run 1000ns;"
 
 top_tb.sv:
-	vsim -do "vlib work; vcom spi/*.vhd; vlog *.sv ../SD-card-controller/rtl/verilog/*.*v tb/top_tb.sv; vsim -voptargs="+acc=npr" top_tb; do top_tb.do; run 200us;"
+	vsim -do "vlib work; vcom spi/*.vhd; vlog *.sv *.v ../SD-card-controller/rtl/verilog/*.*v tb/top_tb.sv; vsim -voptargs="+acc=npr" top_tb; do top_tb.do; run 100us;"

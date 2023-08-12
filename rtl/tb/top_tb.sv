@@ -43,6 +43,12 @@ task write(bit [6:0] addr, bit [7:0] data);
     spi_writeb(8'h00);
 endtask
 
+task read(bit [6:0] addr);
+    spi_writeb(8'h89);
+    spi_writeb({1'b0, addr});
+    spi_writeb(8'h00);
+endtask
+
 
 // drive clock and reset
 initial begin
@@ -72,12 +78,14 @@ end
 
 initial begin
     spi_writeb(8'h00);
+    write('h24, 'h23); //set clock divider
+    read('h24);
     write('h24, 0); //set clock divider
 
     //CMD0 (reset)
     write(5, 0);
     write(0, 0);
-    #1000;
+    #15000;
 
     //CMD7 (select card)
     write(5, 7);

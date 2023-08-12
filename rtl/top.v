@@ -36,18 +36,22 @@ wire [7:0] spi_data_tx;
 wire spi_tx_valid;
 wire [7:0] signal_out;
 
-SPI_Slave spslv(
-	.i_Rst_L(~rst),
-	.i_Clk(SYSCLK),
-	.i_TX_DV(spi_tx_valid),
-	.i_TX_Byte(spi_data_tx),
-	.i_SPI_Clk(SCLK),
-	.i_SPI_CS_n(SS),
-	.i_SPI_MOSI(MOSI),
+wire spi_slave_wr;
 
-	.o_RX_DV(spi_valid),
-	.o_RX_Byte(spi_data),
-	.o_SPI_MISO(MISO)
+spi_slave spi_slave0(
+	.clk_i(SYSCLK),
+	.spi_ssel_i(SS),
+	.spi_sck_i(SCLK),
+	.spi_mosi_i(MOSI),
+	.spi_miso_o(MISO),
+
+	.do_valid_o(spi_valid),
+	.do_o(spi_data),
+
+	.di_req_o(spi_slave_wr),
+	.di_i(spi_data_tx),
+	.wren_i(spi_tx_valid),
+	.wr_ack_o()
 );
 
 wire [6:0] sd_addr;
