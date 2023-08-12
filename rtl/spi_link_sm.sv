@@ -29,7 +29,7 @@ module spi_link_sm(
 	input [7:0] sd_fifo_data_i,
 
 	output logic sd_fifo_we,
-	output logic [7:0] sd_fifo_data_o, // TODO: make this not a register?
+	output logic [7:0] sd_fifo_data_o,
 
 	output logic fpga_mode
 );
@@ -52,100 +52,96 @@ logic [15:0] ctr0; //right now just used for rx headers, but could be used for o
 logic prev_valid;
 
 assign spi_data_out = state == READ_SD_REG ? sd_data_i : sd_fifo_data_i;
+assign sd_data_o = spi_data;
+assign sd_fifo_data_o = spi_data;
 
 always @(posedge clk) begin
+	sd_we <= 1'b0;
+	sd_fifo_we <= 1'b0;
+	spi_tx_valid <= 1'b0;
+
 	if (rst) begin
 		state <= WAITING;
-		spi_tx_valid <= 1'b0;
-		sd_we <= 1'b0;
 		sd_fifo_rd <= 1'b0;
-		sd_fifo_we <= 1'b0;
-		sd_fifo_data_o <= 8'h00;
 		fpga_mode <= 1'b0;
 		prev_valid <= 1'b0;
-	end
+	end else begin
+		if (sd_fifo_rd == 1'b1) begin
+			sd_fifo_rd <= 1'b0;
+			spi_tx_valid <= 1'b1;
+		end
 
-	if (sd_we == 1'b1) sd_we <= 1'b0;
-	if (spi_tx_valid == 1'b1) spi_tx_valid <= 1'b0;
-	if (sd_fifo_rd == 1'b1) begin
-		sd_fifo_rd <= 1'b0;
-		spi_tx_valid <= 1'b1;
-	end
-	if (sd_fifo_we == 1'b1) sd_fifo_we <= 1'b0;
+		prev_valid <= valid;
+		if (valid && !prev_valid) begin
+			//run the state machine
+			case (state)
+			//waiting state
+			WAITING: begin
+				//see if the opcode is a command
+				case (spi_data)
+					`WRITE_8BIT_REG: state <= WRITE_8BIT_REG;
+					`RX_SD_DATA: state <= RX_SD_DATA;
+					`READ_SD_FIFO: sd_fifo_rd <= 1'b1;
+					`WRITE_SD_FIFO: state <= WRITE_SD_FIFO;
+					`FPGA_MODE_ON: fpga_mode <= 1'b1;
+					`FPGA_MODE_OFF: fpga_mode <= 1'b0;
+					`RX_DATA: begin
+						state <= RECEIVE_RX_HEADER;
+						ctr0 <= 0;
+					end
+				endcase
+			end
+			
+			//writing to dac state
+			WRITE_8BIT_REG: begin
+				state <= WAITING; //go back to waiting
+				dac_state <= spi_data;
+			end
 
-	prev_valid <= valid;
+			RX_SD_DATA: begin
+				if (spi_data[7] == 1'b1) begin // write
+					state <= WRITE_SD_REG;
+				end else begin // read
+					state <= READ_SD_REG;
+					spi_tx_valid <= 1'b1; // This will write until the next spi valid is received. TODO: is this ok?
+				end
+				sd_addr <= spi_data[6:0];
+			end
 
-	if (valid && !prev_valid) begin
-		//run the state machine
-		case (state)
-		//waiting state
-		WAITING: begin
-			//see if the opcode is a command
-			case (spi_data)
-				`WRITE_8BIT_REG: state <= WRITE_8BIT_REG;
-				`RX_SD_DATA: state <= RX_SD_DATA;
-				`READ_SD_FIFO: sd_fifo_rd <= 1'b1;
-				`WRITE_SD_FIFO: state <= WRITE_SD_FIFO;
-				`FPGA_MODE_ON: fpga_mode <= 1'b1;
-				`FPGA_MODE_OFF: fpga_mode <= 1'b0;
-				`RX_DATA: begin
-					state <= RECEIVE_RX_HEADER;
+			WRITE_SD_REG: begin
+				state <= WAITING;
+				sd_we <= 1'b1;
+			end
+
+			READ_SD_REG: state <= WAITING;
+
+			WRITE_SD_FIFO: begin
+				state <= WAITING;
+				sd_fifo_we <= 1'b1;
+			end
+
+			//receiving data rx header
+			RECEIVE_RX_HEADER: begin
+				ctr0 <= ctr0 + 1;
+				header[ctr0] <= spi_data;
+				if (ctr0 == `HEADER_SIZE - 1) begin
+					state <= RECEIVE_RX_BODY;
 					ctr0 <= 0;
 				end
+			end
+			
+			//receiving the data itself
+			RECEIVE_RX_BODY: begin
+				ctr0 <= ctr0 + 1;
+				dac_state <= spi_data;
+				if (ctr0 == {header[1], header[0]}) begin //the header should be one less than the actual data size
+					state <= WAITING;
+				end
+			end
+
+			//end of state machine
 			endcase
 		end
-		
-		//writing to dac state
-		WRITE_8BIT_REG: begin
-			state <= WAITING; //go back to waiting
-			dac_state <= spi_data;
-		end
-
-		RX_SD_DATA: begin
-			if (spi_data[7] == 1'b1) begin // write
-				state <= WRITE_SD_REG;
-			end else begin // read
-				state <= READ_SD_REG;
-				spi_tx_valid <= 1'b1; // This will write until the next spi valid is received. TODO: is this ok?
-			end
-			sd_addr <= spi_data[6:0];
-		end
-
-		WRITE_SD_REG: begin
-			state <= WAITING;
-			sd_data_o <= spi_data[7:0];
-			sd_we <= 1'b1;
-		end
-
-		READ_SD_REG: state <= WAITING;
-
-		WRITE_SD_FIFO: begin
-			state <= WAITING;
-			sd_fifo_we <= 1'b1;
-			sd_fifo_data_o <= spi_data[7:0];
-		end
-
-		//receiving data rx header
-		RECEIVE_RX_HEADER: begin
-			ctr0 <= ctr0 + 1;
-			header[ctr0] <= spi_data;
-			if (ctr0 == `HEADER_SIZE - 1) begin
-				state <= RECEIVE_RX_BODY;
-				ctr0 <= 0;
-			end
-		end
-		
-		//receiving the data itself
-		RECEIVE_RX_BODY: begin
-			ctr0 <= ctr0 + 1;
-			dac_state <= spi_data;
-			if (ctr0 == {header[1], header[0]}) begin //the header should be one less than the actual data size
-				state <= WAITING;
-			end
-		end
-
-		//end of state machine
-		endcase
 	end
 end
 
