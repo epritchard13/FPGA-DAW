@@ -1,4 +1,4 @@
-.PHONY: psram_bridge_tb.sv, spi_loopback_test.sv
+.PHONY: psram_bridge_tb.sv, spi_loopback_test.sv, top_tb.sv
 
 all:
 	iverilog -g2012 -o verilog_tb.vpp *.v *.sv ..\\SD-card-controller\\rtl\\verilog\\**.*v tb/verilog_tb.sv
@@ -12,4 +12,7 @@ psram_bridge_tb.sv:
 	vsim -do "vlog psram_bridge.sv psram_bridge_tb.sv; vsim -voptargs="+acc=npr" psram_bridge_tb;"
 
 spi_loopback_test.sv:
-	vsim -do "vlib work; vcom spi/*.vhd; vlog spi/*.sv; vsim -voptargs="+acc=npr" spi_loopback_test; do spi_loopback.do; run 1000ns;"
+	vsim -do "vlib work; vcom spi/*.vhd; vlog tb/spi_loopback_test.sv; vsim -voptargs="+acc=npr" spi_loopback_test; do spi_loopback.do; run 1000ns;"
+
+top_tb.sv:
+	vsim -do "vlib work; vcom spi/*.vhd; vlog *.sv ../SD-card-controller/rtl/verilog/*.*v tb/top_tb.sv; vsim -voptargs="+acc=npr" top_tb; do top_tb.do; run 200us;"
