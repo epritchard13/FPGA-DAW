@@ -261,7 +261,24 @@ static void ocsdc_setup_data_xfer(struct ocsdc * dev, struct mmc_cmd *cmd, struc
 		//ocsdc_write(dev, OCSDC_DST_SRC_ADDR, (uint32_t)data->src);
 		spisdc_write_fifo(data);
 	}
-	ocsdc_write(dev, OCSDC_BLOCK_SIZE, data->blocksize-1);
+	
+	uint32_t block_size_sel;
+	switch (data->blocksize-1) {
+	case 511:
+		block_size_sel = 0;
+		break;
+	case 63:
+		block_size_sel = 1;
+		break;
+	case 7:
+		block_size_sel = 2;
+		break;
+	default:
+		printf("error: block size %d not supported", data->blocksize);
+		break;
+	}
+	ocsdc_write(dev, OCSDC_BLOCK_SIZE, block_size_sel);
+
 	ocsdc_write(dev, OCSDC_BLOCK_COUNT, data->blocks-1);
 
 	//printf("ocsdc_setup_read: addr: %x\n", (uint32_t)data->dest);
