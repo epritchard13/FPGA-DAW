@@ -2,7 +2,6 @@
 
 //SPI command opcodes
 `define WRITE_8BIT_REG 8'h87 		//write a value to the test dac
-`define RX_DATA 8'h88 				//receive a packet
 `define RX_SD_DATA 8'h89 			//SD card operation
 `define READ_SD_FIFO 8'h8A 			//read from the SD card FIFO
 `define WRITE_SD_FIFO 8'h8B 		//write to the SD card FIFO
@@ -37,17 +36,11 @@ module spi_link_sm(
 enum logic [2:0] {
 	WAITING,
 	WRITE_8BIT_REG,
-	RECEIVE_RX_HEADER,
-	RECEIVE_RX_BODY,
 	RX_SD_DATA,
 	READ_SD_REG,
 	WRITE_SD_REG,
 	WRITE_SD_FIFO
 } state = WAITING;
-
-`define HEADER_SIZE 2 //size of header in bytes
-logic [7:0] header [(`HEADER_SIZE - 1):0]; //rx header
-logic [15:0] ctr0; //right now just used for rx headers, but could be used for other stuff
 
 logic prev_valid;
 
@@ -85,10 +78,6 @@ always @(posedge clk) begin
 					`WRITE_SD_FIFO: state <= WRITE_SD_FIFO;
 					`FPGA_MODE_ON: fpga_mode <= 1'b1;
 					`FPGA_MODE_OFF: fpga_mode <= 1'b0;
-					`RX_DATA: begin
-						state <= RECEIVE_RX_HEADER;
-						ctr0 <= 0;
-					end
 				endcase
 			end
 			
@@ -118,25 +107,6 @@ always @(posedge clk) begin
 			WRITE_SD_FIFO: begin
 				state <= WAITING;
 				sd_fifo_we <= 1'b1;
-			end
-
-			//receiving data rx header
-			RECEIVE_RX_HEADER: begin
-				ctr0 <= ctr0 + 1;
-				header[ctr0] <= spi_data;
-				if (ctr0 == `HEADER_SIZE - 1) begin
-					state <= RECEIVE_RX_BODY;
-					ctr0 <= 0;
-				end
-			end
-			
-			//receiving the data itself
-			RECEIVE_RX_BODY: begin
-				ctr0 <= ctr0 + 1;
-				dac_state <= spi_data;
-				if (ctr0 == {header[1], header[0]}) begin //the header should be one less than the actual data size
-					state <= WAITING;
-				end
 			end
 
 			//end of state machine

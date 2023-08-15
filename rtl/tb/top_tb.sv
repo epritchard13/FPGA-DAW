@@ -78,6 +78,8 @@ end
 
 initial begin
     spi_writeb(8'h00);
+    write(`reset, 1);
+    write(`reset, 0);
     write('h24, 'h23); //set clock divider
     read('h24);
     write('h24, 0); //set clock divider
@@ -87,17 +89,23 @@ initial begin
     write(0, 0);
     #15000;
 
+    //CMD2 (get CID)
+    write(5, 2);
+    write(4, 'b10);
+    write(0, 0);
+    #6000;
+
     //CMD7 (select card)
     write(5, 7);
     write(4, 0);
     write(2, 'h13);
     write(0, 0);
-    #2000;
+    #6000;
 
     //CMD17 (read single block)
-    write('h48, 0);
-    write('h44, 'hff);
-    write('h45, 1);
+    //write('h48, 0);
+    //write('h44, 'hff);
+    //write('h45, 1);
     write(3, 0);
     write(5, 17);
     write(4, 'b01_1_1101);

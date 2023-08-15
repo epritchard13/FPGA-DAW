@@ -22,3 +22,6 @@ and send them from the pico, including data commands. Maybe don't do the above.
 * Add a virtual sd card regmap, so that only necessary reg writes are completed?
 * Data and command interrupt-driven SD card driver!
 * Do something about 1-bit SD mode
+
+## Important things that should be added ASAP:
+* Software cmd/data timeout watchdogs (because I removed the hardware ones)

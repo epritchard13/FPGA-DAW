@@ -9,10 +9,10 @@ module top(
 	output MISO,
 	
 	output A_OUT,
-	output [3:0] LED,
 
 	inout SD_CMD,
 	inout [3:0] SD_DAT,
+	//input SD_CLK_I,
 	output SD_CLK
 
 );
@@ -137,7 +137,7 @@ sdc_controller sdc_controller0(
 
 pwm_dac pwmdac(
 	.clk(SYSCLK),
-	.val(sdc_controller0.sd_data_serial_host0.debug_out),
+	//.val(sdc_controller0.sd_data_serial_host0.debug_out),
 	.analog(A_OUT)
 );
 
