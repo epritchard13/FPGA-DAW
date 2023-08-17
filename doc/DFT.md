@@ -35,3 +35,7 @@ We have to divide by the length of the signal $N=4$ at the end, by the way (it's
 
 If we feel like it, we can do some frequency domain DSP and modify the complex exponentials in any way we want to. And, when we evaluate this function from [0, 4), we should get the original samples [0, 1, 1, 0] back.
 
+## Summary
+
+The DFT breaks down a time-domain signal of fixed length into frequencies. It stores the amplitude and phase of each frequency as well. The amount of terms is equal to the length of the original signal. Performing an inverse DFT always gives back the original signal.
+
