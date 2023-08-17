@@ -8,25 +8,30 @@ module top(
 	input MOSI,
 	output MISO,
 	
-	output A_OUT,
-
 	inout SD_CMD,
 	inout [3:0] SD_DAT,
 	//input SD_CLK_I,
-	output SD_CLK
+	output SD_CLK,
 
+	output PSRAM_SS,
+
+	output BUS_MOSI,
+	input BUS_MISO,
+	output BUS_SCLK,
+
+	output A_OUT
 );
 
 reg rst = 0;
 reg [3:0] ctr = 3'b111;
 always @(posedge SYSCLK) begin
 	if (ctr == 3'b111) begin
-		rst <= 1;
-		ctr <= ctr - 1;
+		rst <= 1'b1;
+		ctr <= ctr - 3'b1;
 	end else if (ctr != 3'b000) begin
-		ctr <= ctr - 1;
+		ctr <= ctr - 3'b1;
 	end else begin
-		rst <= 0;
+		rst <= 1'b0;
 	end
 end
 
