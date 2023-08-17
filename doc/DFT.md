@@ -20,7 +20,7 @@ The DFT of those samples is [2,  -1-j,  0, -1+j]. What does this mean?
 
 These coefficients represent the properites of the complex exponentials that we can use to reconstruct our original 4 samples. We can convert these coefficients from $a+bj$ form to $A e^\theta$ form to get:
 
-[$2 e^{0}$, $\sqrt 2 e^{-3\pi/4}$,  0, $\sqrt 2 e^{3\pi/4}$]
+[ $2 e^0$, $\sqrt 2 e^{-3\pi/4}$,  0, $\sqrt 2 e^{3\pi/4}$]
 
 Cool. Now we know that two of our frequencies have an amplitude of $\sqrt 2$, one frequency has an amplitude of 0, and one frequency has a phase of $0$ radians.
 
