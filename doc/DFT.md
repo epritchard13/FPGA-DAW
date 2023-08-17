@@ -24,7 +24,7 @@ These coefficients represent the properites of the complex exponentials that we 
 
 Cool. Now we know that two of our frequencies have an amplitude of $\sqrt 2$, one frequency has an amplitude of 0, and one frequency has a phase of $0$ radians.
 
-By the way, the complex exponentials have angular frequency $\omega$ values of [$0$, $\pi/2$, $\pi$, $3\pi/2$] and can be obtained from the DFT formula. 
+By the way, the complex exponentials have angular frequency $\omega$ values of [ $0$, $\pi/2$, $\pi$, $3\pi/2$] and can be obtained from the DFT formula. 
 
 So to reconstruct the original signal, we just use this function given by our DFT coefficients:
 $$\frac{2 e^{0t + 0} + \sqrt 2 e^{\frac{\pi}{2}t - \frac{3\pi}{4}} +  0 + \sqrt 2 e^{\frac{3\pi}{2} t + \frac{3\pi}{4}}}{4}$$
