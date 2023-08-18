@@ -1,3 +1,4 @@
+# Practical Interpretation of the DFT (Discrete Fourier Transform)
 ## Why do we want a DFT?
 Let's say that we have a discrete time signal of a finite length, and we want to do some processing that involves the frequency domain.
 
@@ -11,7 +12,7 @@ A complex exponential has the form $Ae^{j\omega t + \theta}$, where $\omega$ is 
 
 The DFT finds us phasors that can be represented in the form $A e^{\theta}$, giving us magnitude and phase. How do we know what the frequency is? The angular frequency $\omega$ is a function of the index of the DFT (which spans $[0, N)$ and is the same length as the time-domain signal). $\omega$ spans the range $[0, 2\pi)$. If we know the sample rate of the signal, we can also convert $\omega$ into a Hz frequency value.
 
-One more thing, the DFT outputs complex values in the form $a + jb$. These can be converted to $A e^{\theta}$ form if we want to look at magnitude and phase.
+The DFT actually outputs complex values in the form $a + jb$, but these can easily be converted to the polar $A e^{\theta}$ form if we want to look at the magnitude and phase.
 
 ## Example
 Let's try a DFT of length 4. Our samples are all real valued with the values [ 0, 1, 1, 0 ].
