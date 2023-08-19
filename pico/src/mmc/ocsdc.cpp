@@ -265,13 +265,13 @@ static void ocsdc_setup_data_xfer(struct ocsdc * dev, struct mmc_cmd *cmd, struc
 	uint32_t block_size_sel;
 	switch (data->blocksize-1) {
 	case 511:
-		block_size_sel = 0;
-		break;
-	case 63:
 		block_size_sel = 1;
 		break;
-	case 7:
+	case 63:
 		block_size_sel = 2;
+		break;
+	case 7:
+		block_size_sel = 0;
 		break;
 	default:
 		printf("error: block size %d not supported", data->blocksize);
