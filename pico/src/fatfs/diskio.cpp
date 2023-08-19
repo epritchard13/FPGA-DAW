@@ -113,6 +113,8 @@ void printHex(const void *lpvbits, const unsigned int n);
 
 #if FF_FS_READONLY == 0
 
+#define DEBUG_DISK_WRITE false
+
 DRESULT disk_write (
 	BYTE pdrv,			/* Physical drive nmuber to identify the drive */
 	const BYTE *buff,	/* Data to be written */
@@ -124,14 +126,19 @@ DRESULT disk_write (
 
 	switch (pdrv) {
 	case DEV_MMC :
-		// translate the arguments here
-		//printf("disk_write: DEV_MMC\n\r");
-		//char test_buf[512];
-		//mmc_bread(drv, sector, 1, test_buf);
-		//printHex(test_buf, 512);
-		result = mmc_bwrite(drv, sector, count, buff);
-		//mmc_bread(drv, sector, 1, test_buf);
-		//printHex(test_buf, 512);
+		if (DEBUG_DISK_WRITE) {
+			char test_buf[512];
+			mmc_bread(drv, sector, 1, test_buf);
+			printf("current sector:\n");
+			printHex(test_buf, 512);
+			printf("\nnew sector:\n");
+			result = mmc_bwrite(drv, sector, count, buff);
+			mmc_bread(drv, sector, 1, test_buf);
+			printHex(test_buf, 512);
+			printf("\n");
+		} else {
+			result = mmc_bwrite(drv, sector, count, buff);
+		}
 
 		if (result != count)
 			return RES_ERROR;
