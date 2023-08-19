@@ -1,5 +1,7 @@
 `timescale 1ns/1ps
 
+`include "sd_defines.h"
+
 module top_tb();
 
 logic clk;
