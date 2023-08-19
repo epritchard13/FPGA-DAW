@@ -91,13 +91,13 @@ initial begin
 
     //CMD2 (get CID)
     write(5, 2);
-    write(4, 'b10);
+    write(4, 'b00_0_1010);
     write(0, 0);
     #6000;
 
     //CMD7 (select card)
     write(5, 7);
-    write(4, 0);
+    write(4, 'b00_1_1101);
     write(2, 'h13);
     write(0, 0);
     #6000;
