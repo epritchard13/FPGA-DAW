@@ -1,3 +1,4 @@
+# Practical Interpretation of the DFT (Discrete Fourier Transform)
 ## Why do we want a DFT?
 Let's say that we have a discrete time signal of a finite length, and we want to do some processing that involves the frequency domain.
 
@@ -11,7 +12,7 @@ A complex exponential has the form $Ae^{j\omega t + \theta}$, where $\omega$ is 
 
 The DFT finds us phasors that can be represented in the form $A e^{\theta}$, giving us magnitude and phase. How do we know what the frequency is? The angular frequency $\omega$ is a function of the index of the DFT (which spans $[0, N)$ and is the same length as the time-domain signal). $\omega$ spans the range $[0, 2\pi)$. If we know the sample rate of the signal, we can also convert $\omega$ into a Hz frequency value.
 
-One more thing, the DFT outputs complex values in the form $a + jb$. These can be converted to $A e^{\theta}$ form if we want to look at magnitude and phase.
+The DFT actually outputs complex values in the form $a + jb$, but these can easily be converted to the polar $A e^{\theta}$ form if we want to look at the magnitude and phase.
 
 ## Example
 Let's try a DFT of length 4. Our samples are all real valued with the values [ 0, 1, 1, 0 ].
@@ -20,14 +21,14 @@ The DFT of those samples is [2,  -1-j,  0, -1+j]. What does this mean?
 
 These coefficients represent the properites of the complex exponentials that we can use to reconstruct our original 4 samples. We can convert these coefficients from $a+bj$ form to $A e^\theta$ form to get:
 
-[$2 e^{0}$, $\sqrt 2 e^{-3\pi/4}$,  0, $\sqrt 2 e^{3\pi/4}$]
+[ $2 e^{j0}$, $\sqrt 2 e^{j\frac{-3\pi}{4}}$,  0, $\sqrt 2 e^{j\frac{3\pi}{4}}$]
 
 Cool. Now we know that two of our frequencies have an amplitude of $\sqrt 2$, one frequency has an amplitude of 0, and one frequency has a phase of $0$ radians.
 
-By the way, the complex exponentials have angular frequency $\omega$ values of [$0$, $\pi/2$, $\pi$, $3\pi/2$] and can be obtained from the DFT formula. 
+By the way, the complex exponentials have angular frequency $\omega$ values of [ $0$, $\pi/2$, $\pi$, $3\pi/2$] and can be obtained from the DFT formula. 
 
 So to reconstruct the original signal, we just use this function given by our DFT coefficients:
-$$\frac{2 e^{0t + 0} + \sqrt 2 e^{\frac{\pi}{2}t - \frac{3\pi}{4}} +  0 + \sqrt 2 e^{\frac{3\pi}{2} t + \frac{3\pi}{4}}}{4}$$
+$$\frac{2 e^{j(0t + 0)} + \sqrt 2 e^{j(\frac{\pi}{2}t - \frac{3\pi}{4})} +  0 + \sqrt 2 e^{j(\frac{3\pi}{2} t + \frac{3\pi}{4})}}{4}$$
 
 ### **We now have a representation of our original function as a sum of complex exponentials of different frequency!!**
 
