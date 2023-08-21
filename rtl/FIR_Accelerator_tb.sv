@@ -1,3 +1,4 @@
+/* rip
 `timescale 1ns / 1ps
 
 module FIR_Accelerator#(
@@ -147,7 +148,7 @@ always @(posedge clk)begin
 end
 
 
-
+*/
 /*always @(posedge clk)begin
     if(reset_n == 0)begin
         data_out <= 0;
@@ -162,7 +163,7 @@ end
         end
     end
 end*/
-   
+/*
 logic [31:0] product_of_one;
 logic [31:0] product_of_two;
 logic [31:0] product_of_thr;
@@ -222,4 +223,4 @@ dsp_macro pipeline_adder_final(  .clk(clk),
                     .productP(sum));
     
     
-endmodule
+endmodule*/
