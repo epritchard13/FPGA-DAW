@@ -18,7 +18,7 @@ module psram_bridge#(
 
     //Bridge to Mux address
     input logic [23:0] start_pointer,
-    input logic [4:0] block_size,
+    input logic [4:0] number_of_blocks,
 
     //Bridge to Mux interface
     input logic output_enable,
@@ -102,10 +102,10 @@ always_ff @(posedge clk) begin
         end
     
         if(chip_state == idle)begin
-            if((output_enable || write_enable)&&(block_size > 0))begin
+            if((output_enable || write_enable)&&(number_of_blocks > 0))begin
                 chip_state <= send_cmd;
                 current_address <= start_pointer;
-                remaining_bytes <= {block_size, 5'b00000}-1;
+                remaining_bytes <= {number_of_blocks, 5'b00000}-1;
             end
         end else if(chip_state == read_write)begin
             if(s_m_counter == 0)begin
