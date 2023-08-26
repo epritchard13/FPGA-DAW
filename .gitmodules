@@ -1,3 +1,12 @@
 [submodule "SD-card-controller"]
 	path = SD-card-controller
 	url = https://github.com/ethanjamesauto/SD-card-controller
+[submodule "pico/pico-sdk"]
+	path = pico/pico-sdk
+	url = https://github.com/raspberrypi/pico-sdk
+[submodule "pico/-f"]
+	path = pico/-f
+	url = https://github.com/tinyvision-ai-inc/pico-ice-sdk
+[submodule "pico/pico-ice-sdk"]
+	path = pico/pico-ice-sdk
+	url = https://github.com/tinyvision-ai-inc/pico-ice-sdk

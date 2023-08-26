@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 # Initialise pico_sdk from installed location
 # (note this can come from environment, CMake cache etc)
-set(PICO_SDK_PATH "C:/RP2040/pico-sdk")
+set(PICO_SDK_PATH ${CMAKE_CURRENT_SOURCE_DIR}/pico-sdk/)
 
 set(PICO_BOARD pico CACHE STRING "Board type")
 
@@ -24,6 +24,8 @@ set(PICO_CXX_ENABLE_EXCEPTIONS 1)
 
 # Initialise the Raspberry Pi Pico SDK
 pico_sdk_init()
+
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/pico-ice-sdk)
 
 # Add executable. Default name is the project name, version 0.1
 
@@ -54,7 +56,9 @@ pico_enable_stdio_usb(daw 1)
 
 # Add the standard library to the build
 target_link_libraries(daw
-        pico_stdlib)
+        pico_stdlib
+        pico_ice_sdk
+        pico_stdio_usb)
 
 # Add the standard include files to the build
 target_include_directories(daw PRIVATE
@@ -74,8 +78,8 @@ target_link_libraries(daw
 
 pico_add_extra_outputs(daw)
 
-add_custom_command(TARGET daw POST_BUILD
-    COMMAND powershell ${CMAKE_CURRENT_SOURCE_DIR}/picoFlashTool_WinPS.ps1
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-    COMMENT "Flashing Pico..."
-)
+#add_custom_command(TARGET daw POST_BUILD
+#    COMMAND powershell ${CMAKE_CURRENT_SOURCE_DIR}/picoFlashTool_WinPS.ps1
+#    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+#    COMMENT "Flashing Pico..."
+#)

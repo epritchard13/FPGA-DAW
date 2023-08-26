@@ -1,5 +1,12 @@
 #include "hardware/spi.h"
 #include "pico/stdlib.h"
+
+#include "boards/pico_ice.h"
+#include "ice_fpga.h"
+
+// tinyusb
+#include "tusb.h"
+
 #include "spi_link.h"
 #include <cmath>
 #include "daw/player.h"
@@ -28,8 +35,11 @@ void printHex(const void *lpvbits, const unsigned int n);
 
 void read_stdin()
 {
-    uint8_t c;
-    fread(&c, 1, 1, stdin);
+    int c_in;
+    c_in = getchar_timeout_us(0);
+    if (c_in == -1) return;
+
+    char c = (char) c_in;
     if (c == '/') { // we have a command
         char cmd[10];
         uint val;
@@ -110,14 +120,17 @@ void read_stdin()
 
 int main()
 {
+    tusb_init();
     stdio_init_all();
 
-    spi_link_init();
-    puts("Hello, world!");
+    ice_fpga_init(48);
+    ice_fpga_start();
 
-    fread(NULL, 1, 1, stdin); // don't start any of the code until we get a single byte
+    spi_link_init();
 
     while (true) {
+        tud_task();
+        //printf("hello world\r\n");
         read_stdin();
     }
 

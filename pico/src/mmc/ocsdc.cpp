@@ -198,16 +198,14 @@ static void ocsdc_set_clock(struct ocsdc * dev, uint clock)
 
 static int ocsdc_finish(struct ocsdc * dev, struct mmc_cmd *cmd) {
 
-	int retval = 0;
-	while (1) {
+	for (int i = 0; i < 20000; i++) {
 		int r2 = ocsdc_read(dev, OCSDC_CMD_INT_STATUS);
 		//printf("ocsdc_finish: cmd %d, status %x\n", cmd->cmdidx, r2);
 		if (r2 & OCSDC_CMD_INT_STATUS_EI) {
 			//clear interrupts
 			ocsdc_write(dev, OCSDC_CMD_INT_STATUS, 0);
 			printf("ocsdc_finish: cmd %d, status %x\n\r", cmd->cmdidx, r2);
-			retval = -1;
-			break;
+			return -1;
 		}
 		else if (r2 & OCSDC_CMD_INT_STATUS_CC) {
 			//clear interrupts
@@ -220,15 +218,14 @@ static int ocsdc_finish(struct ocsdc * dev, struct mmc_cmd *cmd) {
 				cmd->response[3] = ocsdc_read(dev, OCSDC_RESPONSE_4);
 			}
 			printf("ocsdc_finish:  %d ok\n\r", cmd->cmdidx);
-			retval = 0;
-
-			break;
+			return 0;
 		}
 		//else if (!(r2 & OCSDC_CMD_INT_STATUS_CIE)) {
 		//	printf("ocsdc_finish: cmd %d no exec %x\n", cmd->cmdidx, r2);
 		//}
 	}
-	return retval;
+	printf("ocsdc_finish: cmd timed out\n\r");
+	return -1;
 }
 
 
