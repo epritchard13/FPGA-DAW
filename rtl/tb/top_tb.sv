@@ -91,6 +91,12 @@ initial begin
     write(0, 0);
     #15000;
 
+    //CMD8 (csd)
+    write(5, 8);
+    write(4, 'b00_1_1001);
+    write(0, 0);
+    #15000;
+
     //CMD2 (get CID)
     write(5, 2);
     write(4, 'b00_0_1010);
@@ -114,7 +120,6 @@ initial begin
     write(3, 0);
     write(2, 0);
     write(1, 0);
-    #4;
     write(0, 1);
     #60000;
 end
