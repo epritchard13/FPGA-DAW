@@ -32,15 +32,15 @@ class SanityTest(unittest.TestCase):
             test = res.strip() == num
             if test == False:
                 print('Expected:', num, ', Got:', res)
-            assert test
+            assert test 
 
     # test reading a file
-    def test_fat_init(self):
+    def test_fat_read(self):
         for i in tqdm(range(100)):
-            self.ser.write(b'/init\n')
+            self.ser.write(b'/test_read\n')
             while True:
                 line = self.ser.readline().strip()
-                if line.startswith(b'fat_example_main returned'):
+                if line.startswith(b'test_read returned'):
                     assert line.endswith(b'0')
                     break
     
@@ -50,7 +50,7 @@ class SanityTest(unittest.TestCase):
             self.ser.write(b'/test_write\n')
             while True:
                 line = self.ser.readline().strip()
-                if line.startswith(b'fat_test_write returned'):
+                if line.startswith(b'test_write returned'):
                     assert line.endswith(b'0')
                     break
 
