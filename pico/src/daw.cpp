@@ -41,7 +41,7 @@ void read_stdin()
 
     char c = (char) c_in;
     if (c == '/') { // we have a command
-        char cmd[10];
+        char cmd[24];
         uint val;
 
         scanf("%s", cmd);
@@ -78,10 +78,10 @@ void read_stdin()
         else if (strcmp(cmd, "json") == 0) {
             std::cout << test_player.toJson() << std::endl;
         }
-        else if (strcmp(cmd, "init") == 0) {
+        else if (strcmp(cmd, "test_read") == 0) {
             //example_main();
             int status = fat_example_main();
-            printf("fat_example_main returned %d\n", status);
+            printf("test_read returned %d\n", status);
         } 
         else if (strcmp(cmd, "benchmark") == 0) {
             example_main();
@@ -89,7 +89,7 @@ void read_stdin()
         else if (strcmp(cmd, "test_write") == 0) {
             //example_main();
             int status = fat_test_write();
-            printf("fat_test_write returned %d\n", status);
+            printf("test_write returned %d\n", status);
         }
         else if (strcmp(cmd, "bread") == 0) {
             unsigned long long val;
