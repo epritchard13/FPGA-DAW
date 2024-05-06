@@ -8,10 +8,10 @@ const uint8_t QUERY_STATUS = 0x01;
 #define SPI_CLK (5*1000*1000)
 
 #define SPI_PORT spi0
-#define PIN_MISO 4
-#define PIN_CS 5
-#define PIN_SCK 6
-#define PIN_MOSI 7
+#define PIN_MISO 16
+#define PIN_CS 17
+#define PIN_SCK 18
+#define PIN_MOSI 19
 
 #define SPI_CMD_SD 0x89
 

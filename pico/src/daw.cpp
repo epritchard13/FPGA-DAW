@@ -123,8 +123,8 @@ int main()
     tusb_init();
     stdio_init_all();
 
-    ice_fpga_init(48);
-    ice_fpga_start();
+    //ice_fpga_init(48);
+    //ice_fpga_start();
 
     spi_link_init();
 
