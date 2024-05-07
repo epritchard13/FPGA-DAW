@@ -22,8 +22,10 @@ module top(
 	output A_OUT
 );
 
-reg rst = 0;
+// Lattice FPGAs will ignore these initial values, but they'll reset to 0 anyway
+reg rst = 1'b0;
 reg [3:0] ctr = 3'b0;
+
 always @(posedge SYSCLK) begin
 	if (ctr == 3'b0) begin
 		rst <= 1'b1;

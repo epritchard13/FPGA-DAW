@@ -40,7 +40,7 @@ enum logic [2:0] {
 	READ_SD_REG,
 	WRITE_SD_REG,
 	WRITE_SD_FIFO
-} state = WAITING;
+} state;
 
 logic prev_valid;
 
