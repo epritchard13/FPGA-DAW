@@ -23,13 +23,13 @@ module top(
 );
 
 reg rst = 0;
-reg [3:0] ctr = 3'b111;
+reg [3:0] ctr = 3'b0;
 always @(posedge SYSCLK) begin
-	if (ctr == 3'b111) begin
+	if (ctr == 3'b0) begin
 		rst <= 1'b1;
-		ctr <= ctr - 3'b1;
-	end else if (ctr != 3'b000) begin
-		ctr <= ctr - 3'b1;
+		ctr <= ctr + 3'b1;
+	end else if (ctr != 3'b111) begin
+		ctr <= ctr + 3'b1;
 	end else begin
 		rst <= 1'b0;
 	end

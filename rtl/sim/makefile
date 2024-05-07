@@ -1,4 +1,4 @@
-.PHONY: psram_bridge_tb.sv, spi_loopback_test.sv, top_tb.sv
+.PHONY: psram_bridge_tb.sv, spi_loopback_test.sv, top_tb.sv, FIR_Accelerator_tb.sv
 
 all:
 #	iverilog -g2012 -o verilog_tb.vpp *.v *.sv ..\\SD-card-controller\\rtl\\verilog\\**.*v tb/verilog_tb.sv
@@ -16,3 +16,6 @@ spi_loopback_test.sv:
 
 top_tb.sv:
 	vsim -do "vlib work; do top_tb_do.do;"
+
+FIR_Accelerator_tb.sv:
+	vsim -do "vlib work; vlog ../*.sv; vsim -voptargs="+acc=npr" FIR_Accelerator; run -5us;"
