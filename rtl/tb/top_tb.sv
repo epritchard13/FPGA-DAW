@@ -1,7 +1,5 @@
 `timescale 1ns/1ps
 
-`include "sd_defines.h"
-
 module top_tb();
 
 logic clk;
@@ -90,9 +88,11 @@ initial begin
 end
 
 initial begin
+    bit pass = 1;
+
     spi_writeb(8'h00);
-    write(`reset, 1);
-    write(`reset, 0);
+    write('h28, 1);
+    write('h28, 0);
     write('h24, 'h23); //set clock divider
     read('h24);
     write('h24, 0); //set clock divider
@@ -103,10 +103,10 @@ initial begin
     #15000;
 
     //CMD8 (csd)
-    write(5, 8);
+    /*write(5, 8);
     write(4, 'b00_1_1001);
     write(0, 0);
-    #15000;
+    #15000;*/
 
     //CMD2 (get CID)
     write(5, 2);
@@ -121,32 +121,10 @@ initial begin
     write(0, 0);
     #6000;
 
-    //CMD17 (read single block)
-    //write('h48, 0);
-    //write('h44, 'hff);
-    //write('h45, 1);
-    write(3, 0);
-    write(5, 17);
-    write(4, 'b01_1_1101);
-    write(3, 0);
-    write(2, 0);
-    write(1, 0);
-    write(0, 1);
-    #60000;
-	
-	for (int i = 0; i < 512; i++) begin
-		bit [7:0] dat;
-        fifo_read(dat);
-		$display("poop: %0h", dat);
-	end
-	
-	for (int i = 0; i < 512; i++) begin
-        /*if (i % 2 == 0)
-            fifo_write('hab);
-        else
-            fifo_write('hcd);*/
+    // write single block
+    for (int i = 0; i < 512; i++) begin
         fifo_write(i % 256);
-    end//*/
+    end
     
     //CMD24 (write single block)
     //*
@@ -162,6 +140,35 @@ initial begin
     write(2, 0);
     write(0, 0);
     #60000;//*/
+
+    //CMD17 (read single block)
+    //write('h48, 0);
+    //write('h44, 'hff);
+    //write('h45, 1);
+    write('h1c, 1);
+    write(3, 0);
+    write(5, 17);
+    write(4, 'b01_1_1101);
+    write(3, 0);
+    write(2, 0);
+    write(1, 0);
+    write(0, 1);
+    #60000;
+	
+	for (int i = 0; i < 512; i++) begin
+		bit [7:0] dat;
+        fifo_read(dat);
+		//$display("poop: %0h", dat);
+        if (dat != i % 256) begin
+            $display("Mismatch at %0d: %0h != %0h", i, dat, i % 256);
+            pass = 0;
+        end
+	end
+    if (pass) begin
+        $display("PASS");
+    end else begin
+        $display("FAIL");
+    end
 end
 
 spi_master spi_master0(
@@ -197,6 +204,16 @@ top top_dut(
 logic [15:0] rddata;
 logic [39:0] rdaddr;
 
+//*
+sdModel #(
+    "mem.txt", "log.txt"
+) sdmodel0(
+    .sdClk(~sd_clk),
+    .cmd(sd_cmd),
+    .dat(sd_dat)
+);//*/
+
+/*
 sd_fake sd_fake(
     .rstn_async(~rst),
     .sdclk(sd_clk),
@@ -205,7 +222,8 @@ sd_fake sd_fake(
 
     .rdaddr(rdaddr),
     .rddata(rddata)
-);
+);//*/
+
 
 brom brom(
     .clk(sd_clk),
