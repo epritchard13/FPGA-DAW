@@ -51,6 +51,17 @@ task read(bit [6:0] addr);
     spi_writeb(8'h00);
 endtask
 
+task automatic fifo_read(ref bit [7:0] data);
+    spi_writeb(8'h8A);
+    spi_writeb(8'h00);
+	@(posedge do_valid) data = dout;
+    spi_writeb(8'h00);
+endtask
+
+task fifo_write(bit [7:0] data);
+    spi_writeb(8'h8B);
+    spi_writeb(data);
+endtask
 
 // drive clock and reset
 initial begin
@@ -122,6 +133,35 @@ initial begin
     write(1, 0);
     write(0, 1);
     #60000;
+	
+	for (int i = 0; i < 512; i++) begin
+		bit [7:0] dat;
+        fifo_read(dat);
+		$display("poop: %0h", dat);
+	end
+	
+	for (int i = 0; i < 512; i++) begin
+        /*if (i % 2 == 0)
+            fifo_write('hab);
+        else
+            fifo_write('hcd);*/
+        fifo_write(i % 256);
+    end//*/
+    
+    //CMD24 (write single block)
+    //*
+    write('h1c, 1);
+    write('h3c, 0);
+    write('h48, 0);
+    //write('h44, 'hff);
+    //write('h45, 1);
+    write(3, 0);
+    write(5, 24);
+    write(4, 'b10_0_0000);
+    write(3, 0);
+    write(2, 0);
+    write(0, 0);
+    #60000;//*/
 end
 
 spi_master spi_master0(

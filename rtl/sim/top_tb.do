@@ -29,7 +29,7 @@ add wave -noupdate /top_tb/top_dut/spi_slave0/wren_i
 add wave -noupdate -divider {SD Wires}
 add wave -noupdate /top_tb/sd_clk
 add wave -noupdate /top_tb/sd_cmd
-add wave -noupdate /top_tb/sd_dat
+add wave -noupdate -radix hexadecimal -expand /top_tb/sd_dat
 add wave -noupdate -divider {SD Interrupt Status}
 add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_controller_wb0/cmd_int_status_reg
 add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_controller_wb0/data_int_status_reg
@@ -38,6 +38,41 @@ add wave -noupdate -radix binary /top_tb/top_dut/sdc_controller0/sd_data_master0
 add wave -noupdate -radix binary /top_tb/top_dut/sdc_controller0/sd_cmd_master0/state
 add wave -noupdate -radix unsigned /top_tb/top_dut/sdc_controller0/sd_data_serial_host0/blkcnt
 add wave -noupdate -radix unsigned /top_tb/top_dut/sdc_controller0/sd_data_serial_host0/blkcnt_reg
+add wave -noupdate -divider {SD Data Host}
+add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_data_serial_host0/rd
+add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_data_serial_host0/sd_clk
+add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_data_serial_host0/rst
+add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_data_serial_host0/data_in
+add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_data_serial_host0/data_out
+add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_data_serial_host0/we
+add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_data_serial_host0/DAT_oe_o
+add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_data_serial_host0/DAT_dat_o
+add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_data_serial_host0/DAT_dat_i
+add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_data_serial_host0/blksize
+add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_data_serial_host0/bus_4bit
+add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_data_serial_host0/blkcnt
+add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_data_serial_host0/start
+add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_data_serial_host0/sd_data_busy
+add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_data_serial_host0/busy
+add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_data_serial_host0/crc_ok
+add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_data_serial_host0/debug_out
+add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_data_serial_host0/DAT_dat_reg
+add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_data_serial_host0/data_cycles
+add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_data_serial_host0/crc_in
+add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_data_serial_host0/crc_en
+add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_data_serial_host0/crc_rst
+add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_data_serial_host0/crc_out
+add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_data_serial_host0/transf_cnt
+add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_data_serial_host0/state
+add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_data_serial_host0/crc_status
+add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_data_serial_host0/busy_int
+add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_data_serial_host0/blkcnt_reg
+add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_data_serial_host0/next_block
+add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_data_serial_host0/start_bit
+add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_data_serial_host0/crc_c
+add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_data_serial_host0/last_din
+add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_data_serial_host0/crc_s
+add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_data_serial_host0/data_index
 add wave -noupdate -divider {SD CMD controller}
 add wave -noupdate /top_tb/top_dut/sdc_controller0/cmd_serial_host0/sd_clk
 add wave -noupdate /top_tb/top_dut/sdc_controller0/cmd_serial_host0/rst
@@ -65,7 +100,7 @@ add wave -noupdate /top_tb/top_dut/sdc_controller0/cmd_serial_host0/crc_ok
 add wave -noupdate -radix unsigned /top_tb/top_dut/sdc_controller0/cmd_serial_host0/counter
 add wave -noupdate /top_tb/top_dut/sdc_controller0/cmd_serial_host0/state
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {34042 ps} 0}
+WaveRestoreCursors {{Cursor 1} {491280500 ps} 0}
 quietly wave cursor active 1
 configure wave -namecolwidth 367
 configure wave -valuecolwidth 40
@@ -81,4 +116,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ns
 update
-WaveRestoreZoom {0 ps} {233428 ps}
+WaveRestoreZoom {491093983 ps} {491584555 ps}
