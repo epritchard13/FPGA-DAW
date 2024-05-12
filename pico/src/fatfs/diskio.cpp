@@ -10,6 +10,7 @@
 #include "ff.h"			/* Obtains integer types */
 #include "diskio.h"		/* Declarations of disk functions */
 
+#include "../config.h"
 #include "../mmc/mmc.h"
 #include <stdio.h>
 
@@ -57,7 +58,7 @@ DSTATUS disk_initialize (
 
 	//init ocsdc driver
 	if (!drv) {
-		drv = ocsdc_mmc_init(125000000);
+		drv = ocsdc_mmc_init(FPGA_CLK);
 	}
 	if (!drv) {
 		printf("ocsdc_mmc_init failed\n\r");

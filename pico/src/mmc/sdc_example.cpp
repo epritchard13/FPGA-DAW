@@ -47,6 +47,7 @@
 #include "mmc.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include "../config.h"
 
 #include "pico/time.h"
 
@@ -91,7 +92,7 @@ void benchmark(struct mmc* drv) {
     spisdc_fpga_mode(drv, true);
 
     uint64_t time = to_us_since_boot(get_absolute_time());
-    mmc_bread(drv, 225055990, num_blocks, NULL);
+    mmc_bread(drv, 0, num_blocks, NULL);
 
     time = to_us_since_boot(get_absolute_time()) - time;
     printf("benchmark took %d ms\n\r", (int)(time / 1000));
@@ -120,7 +121,7 @@ int example_main() {
 	printf("Hello World !!!\n\r");
 
 	//init ocsdc driver
-	struct mmc * drv = ocsdc_mmc_init(125000000);
+	struct mmc * drv = ocsdc_mmc_init(FPGA_CLK);
 	if (!drv) {
 		printf("ocsdc_mmc_init failed\n\r");
 		return -1;
