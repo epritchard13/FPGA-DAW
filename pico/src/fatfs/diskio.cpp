@@ -57,7 +57,7 @@ DSTATUS disk_initialize (
 
 	//init ocsdc driver
 	if (!drv) {
-		drv = ocsdc_mmc_init(48000000);
+		drv = ocsdc_mmc_init(125000000);
 	}
 	if (!drv) {
 		printf("ocsdc_mmc_init failed\n\r");
