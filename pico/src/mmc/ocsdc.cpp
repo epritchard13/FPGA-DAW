@@ -122,7 +122,7 @@ uint8_t spisdc_readb(uint8_t offset) {
 
 void spisdc_read_fifo(struct mmc_data *data) {
 	int bytes = data->blocksize * data->blocks;
-	printf("spisdc_read_fifo: %d\n", bytes);
+	//printf("spisdc_read_fifo: %d\n", bytes);
 	char *buf = data->dest;
 	
 	for (int i = 0; i < bytes; i++) {
@@ -136,7 +136,7 @@ void spisdc_read_fifo(struct mmc_data *data) {
 
 void spisdc_write_fifo(struct mmc_data *data) {
 	int bytes = data->blocksize * data->blocks;
-	printf("spisdc_write_fifo: %d\n", bytes);
+	//printf("spisdc_write_fifo: %d\n", bytes);
 	const char *buf = data->src;
 
 	for (int i = 0; i < bytes; i++) {
@@ -186,7 +186,7 @@ static void ocsdc_set_clock(struct ocsdc * dev, uint clock)
 {
 	int clk_div = dev->clk_freq / (2*clock) - 1;
 
-	printf("ocsdc_set_clock %d, div %d\n\r", clock, clk_div);
+	//printf("ocsdc_set_clock %d, div %d\n\r", clock, clk_div);
 	//software reset
 	ocsdc_write(dev, OCSDC_SOFTWARE_RESET, 1);
 	//set clock devider
@@ -204,7 +204,7 @@ static int ocsdc_finish(struct ocsdc * dev, struct mmc_cmd *cmd) {
 		if (r2 & OCSDC_CMD_INT_STATUS_EI) {
 			//clear interrupts
 			ocsdc_write(dev, OCSDC_CMD_INT_STATUS, 0);
-			printf("ocsdc_finish: cmd %d, status %x\n\r", cmd->cmdidx, r2);
+			//printf("ocsdc_finish: cmd %d, status %x\n\r", cmd->cmdidx, r2);
 			return -1;
 		}
 		else if (r2 & OCSDC_CMD_INT_STATUS_CC) {
@@ -217,14 +217,14 @@ static int ocsdc_finish(struct ocsdc * dev, struct mmc_cmd *cmd) {
 				cmd->response[2] = ocsdc_read(dev, OCSDC_RESPONSE_3);
 				cmd->response[3] = ocsdc_read(dev, OCSDC_RESPONSE_4);
 			}
-			printf("ocsdc_finish:  %d ok\n\r", cmd->cmdidx);
+			//printf("ocsdc_finish:  %d ok\n\r", cmd->cmdidx);
 			return 0;
 		}
 		//else if (!(r2 & OCSDC_CMD_INT_STATUS_CIE)) {
 		//	printf("ocsdc_finish: cmd %d no exec %x\n", cmd->cmdidx, r2);
 		//}
 	}
-	printf("ocsdc_finish: cmd timed out\n\r");
+	//printf("ocsdc_finish: cmd timed out\n\r");
 	return -1;
 }
 
@@ -236,11 +236,11 @@ static int ocsdc_data_finish(struct ocsdc * dev) {
     ocsdc_write(dev, OCSDC_DAT_INT_STATUS, 0);
 
     if (status & SDCMSC_DAT_INT_STATUS_TRS) {
-    	printf("ocsdc_data_finish: ok\n\r");
+    	//printf("ocsdc_data_finish: ok\n\r");
     	return 0;
     }
     else {
-    	printf("ocsdc_data_finish: status %x\n\r", status);
+    	//printf("ocsdc_data_finish: status %x\n\r", status);
     	return -1;
     }
 	return -1;
@@ -278,7 +278,7 @@ static void ocsdc_setup_data_xfer(struct ocsdc * dev, struct mmc_cmd *cmd, struc
 
 	ocsdc_write(dev, OCSDC_BLOCK_COUNT, data->blocks-1);
 
-	printf("ocsdc_setup_read: addr: %x\n", (uint32_t)data->dest);
+	//printf("ocsdc_setup_read: addr: %x\n", (uint32_t)data->dest);
 }
 
 static int ocsdc_send_cmd(struct mmc *mmc, struct mmc_cmd *cmd, struct mmc_data *data)
@@ -308,7 +308,7 @@ static int ocsdc_send_cmd(struct mmc *mmc, struct mmc_cmd *cmd, struct mmc_data 
 		ocsdc_setup_data_xfer(dev, cmd, data);
 	}
 
-	printf("ocsdc_send_cmd %04x\n\r", command);
+	//printf("ocsdc_send_cmd %04x\n\r", command);
 
 //	getc();
 
