@@ -89,6 +89,8 @@ end
 
 initial begin
     bit pass = 1;
+    bit [7:0] rand_dat[512];
+    bit [7:0] tmp;
 
     spi_writeb(8'h00);
     write('h28, 1);
@@ -106,7 +108,7 @@ initial begin
     /*write(5, 8);
     write(4, 'b00_1_1001);
     write(0, 0);
-    #15000;*/
+    #15000;//*/
 
     //CMD2 (get CID)
     write(5, 2);
@@ -123,7 +125,8 @@ initial begin
 
     // write single block
     for (int i = 0; i < 512; i++) begin
-        fifo_write(i % 256);
+        rand_dat[i] = (i + 4) % 256;//$urandom_range(0, 256);
+        fifo_write(rand_dat[i]);
     end
     
     //CMD24 (write single block)
@@ -154,13 +157,13 @@ initial begin
     write(1, 0);
     write(0, 1);
     #60000;
-	
+	    
 	for (int i = 0; i < 512; i++) begin
 		bit [7:0] dat;
         fifo_read(dat);
 		//$display("poop: %0h", dat);
-        if (dat != i % 256) begin
-            $display("Mismatch at %0d: %0h != %0h", i, dat, i % 256);
+        if (dat != rand_dat[i]) begin
+            $display("Mismatch at %0d: %0h != %0h", i, dat, rand_dat[i]);
             pass = 0;
         end
 	end

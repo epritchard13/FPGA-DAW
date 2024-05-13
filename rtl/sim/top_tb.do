@@ -29,7 +29,7 @@ add wave -noupdate /top_tb/top_dut/spi_slave0/wren_i
 add wave -noupdate -divider {SD Wires}
 add wave -noupdate /top_tb/sd_clk
 add wave -noupdate /top_tb/sd_cmd
-add wave -noupdate -radix hexadecimal -expand /top_tb/sd_dat
+add wave -noupdate -radix hexadecimal -childformat {{{/top_tb/sd_dat[3]} -radix hexadecimal} {{/top_tb/sd_dat[2]} -radix hexadecimal} {{/top_tb/sd_dat[1]} -radix hexadecimal} {{/top_tb/sd_dat[0]} -radix hexadecimal}} -expand -subitemconfig {{/top_tb/sd_dat[3]} {-radix hexadecimal} {/top_tb/sd_dat[2]} {-radix hexadecimal} {/top_tb/sd_dat[1]} {-radix hexadecimal} {/top_tb/sd_dat[0]} {-radix hexadecimal}} /top_tb/sd_dat
 add wave -noupdate -divider {SD Interrupt Status}
 add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_controller_wb0/cmd_int_status_reg
 add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_controller_wb0/data_int_status_reg
@@ -38,6 +38,27 @@ add wave -noupdate -radix binary /top_tb/top_dut/sdc_controller0/sd_data_master0
 add wave -noupdate -radix binary /top_tb/top_dut/sdc_controller0/sd_cmd_master0/state
 add wave -noupdate -radix unsigned /top_tb/top_dut/sdc_controller0/sd_data_serial_host0/blkcnt
 add wave -noupdate -radix unsigned /top_tb/top_dut/sdc_controller0/sd_data_serial_host0/blkcnt_reg
+add wave -noupdate -divider {SD FIFO Filler}
+add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_fifo_filler0/clk
+add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_fifo_filler0/rst
+add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_fifo_filler0/rd_dat_o
+add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_fifo_filler0/rd_en_i
+add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_fifo_filler0/wr_dat_i
+add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_fifo_filler0/wr_en_i
+add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_fifo_filler0/sd_clk
+add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_fifo_filler0/dat_i
+add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_fifo_filler0/dat_o
+add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_fifo_filler0/wr_i
+add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_fifo_filler0/rd_i
+add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_fifo_filler0/sd_full_o
+add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_fifo_filler0/sd_empty_o
+add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_fifo_filler0/wb_full_o
+add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_fifo_filler0/wb_empty_o
+add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_fifo_filler0/fifo_rd
+add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_fifo_filler0/fifo_rd_ack
+add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_fifo_filler0/fifo_rd_reg
+add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_fifo_filler0/rd_en_i_cross
+add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_fifo_filler0/wr_en_i_cross
 add wave -noupdate -divider {SD Data Host}
 add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_data_serial_host0/rd
 add wave -noupdate /top_tb/top_dut/sdc_controller0/sd_data_serial_host0/sd_clk
@@ -100,7 +121,7 @@ add wave -noupdate /top_tb/top_dut/sdc_controller0/cmd_serial_host0/crc_ok
 add wave -noupdate -radix unsigned /top_tb/top_dut/sdc_controller0/cmd_serial_host0/counter
 add wave -noupdate /top_tb/top_dut/sdc_controller0/cmd_serial_host0/state
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {491280500 ps} 0}
+WaveRestoreCursors {{Cursor 1} {162210916 ps} 0}
 quietly wave cursor active 1
 configure wave -namecolwidth 367
 configure wave -valuecolwidth 40
@@ -116,4 +137,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ns
 update
-WaveRestoreZoom {491093983 ps} {491584555 ps}
+WaveRestoreZoom {0 ps} {1050 us}
