@@ -79,7 +79,7 @@ target_link_libraries(daw
 pico_add_extra_outputs(daw)
 
 add_custom_command(TARGET daw POST_BUILD
-    COMMAND powershell.exe C:/picoFlashTool_WinPS.ps1
+    COMMAND powershell.exe C:/pico-ice/picoFlashTool_WinPS.ps1
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     COMMENT "Flashing Pico..."
 )
