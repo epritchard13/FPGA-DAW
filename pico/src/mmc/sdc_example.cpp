@@ -85,8 +85,8 @@ void printHex(const void *lpvbits, const unsigned int n) {
     printf(" | %s\n\r", line);
 }
 
-void benchmark(struct mmc* drv) {
-    int num_blocks = 1024*2*10;
+void benchmark(struct mmc* drv, int megabytes) {
+    int num_blocks = 1024*2*megabytes;
 
     printf("starting... ");
     spisdc_fpga_mode(drv, true);
@@ -117,7 +117,7 @@ int test_audio(struct mmc* drv) {
     return 0;
 }
 
-int example_main() {
+int example_main(int count) {
 	printf("Hello World !!!\n\r");
 
 	//init ocsdc driver
@@ -135,7 +135,7 @@ int example_main() {
 	}
 
 	print_mmcinfo(drv);
-    benchmark(drv);
+    benchmark(drv, count);
     //test_audio(drv);
 
 	return EXIT_SUCCESS;

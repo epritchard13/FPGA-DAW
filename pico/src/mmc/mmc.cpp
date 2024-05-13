@@ -701,7 +701,7 @@ static int mmc_startup(struct mmc *mmc)
 		if (mmc->card_caps & MMC_MODE_HS)
 			mmc->tran_speed = 50000000;
 		else
-			mmc->tran_speed = 25000000;
+			mmc->tran_speed = 50000000;
 	} else {
 		width = ((mmc->host_caps & MMC_MODE_MASK_WIDTH_BITS) >>
 			 MMC_MODE_WIDTH_BITS_SHIFT);

@@ -16,6 +16,8 @@
 #include <cstring>
 #include <stdio.h>
 
+#include "config.h"
+
 #include "fatfs/ff.h"
 #include "fatfs/diskio.h"
 
@@ -84,7 +86,9 @@ void read_stdin()
             printf("test_read returned %d\n", status);
         } 
         else if (strcmp(cmd, "benchmark") == 0) {
-            example_main();
+            int val;
+            scanf("%d", &val);
+            example_main(val);
         } 
         else if (strcmp(cmd, "test_write") == 0) {
             //example_main();
@@ -123,8 +127,10 @@ int main()
     tusb_init();
     stdio_init_all();
 
-    //ice_fpga_init(48);
-    //ice_fpga_start();
+#ifdef LATTICE_FPGA
+    ice_fpga_init(48);
+    ice_fpga_start();
+#endif
 
     spi_link_init();
 
